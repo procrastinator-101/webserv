@@ -1,0 +1,44 @@
+http request:
+	-	URL
+	-	method type
+	-	headers
+	-	body
+
+
+http response:
+	-	status code
+	-	headers
+	-	body
+
+
+
+pipelining :
+	-	(http 1.1 disabled by default)
+	-	a request is sent before the response for the previous request is received.
+	-	the responses are then ordered by the client.
+
+
+http 2:
+	multiplexing : shove multiple request in one tcp request
+	compression
+	secure by default
+	protocol negotiation during TLS (NPN/ALPN) to communicate with older protocols (1.0, 1.1)
+
+
+A stateless app :
+	-	is an application program that does not save client data generated in one 
+		session for use in the next session with that client. Each session is carried 
+		out as if it was the first time and responses are not dependent upon data from 
+		a previous session.
+
+user agent :
+	-	refers to any of the various client programs that initiate a request, 
+		including (but not limited to) browsers, spiders (web-based robots), command-line 
+		tools, custom applications, and mobile apps.
+
+
+Out-of-Band Signaling : is any transmission technology in which signaling is separate 
+	from the data being transmitted. Out-of-band signaling uses one or more channels for 
+	transmitting data or voice information and one special out-of-band channel for 
+	performing signaling functions such as establishing and terminating the communication 
+	link, controlling flow, or transmitting error information.
