@@ -1,0 +1,20 @@
+Raw Sockets:
+	-	used for implementing new transport layer protocols.
+	-	sends and receives packets of information without using the computer 
+		operating system as a middleman.
+	-	reduces cpu overload due to the operating system way of handling data transmission.
+
+Sequenced-packet sockets:
+	-	allow the user to manipulate the Sequence Packet Protocol (SPP) or Internet Datagram 
+		Protocol (IDP) headers on a packet or a group of packets, either by writing a prototype 
+		header along with whatever data is to be sent, or by specifying a default header to be
+		used with all outgoing data, and allows the user to receive the headers on incoming packets.
+
+
+Out-of-Band Signaling : is any transmission technology in which signaling is separate 
+	from the data being transmitted. Out-of-band signaling uses one or more channels for 
+	transmitting data or voice information and one special out-of-band channel for 
+	performing signaling functions such as establishing and terminating the communication 
+	link, controlling flow, or transmitting error information.
+
+-	A SIGPIPE signal is raised if a process sends on a broken stream
