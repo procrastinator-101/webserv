@@ -18,3 +18,35 @@ Out-of-Band Signaling : is any transmission technology in which signaling is sep
 	link, controlling flow, or transmitting error information.
 
 -	A SIGPIPE signal is raised if a process sends on a broken stream
+
+
+-	sockaddr that holds the socket information:
+	-	sa_family
+	-	sa_data : represented by sockaddr_in in inet_family
+
+
+getaddrinfo
+============================================================================================================================
+int getaddrinfo(const char *restrict node, const char *restrict service, 
+				const struct addrinfo *restrict hints, struct addrinfo **restrict res);
+	
+	node : 
+		-	ipv4 : 127.0.0.1
+		-	ipv6 : ::1
+		-	host : google.com. It can be suppressed by setting hints.ai_flags to AI_NUMERICHOST.
+		-	null :
+			-	AI_PASSIVE is set : returned address (inaddr_any) is suitable for bind and accept. 
+			-	AI_PASSIVE is not set : returned address (inaddr_loopback) is suitable for  connect, sendto, or sendmsg.
+	service :
+		-	service name : http. It can be suppressed by setting AI_NUMERICSERV.
+		-	port number : 80
+		-	null : uninitilised
+	hints :
+		-	null:
+			-	ai_socktype : 0
+			-	ai_protocol : 0
+			-	ai_family : AF_UNSPEC
+			-	ai_flags : AI_V4MAPPED | AI_ADDRCONFIG
+============================================================================================================================
+
+netstat -an -p tcp

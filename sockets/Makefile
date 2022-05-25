@@ -14,11 +14,12 @@ Author = younes
 
 NAME = sockets
 
-CC = c++
-CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
+CC = clang++
+CFLAGS = #-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
 
-SRC = main.cpp 
+SRC = main.cpp
+# SRC = sample.cpp
 
 HDR = 
 
