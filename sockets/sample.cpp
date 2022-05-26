@@ -45,7 +45,6 @@ int main()
 	}
 	std::cout << "listening ....." << std::endl;
 	client = accept(server, (sockaddr *)&address, &len);
-	std::cout << "DEDE" << std::endl;
 	if (client < 0)
 	{
 		std::cerr << "accept failed" << std::endl;
@@ -53,6 +52,7 @@ int main()
 		return 1;
 	}
 	std::cout << "connection accepted" << std::endl;
+	std::cout << address.sin_family << " " << len << std::endl;
 	ret = read(client, buffer, bufferSize);
 	close(server);
 	close(client);

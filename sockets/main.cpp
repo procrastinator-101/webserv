@@ -1,6 +1,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <strings.h>
+#include <sys/_types/_socklen_t.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -22,9 +23,10 @@ const int backLog = 10;
 
 struct	Client
 {
-	int			fd;
-	addrinfo	address;
-	char		buffer[bufferSize];
+	int					fd;
+	sockaddr_storage	address;
+	socklen_t			addressLen;
+	char				buffer[bufferSize];
 };
 
 int main(int argc, char **argv)
@@ -87,15 +89,22 @@ int main(int argc, char **argv)
 	{
 		Client client;
 
-		client.address.ai_addrlen = sizeof(*client.address.ai_addr);
+		client.addressLen = sizeof(client.address);
 		std::cout << YELLOW << std::setw(FIELDSIZE) << "listening" << "..." << std::endl;
-		client.fd = accept(fd, client.address.ai_addr, &client.address.ai_addrlen);
+		client.fd = accept(fd, reinterpret_cast<sockaddr *>(&client.address), &client.addressLen);
 		if (client.fd < 0)
 		{
 			std::cout << RED << std::setw(FIELDSIZE) << "connections acception" << "failure" << std::endl;
 			close(fd);
 			return 1;
 		}
+		std::cout << client.address.ss_family << "|" << client.address.ss_len << std::endl;
+		std::cout << server.ai_addr->sa_family << "|" << server.ai_addrlen << std::endl;
+		std::cout << AF_INET << "|" << sizeof(sockaddr_storage) << std::endl;
+		getnameinfo((struct sockaddr*)&client.address,
+               client.addressLen, client.buffer, sizeof(client.buffer), 0, 0,
+               NI_NUMERICHOST);
+		std::cout << client.buffer << std::endl;
 		std::cout << GREEN << "connect with " << client.fd << " : success" << std::endl;
 		ret = read(client.fd, client.buffer, bufferSize);
 		if (ret < 0)

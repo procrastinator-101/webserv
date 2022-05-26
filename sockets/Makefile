@@ -18,8 +18,8 @@ CC = clang++
 CFLAGS = #-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
 
+SRC = sample.cpp
 SRC = main.cpp
-# SRC = sample.cpp
 
 HDR = 
 
