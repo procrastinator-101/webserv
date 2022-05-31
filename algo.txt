@@ -1,0 +1,31 @@
+for each server
+	-	create a socket
+	-	bind it to an address
+	-	listen on that socket
+	-	accept connecttions
+		-	if the client already accepted
+			-	use that client
+		-	otherwise
+			-	create a client for each accepted connection
+
+
+client:
+	-	fd : socket
+	-	request
+	-	response
+	-	keep alive
+
+
+request:
+	-	msg
+	-	method
+	-	path
+	-	version
+	-	headers : pair<string, string> : header, value
+	-	body
+
+response:
+	-	msg
+	-	status code
+	-	headers : from the request
+	-	body

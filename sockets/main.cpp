@@ -101,10 +101,11 @@ int main(int argc, char **argv)
 		std::cout << client.address.ss_family << "|" << client.address.ss_len << std::endl;
 		std::cout << server.ai_addr->sa_family << "|" << server.ai_addrlen << std::endl;
 		std::cout << AF_INET << "|" << sizeof(sockaddr_storage) << std::endl;
+		char buffer[1024];
 		getnameinfo((struct sockaddr*)&client.address,
-               client.addressLen, client.buffer, sizeof(client.buffer), 0, 0,
-               NI_NUMERICHOST);
-		std::cout << client.buffer << std::endl;
+               client.addressLen, client.buffer, sizeof(client.buffer), buffer, 1024,
+               0);
+		std::cout << client.buffer << " " << buffer << std::endl;
 		std::cout << GREEN << "connect with " << client.fd << " : success" << std::endl;
 		ret = read(client.fd, client.buffer, bufferSize);
 		if (ret < 0)

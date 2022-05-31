@@ -49,4 +49,13 @@ int getaddrinfo(const char *restrict node, const char *restrict service,
 			-	ai_flags : AI_V4MAPPED | AI_ADDRCONFIG
 ============================================================================================================================
 
+
+============================================================================================================================
+int getnameinfo(const struct sockaddr *restrict addr, socklen_t addrlen,
+                char *restrict host, socklen_t hostlen,
+                char *restrict serv, socklen_t servlen, int flags);
+	
+	-	at least one of hostname or service name must be requested.
+============================================================================================================================
+
 netstat -an -p tcp

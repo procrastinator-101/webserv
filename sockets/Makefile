@@ -12,24 +12,31 @@
 
 Author = younes
 
-NAME = sockets
+SERVER = server
+
+CLIENT = client
+
+NAME = $(SERVER) $(CLIENT)
 
 CC = clang++
 CFLAGS = #-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
 
-SRC = sample.cpp
-SRC = main.cpp
+CLIENT_SRC = client.cpp
+
+SERVER_SRC = main.cpp
 
 HDR = 
-
 
 OBJ = $(SRC:.cpp=.o)
 
 all : $(NAME)
 
-$(NAME) : $(SRC) $(HDR)
-	@$(CC) $(CFLAGS) -o $@ $(SRC)
+$(SERVER) : $(SERVER_SRC)
+	@$(CC) $(CFLAGS) -o $@ $(SERVER_SRC)
+
+$(CLIENT) : $(CLIENT_SRC)
+	@$(CC) $(CFLAGS) -o $@ $(CLIENT_SRC)
 
 %.o: %.cpp
 	@$(CC) $(CFLAGS) -o $@ -c $<
