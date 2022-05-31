@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 	host = *result;
 	freeaddrinfo(result);
 
-	// while (1)
+	while (1)
 	{
 		//create a socker to connect to a server
 		fd = socket(host.ai_family, host.ai_socktype, host.ai_protocol);
@@ -87,7 +87,6 @@ int main(int argc, char **argv)
 			close(fd);
 		}
 		std::cout << GREEN << std::setw(FIELDSIZE) << "send" << "success" << BLACK << std::endl;
-		while (1);
 		close(fd);
 	}
 	return 0;

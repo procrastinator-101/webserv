@@ -9,6 +9,20 @@ for each server
 			-	create a client for each accepted connection
 
 
+server:
+	-	fd : socket
+	-	ip address
+	-	port
+	-	servername
+	-	aliases (other servernames)
+	-	root
+	-	served locations
+	-	allowed methods
+	-	redirections
+	-	auto index : per location
+	-	default served file
+
+
 client:
 	-	fd : socket
 	-	request
@@ -23,6 +37,7 @@ request:
 	-	version
 	-	headers : pair<string, string> : header, value
 	-	body
+
 
 response:
 	-	msg
