@@ -80,5 +80,9 @@ headers:
 		-	values:
 			-	keep-alive :  default http/1.1
 			-	close :  default http/1.0
+	Content-Type :
+		-	media-type
+		-	charset
+		-	boundary
 =================================================================================================
 

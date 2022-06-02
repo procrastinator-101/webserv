@@ -17,9 +17,12 @@ server:
 	-	aliases (other servernames)
 	-	root
 	-	served locations
+
+
+location:
 	-	allowed methods
 	-	redirections
-	-	auto index : per location
+	-	auto index
 	-	default served file
 
 
