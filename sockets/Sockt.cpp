@@ -1,5 +1,8 @@
 #include "Sockt.hpp"
 #include <exception>
+#include <netinet/in.h>
+#include <sys/_types/_socklen_t.h>
+#include <sys/socket.h>
 
 namespace ft
 {
@@ -62,11 +65,10 @@ namespace ft
 
 	void	Sockt::makeClientSockt(const in_addr_t& ipAddress, const in_port_t& port)
 	{
-		_initialise(ipAddress, port, defaultBacklog);
 		create();
 		try
 		{
-			connect();
+			connect(ipAddress, port);
 		}
 		catch (std::exception& e)
 		{
@@ -104,14 +106,32 @@ namespace ft
 			throw std::runtime_error("socket listening failure");
 	}
 
-	void	Sockt::connect()
+	void	Sockt::connect(const in_addr_t& ipAddress, const in_port_t& port)
 	{
+		int	ret;
+		sockaddr_in	dst;
 
+		//set the address that the socket will connect to
+		bzero(&dst, addressLen);
+		dst.sin_port = port;
+		dst.sin_family = AF_INET;
+		dst.sin_len = addressLen;
+		dst.sin_addr.s_addr = ipAddress;
+
+		ret = ::connect(fd, reinterpret_cast<sockaddr *>(&dst), addressLen);
+		if (ret < 0)
+			throw std::runtime_error("socket connecting failure");
 	}
 
-	void	Sockt::accept()
+	Sockt	Sockt::accept()//
 	{
+		Sockt		ret;
+		socklen_t	len;
 
+		ret.fd = ::accept(fd, reinterpret_cast<sockaddr *>(&ret.address), &len);
+		if (ret.fd < 0)
+			throw std::runtime_error("socket accepting failure");
+		return ret;
 	}
 
 	void	Sockt::_deepCopy(const Sockt& src)
@@ -126,7 +146,7 @@ namespace ft
 		//set the fd to -1
 		fd = -1;
 
-		//set the address that the socket will bind or connect to
+		//set the address that the socket will bind to
 		bzero(&address, addressLen);
 		address.sin_port = port;
 		address.sin_family = AF_INET;

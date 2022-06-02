@@ -22,7 +22,8 @@ namespace ft
 
 	/**
 	 * @brief 
-	 * 
+	 * a class to handle sockets (mainly server socket)
+	 * but can be used by client sockets too.
 	 */
 
 	class Sockt
@@ -72,6 +73,7 @@ namespace ft
 			Sockt(const Sockt& src);
 			Sockt(const int& fd, const int& backlog, const sockaddr_in& address);
 
+			//for server sockets only
 			Sockt(const in_addr_t& ipAddress, const in_port_t& port, const int& bcklog, const bool& isDry = false);//might throw
 
 			Sockt	&operator=(const Sockt& rop);
@@ -86,10 +88,11 @@ namespace ft
 			void	create();//might throw
 			void	bind();//might throw
 			void	listen();//might throw
-			void	accept();//might throw
-			void	connect();//might throw
 
-			void	makeClientSockt(const in_addr_t& ipAddress, const in_port_t& port);//might throw
+			Sockt	accept();//might throw
+			void	connect(const in_addr_t& ipAddress, const in_port_t& port = 0);//might throw
+
+			void	makeClientSockt(const in_addr_t& ipAddress, const in_port_t& port = 0);//might throw
 			void	makeServerSockt(const in_addr_t& ipAddress, const in_port_t& port, const int bcklog);//might throw
 		//================================================================================================
 		//	Socket operations End
@@ -104,7 +107,6 @@ namespace ft
 		//	overload << for Sockt End
 		//================================================================================================
 	};
-	
 }
 
 
