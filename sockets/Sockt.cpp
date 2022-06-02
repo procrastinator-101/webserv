@@ -1,4 +1,5 @@
 #include "Sockt.hpp"
+#include <exception>
 
 namespace ft
 {
@@ -7,9 +8,9 @@ namespace ft
 	const socklen_t	Sockt::addressLen = sizeof(sockaddr_in);
 	const in_addr_t	Sockt::defaultAddress = htonl(INADDR_ANY);
 
-	Sockt::Sockt(bool isDry) : fd(-1)
+	Sockt::Sockt()
 	{
-		_makeSockt(defaultAddress, defaultPort, defaultBacklog);
+		_initialise(defaultAddress, defaultPort, defaultBacklog);
 	}
 
 	Sockt::~Sockt()
@@ -17,7 +18,6 @@ namespace ft
 		if (fd >= 0)
 			close(fd);
 	}
-
 
 	Sockt::Sockt(const Sockt& src) : fd(src.fd), backlog(src.backlog), address(src.address)
 	{
@@ -27,9 +27,12 @@ namespace ft
 	{
 	}
 
-	Sockt::Sockt(const in_addr_t& ipAddress, const in_port_t& port, const int bcklog) : fd(-1)
+	Sockt::Sockt(const in_addr_t& ipAddress, const in_port_t& port, const int& bcklog, const bool& isDry)
 	{
-		_makeSockt(ipAddress, port, bcklog);
+		if (isDry)
+			_initialise(ipAddress, port, bcklog);
+		else
+			makeServerSockt(ipAddress, port, bcklog);
 	}
 
 	Sockt	&Sockt::operator=(const Sockt& rop)
@@ -40,40 +43,47 @@ namespace ft
 		return *this;
 	}
 
-	void	Sockt::_makeSockt(const in_addr_t& ipAddress, const in_port_t& port, const int bcklog)
+	void	Sockt::makeServerSockt(const in_addr_t& ipAddress, const in_port_t& port, const int bcklog)
+	{
+		_initialise(ipAddress, port, bcklog);
+		create();
+		try
+		{
+			bind();
+			listen();
+		}
+		catch (std::exception& e)
+		{
+			close(fd);
+			fd = -1;
+			throw ;
+		}
+	}
+
+	void	Sockt::makeClientSockt(const in_addr_t& ipAddress, const in_port_t& port)
+	{
+		_initialise(ipAddress, port, defaultBacklog);
+		create();
+		try
+		{
+			connect();
+		}
+		catch (std::exception& e)
+		{
+			close(fd);
+			fd = -1;
+			throw ;
+		}
+	}
+
+	void	Sockt::create()
 	{
 		int	ret;
 
-		//create a socket
-		fd = socket(AF_INET, SOCK_STREAM, 0);
-		if (fd < 0)
+		ret = socket(AF_INET, SOCK_STREAM, 0);
+		if (ret < 0)
 			throw std::runtime_error("socket creation failure");
-
-		//set the address that the socket will bind to
-		bzero(&address, addressLen);
-		address.sin_port = port;
-		address.sin_family = AF_INET;
-		address.sin_len = addressLen;
-		address.sin_addr.s_addr = ipAddress;
-
-		//bind to the address
-		ret = ::bind(fd, reinterpret_cast<sockaddr *>(&address), address.sin_len);
-		if (ret < 0)
-		{
-			close(fd);
-			throw std::runtime_error("socket binding failure");
-		}
-
-		//set the backlog
-		backlog = bcklog;
-
-		//listen on the socket
-		ret = ::listen(fd, backlog);
-		if (ret < 0)
-		{
-			close(fd);
-			throw std::runtime_error("socket listening failure");
-		}
+		fd = ret;
 	}
 
 	void	Sockt::bind()
@@ -94,57 +104,37 @@ namespace ft
 			throw std::runtime_error("socket listening failure");
 	}
 
-	void	Sockt::accept()
-	{
-
-	}
-
 	void	Sockt::connect()
 	{
 
 	}
 
-	void	Sockt::create(const in_addr_t& ipAddress, const in_port_t& port, const int bcklog)
+	void	Sockt::accept()
 	{
-		int	ret;
 
-		//create a socket
-		fd = socket(AF_INET, SOCK_STREAM, 0);
-		if (fd < 0)
-			throw std::runtime_error("socket creation failure");
+	}
 
-		//set the address that the socket will bind to
+	void	Sockt::_deepCopy(const Sockt& src)
+	{
+		fd = src.fd;
+		backlog = src.backlog;
+		address = src.address;
+	}
+
+	void	Sockt::_initialise(const in_addr_t& ipAddress, const in_port_t& port, const int bcklog)
+	{
+		//set the fd to -1
+		fd = -1;
+
+		//set the address that the socket will bind or connect to
 		bzero(&address, addressLen);
 		address.sin_port = port;
 		address.sin_family = AF_INET;
 		address.sin_len = addressLen;
 		address.sin_addr.s_addr = ipAddress;
 
-		//bind to the address
-		ret = ::bind(fd, reinterpret_cast<sockaddr *>(&address), address.sin_len);
-		if (ret < 0)
-		{
-			close(fd);
-			throw std::runtime_error("socket binding failure");
-		}
-
 		//set the backlog
 		backlog = bcklog;
-
-		//listen on the socket
-		ret = ::listen(fd, backlog);
-		if (ret < 0)
-		{
-			close(fd);
-			throw std::runtime_error("socket listening failure");
-		}
-	}
-	
-	void	Sockt::_deepCopy(const Sockt& src)
-	{
-		fd = src.fd;
-		backlog = src.backlog;
-		address = src.address;
 	}
 
 	std::ostream	&operator<<(std::ostream& ostr, const ft::Sockt& sockt)
