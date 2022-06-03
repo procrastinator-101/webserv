@@ -59,3 +59,35 @@ int getnameinfo(const struct sockaddr *restrict addr, socklen_t addrlen,
 ============================================================================================================================
 
 netstat -an -p tcp
+
+============================================================================================================================
+inet_addr:
+	-	returns the binary representation of a string adress in the network byte order.
+	-	255.255.255.255 : invalid
+
+inet_network:
+	-	returns the binary representation of a string adress in the host byte order.
+	-	255.255.255.255 : invalid
+
+inet_aton :
+	-	returns the binary representation of a string adress in the network byte order.
+	-	255.255.255.255 : valid
+
+inet_pton :
+	-	like inet_aton, but it takes a printable string address.
+	-	Example:
+		-	127.0x0.0.01 : yileds an error, while it works fine with inet_aton.
+============================================================================================================================
+
+
+============================================================================================================================
+inet_lnaof
+
+inet_makeaddr
+
+inet_netof
+
+inet_ntoa
+
+inet_ntop
+============================================================================================================================

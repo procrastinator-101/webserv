@@ -18,8 +18,6 @@ namespace ft
 
 	Sockt::~Sockt()
 	{
-		if (fd >= 0)
-			close(fd);
 	}
 
 	Sockt::Sockt(const Sockt& src) : fd(src.fd), backlog(src.backlog), address(src.address)
@@ -57,8 +55,7 @@ namespace ft
 		}
 		catch (std::exception& e)
 		{
-			close(fd);
-			fd = -1;
+			destroy();
 			throw ;
 		}
 	}
@@ -72,8 +69,7 @@ namespace ft
 		}
 		catch (std::exception& e)
 		{
-			close(fd);
-			fd = -1;
+			destroy();
 			throw ;
 		}
 	}
@@ -123,7 +119,7 @@ namespace ft
 			throw std::runtime_error("socket connecting failure");
 	}
 
-	Sockt	Sockt::accept()//
+	Sockt	Sockt::accept()
 	{
 		Sockt		ret;
 		socklen_t	len;
@@ -132,6 +128,14 @@ namespace ft
 		if (ret.fd < 0)
 			throw std::runtime_error("socket accepting failure");
 		return ret;
+	}
+
+	void	Sockt::destroy()
+	{
+		if (fd >= 0)
+			close(fd);
+		fd = -1;
+		std::cout << "socket with fd " << fd << " is closed" << std::endl; 
 	}
 
 	void	Sockt::_deepCopy(const Sockt& src)

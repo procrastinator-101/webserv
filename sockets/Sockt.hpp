@@ -1,6 +1,7 @@
 #ifndef SOCKT_HPP
 # define SOCKT_HPP
 
+#include <netdb.h>
 #include <unistd.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -24,6 +25,7 @@ namespace ft
 	 * @brief 
 	 * a class to handle sockets (mainly server socket)
 	 * but can be used by client sockets too.
+	 * port is expected to be in network byte order
 	 */
 
 	class Sockt
@@ -90,9 +92,11 @@ namespace ft
 			void	listen();//might throw
 
 			Sockt	accept();//might throw
-			void	connect(const in_addr_t& ipAddress, const in_port_t& port = 0);//might throw
+			void	connect(const in_addr_t& ipAddress, const in_port_t& port);//might throw
 
-			void	makeClientSockt(const in_addr_t& ipAddress, const in_port_t& port = 0);//might throw
+			void	destroy();
+
+			void	makeClientSockt(const in_addr_t& ipAddress, const in_port_t& port);//might throw
 			void	makeServerSockt(const in_addr_t& ipAddress, const in_port_t& port, const int bcklog);//might throw
 		//================================================================================================
 		//	Socket operations End
