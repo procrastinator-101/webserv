@@ -2,6 +2,14 @@
 #include <exception>
 #include <netdb.h>
 #include <stdexcept>
+#include <string>
+
+std::string getCurrentTime()
+{
+    time_t timer;
+    time(&timer);
+    return ctime(&timer);
+}
 
 int main()
 {
@@ -32,19 +40,23 @@ int main()
 
             try
             {
-				ret = recv(client.fd, buffer, 1024, 0);
-				if (ret < 0)
-					throw std::runtime_error("recv failure");
-				std::cout << "msg : " << buffer << std::endl;
-				ret = send(client.fd, buffer, ret, 0);
-				if (ret < 0)
-					throw std::runtime_error("send failure");
-				client.destroy();
+                ret = recv(client.fd, buffer, 1024, 0);
+                if (ret < 0)
+                    throw std::runtime_error("recv failure");
+                std::string resp = "HTTP/1.1 200 OK\r\n"
+                                   "Connection: close\r\n"
+                                   "Content-Type: text/plain\r\n\r\n"
+                                   "Local time is: " + getCurrentTime();
+                std::cout << "msg : " << buffer << std::endl;
+                ret = send(client.fd, resp.c_str(), resp.length(), 0);
+                if (ret < 0)
+                    throw std::runtime_error("send failure");
+                client.destroy();
             }
             catch (std::exception& e)
             {
-				client.destroy();
-				throw ;
+                client.destroy();
+                throw;
             }
         }
         server.destroy();

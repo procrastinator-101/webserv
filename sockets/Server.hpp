@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Sockt.hpp"
+#include "Client.hpp"
 #include "Location.hpp"
 
 namespace ft
@@ -18,6 +19,7 @@ namespace ft
 			std::string		_root;
 			std::set<std::string>	_aliases;
 			std::map<std::string, Location>	_locations;
+			std::map<int, Client>			_clients;
 		
 			void	_deepCopy(const Server& src);
 

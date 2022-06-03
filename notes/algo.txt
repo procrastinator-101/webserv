@@ -7,16 +7,28 @@ for each server
 			-	use that client
 		-	otherwise
 			-	create a client for each accepted connection
+	-	select
+		-	request
+			-	recv
+			-	handle request
+		-	response
+			-	handle response
+			-	send
 
+
+handle request:
+	-	parse request
+
+handle response:
+	-	
 
 server:
-	-	fd : socket
-	-	ip address
-	-	port
+	-	socket
 	-	servername
 	-	aliases (other servernames)
 	-	root
 	-	served locations
+	-	clients
 
 
 location:
@@ -27,7 +39,7 @@ location:
 
 
 client:
-	-	fd : socket
+	-	socket
 	-	request
 	-	response
 	-	keep alive
@@ -47,3 +59,21 @@ response:
 	-	status code
 	-	headers : from the request
 	-	body
+
+
+sockt:
+	-	create
+	-	bind
+	-	listen
+	-	connect
+	-	accept
+	-	send
+	-	receive
+
+serverSockt:
+	-	setup
+	-	wakeup
+
+clientSockt
+	-	setup
+	-	wakeup
