@@ -6,6 +6,12 @@
 
 namespace ft
 {
+	/**
+	 * @brief 
+	 *	HttpStatus class offers a remap of a HTTP status code to its corresponding
+	 *	HTTP code message.
+	 */
+	
 	class HttpStatus
 	{
 		//================================================================================================
@@ -16,7 +22,7 @@ namespace ft
 			std::string	msg;
 
 		private:
-			static const std::map<int, std::string>	_library;
+			static std::map<int, const std::string>	_library;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
@@ -40,6 +46,8 @@ namespace ft
 		//	HttpStatus operations
 		//================================================================================================
 		public:
+			static int	resolve(const std::string msg);
+			static std::string	resolve(const int code);
 		//================================================================================================
 		//	HttpStatus operations End
 		//================================================================================================
@@ -48,6 +56,13 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
+			static void	_initialiseLibrary();
+			static void	_setInformationalResponseCodes();//100-200
+			static void	_setSuccessCodes();//200-300
+			static void	_setRedirectionCodes();//300-400
+			static void	_setClientErrorCodes();//400-500
+			static void	_setServerErrorCodes();//500-600
+
 			void	_deepCopy(const HttpStatus& src);
 		//================================================================================================
 		//	private methods End
