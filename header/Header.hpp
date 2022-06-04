@@ -1,22 +1,18 @@
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#ifndef HEADER_HPP
+# define HEADER_HPP
 
-#include "Sockt.hpp"
-#include "../request/Request.hpp"
-#include "../response/Response.hpp"
+#include <string>
 
 namespace ft
 {
-	class Client
+	class Header
 	{
 		//================================================================================================
 		//	attributes
 		//================================================================================================
-		private:
-			bool	_keepAlive;
-			Sockt	_sockt;
-			Request	_request;
-			Response	_response;
+		public:
+			std::string	key;
+			std::string	value;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
@@ -25,33 +21,35 @@ namespace ft
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
 		public:
-			Client();
-			~Client();
+			Header();
+			~Header();
 
-			Client(const Client& src);
+			Header(const Header& src);
+			Header(const std::string& key, const std::string& value);
 
-			Client	&operator=(const Client& rop);
+			Header	&operator=(const Header& rop);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================
 
 
 		//================================================================================================
-		//	Client operations
+		//	Header operations
 		//================================================================================================
 		public:
 		//================================================================================================
-		//	Client operations End
+		//	Header operations End
 		//================================================================================================
 
 		//================================================================================================
 		//	private methods
 		//================================================================================================
 		private:
-			void	_deepCopy(const Client& src);
+			void	_deepCopy(const Header& src);
 		//================================================================================================
 		//	private methods End
 		//================================================================================================
 	};
 }
+
 #endif

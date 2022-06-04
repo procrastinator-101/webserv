@@ -45,7 +45,7 @@ request format :
 http response
 =================================================================================================
 Components:
-	-	status code
+	-	status line
 	-	headers
 	-	body
 
@@ -84,5 +84,9 @@ headers:
 		-	media-type
 		-	charset
 		-	boundary
+	
+	Content-length??
+
+	encoding ??
 =================================================================================================
 

@@ -2,6 +2,11 @@
 # define REQUEST_HPP
 
 
+#include <string>
+#include <vector>
+
+#include "../header/Header.hpp"
+
 namespace ft
 {
 	class Request
@@ -10,7 +15,13 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
+			std::string	_msg;
 			
+			std::string	_method;
+			std::string	_path;
+			std::string	_version;
+			std::vector<Header>	_headers;
+			std::string	_body;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================

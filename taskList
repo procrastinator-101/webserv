@@ -1,0 +1,14 @@
+documentation of the config file
+	-	components
+	-	syntax
+	-	errors
+
+parse
+
+socket
+
+handle request
+
+handle response:
+	-	cgi
+	-	normal response

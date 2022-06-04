@@ -1,57 +1,58 @@
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#ifndef RESPONSE_HPP
+# define RESPONSE_HPP
 
-#include "Sockt.hpp"
-#include "../request/Request.hpp"
-#include "../response/Response.hpp"
+#include <string>
+#include <vector>
+
+#include "../header/Header.hpp"
 
 namespace ft
 {
-	class Client
+	class Response
 	{
 		//================================================================================================
 		//	attributes
 		//================================================================================================
 		private:
-			bool	_keepAlive;
-			Sockt	_sockt;
-			Request	_request;
-			Response	_response;
+			std::string	_msg;
+			HttpStatus	_status;
+			std::string	_body;
+			std::vector<Header>	_headers;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
-
 		//================================================================================================
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
 		public:
-			Client();
-			~Client();
+			Response();
+			~Response();
 
-			Client(const Client& src);
+			Response(const Response& src);
 
-			Client	&operator=(const Client& rop);
+			Response	&operator=(const Response& rop);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================
 
 
 		//================================================================================================
-		//	Client operations
+		//	Response operations
 		//================================================================================================
 		public:
 		//================================================================================================
-		//	Client operations End
+		//	Response operations End
 		//================================================================================================
 
 		//================================================================================================
 		//	private methods
 		//================================================================================================
 		private:
-			void	_deepCopy(const Client& src);
+			void	_deepCopy(const Response& src);
 		//================================================================================================
 		//	private methods End
 		//================================================================================================
 	};
 }
+
 #endif

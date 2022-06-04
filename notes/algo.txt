@@ -50,16 +50,26 @@ request:
 	-	method
 	-	path
 	-	version
-	-	headers : pair<string, string> : header, value
+	-	headers
 	-	body
 
+
+header :
+	-	key
+	-	value
+	+	checkValidity
 
 response:
 	-	msg
-	-	status code
-	-	headers : from the request
+	-	version
+	-	HttpStatus
+	-	headers : from the request or/and cgi
 	-	body
 
+
+HttpStatus:
+	code
+	msg
 
 sockt:
 	-	create

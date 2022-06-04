@@ -24,8 +24,7 @@ namespace ft
 			void	_deepCopy(const Server& src);
 
 		public:
-			//might throw : socket related problem
-			Server();
+			Server();//might throw : socket related problem
 			~Server();
 
 			Server(const Server& src);

@@ -1,57 +1,58 @@
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#ifndef HTTPSTATUS_HPP
+# define HTTPSTATUS_HPP
 
-#include "Sockt.hpp"
-#include "../request/Request.hpp"
-#include "../response/Response.hpp"
+#include <map>
+#include <string>
 
 namespace ft
 {
-	class Client
+	class HttpStatus
 	{
 		//================================================================================================
 		//	attributes
 		//================================================================================================
+		public:
+			int	code;
+			std::string	msg;
+
 		private:
-			bool	_keepAlive;
-			Sockt	_sockt;
-			Request	_request;
-			Response	_response;
+			static const std::map<int, std::string>	_library;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
-
 		//================================================================================================
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
 		public:
-			Client();
-			~Client();
+			~HttpStatus();
 
-			Client(const Client& src);
+			HttpStatus(int code = 200);
+			HttpStatus(std::string msg);
+			HttpStatus(const HttpStatus& src);
 
-			Client	&operator=(const Client& rop);
+			HttpStatus	&operator=(const HttpStatus& rop);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================
 
 
 		//================================================================================================
-		//	Client operations
+		//	HttpStatus operations
 		//================================================================================================
 		public:
 		//================================================================================================
-		//	Client operations End
+		//	HttpStatus operations End
 		//================================================================================================
 
 		//================================================================================================
 		//	private methods
 		//================================================================================================
 		private:
-			void	_deepCopy(const Client& src);
+			void	_deepCopy(const HttpStatus& src);
 		//================================================================================================
 		//	private methods End
 		//================================================================================================
 	};
 }
+
 #endif
