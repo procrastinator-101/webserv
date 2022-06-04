@@ -10,6 +10,7 @@ namespace ft
 	 * @brief 
 	 *	HttpStatus class offers a remap of a HTTP status code to its corresponding
 	 *	HTTP code message.
+	 *	the list is based on https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 	 */
 	
 	class HttpStatus
@@ -46,8 +47,8 @@ namespace ft
 		//	HttpStatus operations
 		//================================================================================================
 		public:
-			static int	resolve(const std::string msg);
-			static std::string	resolve(const int code);
+			static int	resolve(const std::string msg);//might throw
+			static std::string	resolve(const int code);//might throw
 		//================================================================================================
 		//	HttpStatus operations End
 		//================================================================================================

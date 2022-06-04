@@ -2,7 +2,7 @@
 
 namespace ft
 {
-	Response::Response() : _statusCode(200)
+	Response::Response()
 	{
 	}
 
@@ -10,7 +10,7 @@ namespace ft
 	{
 	}
 
-	Response::Response(const Response& src) : _statusCode(src._statusCode), _msg(src._msg), _body(src._body), _headers(src._headers)
+	Response::Response(const Response& src) : _msg(src._msg), _version(src._version), _status(src._status), _headers(src._headers), _body(src._body)
 	{
 	}
 
@@ -25,8 +25,9 @@ namespace ft
 	void	Response::_deepCopy(const Response& src)
 	{
 		_msg = src._msg;
-		_body = src._body;
+		_version = src._version;
+		_status = src._status;
 		_headers = src._headers;
-		_statusCode = src._statusCode;
+		_body = src._body;
 	}
 }

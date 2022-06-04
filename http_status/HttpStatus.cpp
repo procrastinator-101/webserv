@@ -35,6 +35,7 @@ namespace ft
 	{
 		if (_library.empty())
 			_initialiseLibrary();
+		
 		std::map<int, const std::string>::const_iterator	it = _library.begin();
 		std::map<int, const std::string>::const_iterator	ite = _library.end();
 
@@ -51,6 +52,7 @@ namespace ft
 	{
 		if (_library.empty())
 			_initialiseLibrary();
+		
 		std::map<int, const std::string>::const_iterator	it;
 
 		it = _library.find(code);
@@ -61,6 +63,11 @@ namespace ft
 
 	void	HttpStatus::_initialiseLibrary()
 	{
+		_setInformationalResponseCodes();
+		_setSuccessCodes();
+		_setRedirectionCodes();
+		_setClientErrorCodes();
+		_setServerErrorCodes();
 	}
 
 	void	HttpStatus::_setInformationalResponseCodes()

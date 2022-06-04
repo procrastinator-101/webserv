@@ -1,11 +1,11 @@
-#ifndef HEADER_HPP
-# define HEADER_HPP
+#ifndef HEADERFIELD_HPP
+# define HEADERFIELD_HPP
 
 #include <string>
 
 namespace ft
 {
-	class Header
+	class HeaderField
 	{
 		//================================================================================================
 		//	attributes
@@ -21,13 +21,13 @@ namespace ft
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
 		public:
-			Header();
-			~Header();
+			HeaderField();
+			~HeaderField();
 
-			Header(const Header& src);
-			Header(const std::string& key, const std::string& value);
+			HeaderField(const HeaderField& src);
+			HeaderField(const std::string& key, const std::string& value);
 
-			Header	&operator=(const Header& rop);
+			HeaderField	&operator=(const HeaderField& rop);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================
@@ -45,7 +45,7 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
-			void	_deepCopy(const Header& src);
+			void	_deepCopy(const HeaderField& src);
 		//================================================================================================
 		//	private methods End
 		//================================================================================================

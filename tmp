@@ -1,0 +1,100 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: youness <marvin@42.fr>                     +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/09/28 22:37:58 by youness           #+#    #+#              #
+#    Updated: 2021/10/20 19:08:26 by yarroubi         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+Author = younes
+
+NAME = webserv
+
+CC = clang++
+CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
+
+# sockets
+#================================================================================
+SOCKET_PATH = sockets
+SOCKET_SRC = sockets
+SOCKET_HDR = sockets
+#================================================================================
+
+# request
+#================================================================================
+REQUEST_PATH = request
+REQUEST_SRC = request
+REQUEST_HDR = request
+#================================================================================
+
+# response
+#================================================================================
+RESPONSE_PATH = response
+RESPONSE_SRC = response
+RESPONSE_HDR = response
+#================================================================================
+
+# server
+#================================================================================
+SERVER_PATH = server
+SERVER_SRC = server
+SERVER_HDR = server
+#================================================================================
+
+# client
+#================================================================================
+CLIENT_PATH = client
+CLIENT_SRC = client
+CLIENT_HDR = client
+#================================================================================
+
+# location
+#================================================================================
+LOCATION_PATH = location
+LOCATION_SRC = location
+LOCATION_HDR = location
+#================================================================================
+
+# http_status
+#================================================================================
+HTTP_STATUS_PATH = http_status
+HTTP_STATUS_SRC = http_status
+HTTP_STATUS_HDR = http_status
+#================================================================================
+
+# header_field
+#================================================================================
+HEADER_FIELD_PATH = header_field
+HEADER_FIELD_SRC = header_field
+HEADER_FIELD_HDR = header_field
+#================================================================================
+
+
+HDR = 
+
+OBJ = $(SRC:.cpp=.o)
+
+all : $(NAME)
+
+$(SERVER) : $(SERVER_SRC) $(SERVER_HDR)
+	@$(CC) $(CFLAGS) -o $@ $(SERVER_SRC)
+
+$(CLIENT) : $(CLIENT_SRC) $(CLIENT_HDR)
+	@$(CC) $(CFLAGS) -o $@ $(CLIENT_SRC)
+
+%.o: %.cpp
+	@$(CC) $(CFLAGS) -o $@ -c $<
+
+clean:
+	@rm -rf $(OBJ)
+
+fclean: clean
+	@rm -rf $(NAME)
+
+re: fclean all
+
+.PHONY : clean fclean re

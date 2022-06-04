@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "../header/Header.hpp"
+#include "../http_status/HttpStatus.hpp"
+#include "../header_field/HeaderField.hpp"
 
 namespace ft
 {
@@ -15,9 +16,10 @@ namespace ft
 		//================================================================================================
 		private:
 			std::string	_msg;
+			std::string	_version;
 			HttpStatus	_status;
+			std::vector<HeaderField>	_headers;
 			std::string	_body;
-			std::vector<Header>	_headers;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================

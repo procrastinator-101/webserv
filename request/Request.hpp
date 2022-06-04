@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../header/Header.hpp"
+#include "../header_field/HeaderField.hpp"
 
 namespace ft
 {
@@ -20,7 +20,7 @@ namespace ft
 			std::string	_method;
 			std::string	_path;
 			std::string	_version;
-			std::vector<Header>	_headers;
+			std::vector<HeaderField>	_headers;
 			std::string	_body;
 		//================================================================================================
 		//	attributes End
