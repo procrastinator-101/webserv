@@ -17,74 +17,96 @@ NAME = webserv
 CC = clang++
 CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
-# sockets
-#================================================================================
-SOCKET_PATH = sockets
-SOCKET_SRC = 
-SOCKET_HDR = 
-#================================================================================
 
-# request
-#================================================================================
-REQUEST_PATH = request
-REQUEST_SRC = 
-REQUEST_HDR = 
-#================================================================================
-
-# response
-#================================================================================
-RESPONSE_PATH = response
-RESPONSE_SRC = 
-RESPONSE_HDR = 
-#================================================================================
-
-# server
-#================================================================================
-SERVER_PATH = server
-SERVER_SRC = 
-SERVER_HDR = 
-#================================================================================
+SRCS_PATH = srcs
 
 # client
 #================================================================================
-CLIENT_PATH = client
-CLIENT_SRC = 
-CLIENT_HDR = 
-#================================================================================
+CLIENT_PATH = $(SRCS_PATH)/client
 
-# location
-#================================================================================
-LOCATION_PATH = location
-LOCATION_SRC = 
-LOCATION_HDR = 
-#================================================================================
-
-# http_status
-#================================================================================
-HTTP_STATUS_PATH = http_status
-HTTP_STATUS_SRC = 
-HTTP_STATUS_HDR = 
+CLIENT_SRC = $(CLIENT_PATH)/Client.cpp
+CLIENT_HDR = $(CLIENT_PATH)/Client.hpp
 #================================================================================
 
 # header_field
 #================================================================================
-HEADER_FIELD_PATH = header_field
-HEADER_FIELD_SRC = 
-HEADER_FIELD_HDR = 
+HEADER_FIELD_PATH = $(SRCS_PATH)/header_field
+
+HEADER_FIELD_SRC = $(HEADER_FIELD_PATH)/HeaderField.cpp
+HEADER_FIELD_HDR = $(HEADER_FIELD_PATH)/HeaderField.hpp
+#================================================================================
+
+# http_status
+#================================================================================
+HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
+
+HTTP_STATUS_SRC = $(HTTP_STATUS_PATH)/HttpStatus.cpp
+HTTP_STATUS_HDR = $(HTTP_STATUS_PATH)/HttpStatus.hpp
+#================================================================================
+
+# location
+#================================================================================
+LOCATION_PATH = $(SRCS_PATH)/location
+
+LOCATION_SRC = $(LOCATION_PATH)/Location.cpp
+LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
+#================================================================================
+
+# nginy
+#================================================================================
+NGINY_PATH = $(SRCS_PATH)/nginy
+
+NGINY_SRC = $(NGINY_PATH)/Nginy.cpp
+NGINY_HDR = $(NGINY_PATH)/Nginy.hpp
+#================================================================================
+
+# request
+#================================================================================
+REQUEST_PATH = $(SRCS_PATH)/request
+
+REQUEST_SRC = $(REQUEST_PATH)/Request.cpp
+REQUEST_HDR = $(REQUEST_PATH)/Request.hpp
+#================================================================================
+
+# response
+#================================================================================
+RESPONSE_PATH = $(SRCS_PATH)/response
+
+RESPONSE_SRC = $(RESPONSE_PATH)/Response.cpp
+RESPONSE_HDR = $(RESPONSE_PATH)/Response.hpp
+#================================================================================
+
+# server
+#================================================================================
+SERVER_PATH = $(SRCS_PATH)/server
+
+SERVER_SRC = $(SERVER_PATH)/Server.cpp
+SERVER_HDR = $(SERVER_PATH)/Server.hpp
+#================================================================================
+
+# sockt
+#================================================================================
+SOCKT_PATH = $(SRCS_PATH)/sockt
+
+SOCKT_SRC = $(SOCKT_PATH)/Sockt.cpp
+SOCKT_HDR = $(SOCKT_PATH)/Sockt.hpp
 #================================================================================
 
 
-HDR = 
+
+SRC =	$(CLIENT_SRC) $(HEADER_FIELD_SRC) $(HTTP_STATUS_SRC) $(LOCATION_SRC) \
+		$(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) $(SERVER_SRC) $(SOCKT_SRC)
+
+HDR =	$(CLIENT_HDR) $(HEADER_FIELD_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) \
+		$(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR)
+
 
 OBJ = $(SRC:.cpp=.o)
 
 all : $(NAME)
 
-$(SERVER) : $(SERVER_SRC) $(SERVER_HDR)
-	@$(CC) $(CFLAGS) -o $@ $(SERVER_SRC)
-
-$(CLIENT) : $(CLIENT_SRC) $(CLIENT_HDR)
-	@$(CC) $(CFLAGS) -o $@ $(CLIENT_SRC)
+$(NAME) : $(SRC) $(HDR)
+	@$(CC) $(CFLAGS) -o $@ $(SRC)
 
 %.o: %.cpp
 	@$(CC) $(CFLAGS) -o $@ -c $<

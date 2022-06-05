@@ -1,7 +1,7 @@
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
-#include "Sockt.hpp"
+#include "../sockt/Sockt.hpp"
 #include "../request/Request.hpp"
 #include "../response/Response.hpp"
 

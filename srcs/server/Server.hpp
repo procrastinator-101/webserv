@@ -5,9 +5,9 @@
 #include <map>
 #include <string>
 
-#include "Sockt.hpp"
-#include "Client.hpp"
-#include "Location.hpp"
+#include "../sockt/Sockt.hpp"
+#include "../client/Client.hpp"
+#include "../location/Location.hpp"
 
 namespace ft
 {

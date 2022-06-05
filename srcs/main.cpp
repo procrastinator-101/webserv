@@ -1,7 +1,4 @@
-#include "webserv.hpp"
-#include <cstdlib>
-#include <exception>
-#include <stdexcept>
+#include "Nginy.hpp"
 
 int main(int argc, char** argv)
 {
