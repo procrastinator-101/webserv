@@ -1,6 +1,6 @@
-make --dry-run --always-make --keep-going --print-directory
+make --dry-run --keep-going --print-directory
 make: Entering directory `/Users/yarroubi/Desktop/webserv'
+clang++ -Wall -Werror -Wextra -std=c++98 -fsanitize=address -o webserv srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockt/Sockt.cpp
+ 
 make: Leaving directory `/Users/yarroubi/Desktop/webserv'
  
-make: *** No rule to make target `webserv', needed by `all'.
-
