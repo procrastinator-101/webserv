@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <sys/_types/_fd_def.h>
+
 #include "../sockt/Sockt.hpp"
 
 #include "../client/Client.hpp"
@@ -55,6 +57,7 @@ namespace ft
 		//	Nginy operations
 		//================================================================================================
 		public:
+			void	select();
 		//================================================================================================
 		//	Nginy operations End
 		//================================================================================================
@@ -65,6 +68,7 @@ namespace ft
 		private:
 			void	_parseConfigFile();
 			void	_deepCopy(const Nginy& src);
+			fd_set	_getMonitoredSockets() const;
 		//================================================================================================
 		//	private methods End
 		//================================================================================================

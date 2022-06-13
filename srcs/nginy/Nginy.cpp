@@ -1,5 +1,5 @@
 #include "Nginy.hpp"
-#include <fstream>
+#include <sys/_types/_fd_def.h>
 
 namespace ft
 {
@@ -26,7 +26,25 @@ namespace ft
 		_deepCopy(rop);
 		return *this;
 	}
+
+	void	Nginy::select()
+	{
+		fd_set	monitoredSockets;
+
+		monitoredSockets = _getMonitoredSockets();
+	}
 	
+	fd_set	Nginy::_getMonitoredSockets() const
+	{
+		fd_set	ret;
+
+		FD_ZERO(&ret);
+		for (std::vector<Server>::size_type i = 0; i < _servers.size(); i++)
+		{
+			
+		}
+	}
+
 	void	Nginy::_parseConfigFile()
 	{
 

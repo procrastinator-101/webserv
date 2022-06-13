@@ -10,7 +10,14 @@ namespace ft
 	{
 	}
 
-	Location::Location(const Location& src) : _index(src._index), _methods(src._methods), _defaultFile(src._defaultFile)
+	Location::Location(std::ifstream& configFile)
+	{
+		if (configFile.eof())
+			return;
+	}
+
+	Location::Location(const Location& src) :	_root(src._root), _autoIndex(src._autoIndex), _methods(src._methods), _indexes(src._indexes),
+												_redirections(src._redirections), _uploadPath(src._uploadPath)
 	{
 	}
 
@@ -24,8 +31,11 @@ namespace ft
 
 	void	Location::_deepCopy(const Location& src)
 	{
-		_index = src._index;
+		_root = src._root;
+		_autoIndex = src._autoIndex;
 		_methods = src._methods;
-		_defaultFile = src._defaultFile;
+		_indexes = src._indexes;
+		_redirections = src._redirections;
+		_uploadPath = src._uploadPath;
 	}
 }

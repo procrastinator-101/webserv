@@ -23,19 +23,24 @@ handle response:
 	-	
 
 server:
-	-	socket
-	-	servername
-	-	aliases (other servernames)
+	-	socket : ip port
+	-	servernames
 	-	root
+	-	allowed methods
+	-	indexes
+	-	error pages
 	-	served locations
 	-	clients
 
 
 location:
-	-	allowed methods
-	-	redirections
+	-	root
 	-	auto index
-	-	default served file
+	-	allowed methods
+	-	indexes
+	-	redirections
+	-	uploadPath
+	-	default served file??
 
 
 client:
@@ -87,3 +92,11 @@ serverSockt:
 clientSockt
 	-	setup
 	-	wakeup
+
+
+nginy
+token = server
+	server tmp(configFile)
+		_locations.insert(location tmp(configFile));
+
+
