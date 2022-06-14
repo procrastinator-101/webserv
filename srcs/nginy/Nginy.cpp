@@ -47,7 +47,40 @@ namespace ft
 
 	void	Nginy::_parseConfigFile()
 	{
+		std::string	line;
 
+		_configFile.open(_configFileName.c_str());
+		if (!_configFile.is_open())
+			throw std::runtime_error("Could not open config file");
+
+		while (std::getline(_configFile, line))
+		{
+			if (line.empty())
+				continue ;
+			std::stringstream	lineStream(line);
+			std::string			key;
+			lineStream >> key;
+			if (key[0] == '#')
+				continue ;
+			if (key == "server")
+			{
+				try
+				{
+					Server	server_tmp(_configFile);
+					_servers.push_back(server_tmp);
+				}
+				catch (std::exception& e)
+				{
+					// std::cerr << "Error: " << e.what() << std::endl;
+					throw std::runtime_error("Error: " + std::string(e.what()));
+				}
+			}
+			else {
+				throw std::runtime_error("Invalid config file");
+			}
+		}
+		if (_configFile.close() != 0)
+			throw std::runtime_error("Could not close config file");
 	}
 	
 	void	Nginy::_deepCopy(const Nginy& src)
