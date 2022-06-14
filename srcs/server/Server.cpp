@@ -53,30 +53,42 @@ namespace ft
 				inside_server = 0;
 				break ;
 			}
-			else if (key == "listen" && lineStream)
+			else if (key == "listen" && lineStream.good())
 			{
+				lineStream >> value;
+				if (lineStream.good())
+					throw std::runtime_error("Server: too many arguments for listen");
 				
-				Sockt	socket(::inet_addr("127.0.0.1"), 8080, Sockt::defaultBacklog);
-	// *****************************************************************************************
+				std::vector<std::string> tmp;
+				tmp = ft::split(value, ":");
+				
+				if (tmp.size() != 2)
+					throw std::runtime_error("Server: listen: invalid add/port");
+
+				std::stringstream	add(tmp[0]);
+				srd::string			port(tmp[1]);
+
+				tmp.clear();
+				Sockt	socket(add, port, Sockt::defaultBacklog);
 			}
-			else if (key == "root" && lineStream)
+			else if (key == "root" && lineStream.good())
 			{
 				lineStream >> value;
 				if (value != "#")
 					_root = value;
 				else
 					throw std::runtime_error("Server: root is not valid");
-				if (lineStream)
+				if (lineStream.good())
 				{
 					lineStream >> value;
 					if (value != "#")
 						throw std::runtime_error("Server: too many arguments for root");
 				}
 			}
-			else if (key == "index" && lineStream)
+			else if (key == "index" && lineStream.good())
 			{
 				int size = _indexes.size();
-				while (lineStream)
+				while (lineStream.good())
 				{
 					if (value == "#")
 						break ;
@@ -86,13 +98,13 @@ namespace ft
 				if (_indexes.size() - size == 0)
 					throw std::runtime_error("Server: index is not valid");
 			}
-			else if (key == "error_page" && lineStream)//invalid code
+			else if (key == "error_page" && lineStream.good())//invalid code
 			{
 				std::string code_str;
 				lineStream >> code_str;
 				if (code_str == "#")
 					throw std::runtime_error("Server: error_page is not valid");
-				if (lineStream && is_num(code_str))
+				if (lineStream.good() && is_num(code_str))
 				{
 					int code = std::stoi(code_str);
 					lineStream >> value;
@@ -100,17 +112,17 @@ namespace ft
 				}
 				else
 					throw std::runtime_error("error_page: invalid code/page");
-				if (lineStream)
+				if (lineStream.good())
 				{
 					lineStream >> value;
 					if (value != "#")
 						throw std::runtime_error("Server: too many arguments for error_page");
 				}
 			}
-			else if (key == "methods")
+			else if (key == "methods" && lineStream.good())
 			{
 				int size = _methods.size();
-				while (lineStream)
+				while (lineStream.good())
 				{
 					lineStream >> value;
 					if (value == "#")
@@ -123,10 +135,10 @@ namespace ft
 				if (_methods.size() - size == 0)
 					throw std::runtime_error("Server: methods is not valid");
 			}
-			else if (key == "server_name" && lineStream)
+			else if (key == "server_name" && lineStream.good())
 			{
 				int size = _names.size();
-				while (lineStream)
+				while (lineStream.good())
 				{
 					lineStream >> value;
 					if (value == "#")
@@ -136,13 +148,13 @@ namespace ft
 				if (_names.size() - size == 0)
 					throw std::runtime_error("Server: server_name is not valid");
 			}
-			else if (key == "location" && lineStream)
+			else if (key == "location" && lineStream.good())
 			{
 				std::string path;
 				lineStream >> path;
 				if (path == "#")
 					throw std::runtime_error("Server: location is not valid");
-				if (lineStream)
+				if (lineStream.good())
 				{
 					lineStream >> value;
 					if (value != "#")
@@ -150,7 +162,6 @@ namespace ft
 				}
 				Location location_tmp(configFile);
 				_locations[path] = location_tmp;
-				
 			}
 			else
 				throw std::runtime_error("Server: config file is not valid");
