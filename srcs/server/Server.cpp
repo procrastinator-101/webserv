@@ -1,6 +1,7 @@
 #include "Server.hpp"
 #include <sys/_select.h>
 #include <sys/_types/_fd_def.h>
+#include <sys/_types/_size_t.h>
 #include <sys/_types/_timeval.h>
 #include <utility>
 
@@ -15,160 +16,161 @@ namespace ft
 	{
 	}
 
-	static	bool is_num(std::string &str)
+	// static	bool is_num(std::string &str)
+	// {
+	// 	for (size_t i = 0; i < str.size(); i++)
+	// 	{
+	// 		if (str[i] < '0' || str[i] > '9')
+	// 			return false;
+	// 	}
+	// 	return true;
+	// }
+
+	Server::Server(std::ifstream& configFile)
 	{
-		for (int i = 0; i < str.size(); i++)
-		{
-			if (str[i] < '0' || str[i] > '9')
-				return false;
-		}
-		return true;
-	}
+		// int					inside_server = 0;
+		// std::string			line;
 
-	Server::Server(std::ifstream& configFile) : _names(), _root(NULL), _methods(), _indexes(), _errorPages(), _clients(), _locations()
-	{
-		int					inside_server = 0;
-		std::string			line;
+		// std::getline(configFile, line);
+		// std::stringstream	ss(line);
+		// std ::string		token;
+		// ss >> token;
+		// if (token != "{")
+		// 	throw std::runtime_error("Server: config file is not valid");
 
-		std::getline(configFile, line);
-		std::stringstream	ss(line);
-		std ::string		token;
-		ss >> token;
-		if (token != "{")
-			throw std::runtime_error("Server: config file is not valid");
-
-		while (std::getline(configFile, line))
-		{
-			inside_server = 1;
-			if (line.empty())
-				continue ;
-			std::stringstream	lineStream(line);
-			std::string			key;
-			std::string			value;
-			lineStream >> key;
-			if (key[0] == '#')
-				continue ;
-			if (key == "}")
-			{
-				inside_server = 0;
-				break ;
-			}
-			else if (key == "listen" && lineStream.good())
-			{
-				lineStream >> value;
-				if (lineStream.good())
-					throw std::runtime_error("Server: too many arguments for listen");
+		// while (std::getline(configFile, line))
+		// {
+		// 	inside_server = 1;
+		// 	if (line.empty())
+		// 		continue ;
+		// 	std::stringstream	lineStream(line);
+		// 	std::string			key;
+		// 	std::string			value;
+		// 	lineStream >> key;
+		// 	if (key[0] == '#')
+		// 		continue ;
+		// 	if (key == "}")
+		// 	{
+		// 		inside_server = 0;
+		// 		break ;
+		// 	}
+		// 	else if (key == "listen" && lineStream.good())
+		// 	{
+		// 		lineStream >> value;
+		// 		if (lineStream.good())
+		// 			throw std::runtime_error("Server: too many arguments for listen");
 				
-				std::vector<std::string> tmp;
-				tmp = ft::split(value, ":");
+		// 		std::vector<std::string> tmp;
+		// 		tmp = ft::split(value, ":");
 				
-				if (tmp.size() != 2)
-					throw std::runtime_error("Server: listen: invalid add/port");
+		// 		if (tmp.size() != 2)
+		// 			throw std::runtime_error("Server: listen: invalid add/port");
 
-				std::stringstream	add(tmp[0]);
-				srd::string			port(tmp[1]);
+		// 		std::stringstream	add(tmp[0]);
+		// 		srd::string			port(tmp[1]);
 
-				tmp.clear();
-				Sockt	socket(add, port, Sockt::defaultBacklog);
-			}
-			else if (key == "root" && lineStream.good())
-			{
-				lineStream >> value;
-				if (value != "#")
-					_root = value;
-				else
-					throw std::runtime_error("Server: root is not valid");
-				if (lineStream.good())
-				{
-					lineStream >> value;
-					if (value != "#")
-						throw std::runtime_error("Server: too many arguments for root");
-				}
-			}
-			else if (key == "index" && lineStream.good())
-			{
-				int size = _indexes.size();
-				while (lineStream.good())
-				{
-					if (value == "#")
-						break ;
-					lineStream >> value;
-					_indexes.insert(value);
-				}
-				if (_indexes.size() - size == 0)
-					throw std::runtime_error("Server: index is not valid");
-			}
-			else if (key == "error_page" && lineStream.good())//invalid code
-			{
-				std::string code_str;
-				lineStream >> code_str;
-				if (code_str == "#")
-					throw std::runtime_error("Server: error_page is not valid");
-				if (lineStream.good() && is_num(code_str))
-				{
-					int code = std::stoi(code_str);
-					lineStream >> value;
-					_errorPages[code] = value;
-				}
-				else
-					throw std::runtime_error("error_page: invalid code/page");
-				if (lineStream.good())
-				{
-					lineStream >> value;
-					if (value != "#")
-						throw std::runtime_error("Server: too many arguments for error_page");
-				}
-			}
-			else if (key == "methods" && lineStream.good())
-			{
-				int size = _methods.size();
-				while (lineStream.good())
-				{
-					lineStream >> value;
-					if (value == "#")
-						break ;
-					if (value == "GET" || value == "POST" || value == "DELETE")
-						_methods.insert(value);
-					else
-						throw std::runtime_error("Invalid method");
-				}
-				if (_methods.size() - size == 0)
-					throw std::runtime_error("Server: methods is not valid");
-			}
-			else if (key == "server_name" && lineStream.good())
-			{
-				int size = _names.size();
-				while (lineStream.good())
-				{
-					lineStream >> value;
-					if (value == "#")
-						break ;
-					_names.insert(value);
-				}
-				if (_names.size() - size == 0)
-					throw std::runtime_error("Server: server_name is not valid");
-			}
-			else if (key == "location" && lineStream.good())
-			{
-				std::string path;
-				lineStream >> path;
-				if (path == "#")
-					throw std::runtime_error("Server: location is not valid");
-				if (lineStream.good())
-				{
-					lineStream >> value;
-					if (value != "#")
-						throw std::runtime_error("Server: too many arguments for location");
-				}
-				Location location_tmp(configFile);
-				_locations[path] = location_tmp;
-			}
-			else
-				throw std::runtime_error("Server: config file is not valid");
-		}
-		if (inside_server == 1 || _locations.size() == 0)
-			throw std::runtime_error("Server: config file is not valid");
-		
+		// 		tmp.clear();
+		// 		Sockt	socket(add, port, Sockt::defaultBacklog);
+		// 	}
+		// 	else if (key == "root" && lineStream.good())
+		// 	{
+		// 		lineStream >> value;
+		// 		if (value != "#")
+		// 			_root = value;
+		// 		else
+		// 			throw std::runtime_error("Server: root is not valid");
+		// 		if (lineStream.good())
+		// 		{
+		// 			lineStream >> value;
+		// 			if (value != "#")
+		// 				throw std::runtime_error("Server: too many arguments for root");
+		// 		}
+		// 	}
+		// 	else if (key == "index" && lineStream.good())
+		// 	{
+		// 		int size = _indexes.size();
+		// 		while (lineStream.good())
+		// 		{
+		// 			if (value == "#")
+		// 				break ;
+		// 			lineStream >> value;
+		// 			_indexes.insert(value);
+		// 		}
+		// 		if (_indexes.size() - size == 0)
+		// 			throw std::runtime_error("Server: index is not valid");
+		// 	}
+		// 	else if (key == "error_page" && lineStream.good())//invalid code
+		// 	{
+		// 		std::string code_str;
+		// 		lineStream >> code_str;
+		// 		if (code_str == "#")
+		// 			throw std::runtime_error("Server: error_page is not valid");
+		// 		if (lineStream.good() && is_num(code_str))
+		// 		{
+		// 			int code = std::stoi(code_str);
+		// 			lineStream >> value;
+		// 			_errorPages[code] = value;
+		// 		}
+		// 		else
+		// 			throw std::runtime_error("error_page: invalid code/page");
+		// 		if (lineStream.good())
+		// 		{
+		// 			lineStream >> value;
+		// 			if (value != "#")
+		// 				throw std::runtime_error("Server: too many arguments for error_page");
+		// 		}
+		// 	}
+		// 	else if (key == "methods" && lineStream.good())
+		// 	{
+		// 		int size = _methods.size();
+		// 		while (lineStream.good())
+		// 		{
+		// 			lineStream >> value;
+		// 			if (value == "#")
+		// 				break ;
+		// 			if (value == "GET" || value == "POST" || value == "DELETE")
+		// 				_methods.insert(value);
+		// 			else
+		// 				throw std::runtime_error("Invalid method");
+		// 		}
+		// 		if (_methods.size() - size == 0)
+		// 			throw std::runtime_error("Server: methods is not valid");
+		// 	}
+		// 	else if (key == "server_name" && lineStream.good())
+		// 	{
+		// 		int size = _names.size();
+		// 		while (lineStream.good())
+		// 		{
+		// 			lineStream >> value;
+		// 			if (value == "#")
+		// 				break ;
+		// 			_names.insert(value);
+		// 		}
+		// 		if (_names.size() - size == 0)
+		// 			throw std::runtime_error("Server: server_name is not valid");
+		// 	}
+		// 	else if (key == "location" && lineStream.good())
+		// 	{
+		// 		std::string path;
+		// 		lineStream >> path;
+		// 		if (path == "#")
+		// 			throw std::runtime_error("Server: location is not valid");
+		// 		if (lineStream.good())
+		// 		{
+		// 			lineStream >> value;
+		// 			if (value != "#")
+		// 				throw std::runtime_error("Server: too many arguments for location");
+		// 		}
+		// 		Location location_tmp(configFile);
+		// 		_locations[path] = location_tmp;
+		// 	}
+		// 	else
+		// 		throw std::runtime_error("Server: config file is not valid");
+		// }
+		// if (inside_server == 1 || _locations.size() == 0)
+		// 	throw std::runtime_error("Server: config file is not valid");
+		if (configFile.eof())
+			return;
 	}
 
 	Server::Server(const Server& src) :	_sockt(src._sockt), _names(src._names), _root(src._root), _autoIndex(src._autoIndex), _methods(src._methods),
