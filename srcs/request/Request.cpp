@@ -77,7 +77,7 @@ namespace ft
 		}
 		return std::min(i + 1, msgLines.size());
 	}
-
+	
 	size_t	Request::_parseBody(std::vector<std::string>& msgLines, size_t offset)
 	{
 		size_t	i;
