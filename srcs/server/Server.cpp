@@ -55,7 +55,7 @@ namespace ft
 			}
 			else if (key == "listen" && lineStream)
 			{
-// *****************************************************************************************
+	// *****************************************************************************************
 			}
 			else if (key == "root" && lineStream)
 			{
@@ -84,7 +84,7 @@ namespace ft
 				if (_indexes.size() - size == 0)
 					throw std::runtime_error("Server: index is not valid");
 			}
-			else if (key == "error_page" && lineStream)
+			else if (key == "error_page" && lineStream)//invalid code
 			{
 				std::string code_str;
 				lineStream >> code_str;
@@ -134,12 +134,27 @@ namespace ft
 				if (_names.size() - size == 0)
 					throw std::runtime_error("Server: server_name is not valid");
 			}
-		
-
-			
-			
-			
-		}
+			else if (key == "location" && listStream)
+			{
+				std::string path;
+				lineStream >> path;
+				if (path == "#")
+					throw std::runtime_error("Server: location is not valid");
+				if (lineStream)
+				{
+					lineStream >> value;
+					if (value != "#")
+						throw std::runtime_error("Server: too many arguments for location");
+				}
+				try {
+					Location location_tmp(configFile);
+					_locations[path] = location_tmp;
+				}
+				catch (std::runtime_error &e)
+					throw std::runtime_error(std::string(e.what()));
+			}
+			else
+				throw std::runtime_error("Server: config file is not valid");
 		if (inside_server == 1 || _locations.size() == 0)
 			throw std::runtime_error("Server: config file is not valid");
 	}
