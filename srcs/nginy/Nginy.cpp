@@ -81,8 +81,7 @@ namespace ft
 		}
 		if (_servers.empty())
 			throw std::runtime_error("config file: No server found");
-		if (_configFile.close() != 0)
-			throw std::runtime_error("Could not close config file");
+		_configFile.close();
 	}
 	
 	void	Nginy::_deepCopy(const Nginy& src)
