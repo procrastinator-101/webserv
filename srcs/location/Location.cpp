@@ -182,7 +182,11 @@ namespace ft
 
 		// take server data
 		if (_root == NULL)
+		{
+			if (root == NULL)
+				throw std::runtime_error("Location: root is not valid");
 			_root = root;
+		}
 		if (_autoIndex == false)
 			_autoIndex = autoIndex;
 		if (_indexes.empty())
