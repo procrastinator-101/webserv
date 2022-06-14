@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <exception>
 #include <sys/_select.h>
 #include <sys/_types/_fd_def.h>
 #include <sys/_types/_size_t.h>
@@ -54,25 +55,25 @@ namespace ft
 				inside_server = 0;
 				break ;
 			}
-			else if (key == "listen" && lineStream.good())
-			{
-				lineStream >> value;
-				if (lineStream.good())
-					throw std::runtime_error("Server: too many arguments for listen");
+			// else if (key == "listen" && lineStream.good())
+			// {
+			// 	lineStream >> value;
+			// 	if (lineStream.good())
+			// 		throw std::runtime_error("Server: too many arguments for listen");
 				
-				std::vector<std::string> tmp;
-				tmp = ft::split(value, ":");
+			// 	std::vector<std::string> tmp;
+			// 	tmp = ft::split(value, ":");
 				
-				if (tmp.size() != 2)
-					throw std::runtime_error("Server: listen: invalid add/port");
+			// 	if (tmp.size() != 2)
+			// 		throw std::runtime_error("Server: listen: invalid add/port");
 
-				std::string		add(tmp[0]);
-				std::string		port(tmp[1]);
+			// 	std::string		add(tmp[0]);
+			// 	std::string		port(tmp[1]);
 
-				tmp.clear();
-				Sockt	sockt_tmp(add, port, Sockt::defaultBacklog);
-				_sockt = sockt_tmp;
-			}
+			// 	tmp.clear();
+			// 	Sockt	sockt_tmp(add, port, Sockt::defaultBacklog);
+			// 	_sockt = sockt_tmp;
+			// }
 			else if (key == "root" && lineStream.good())
 			{
 				lineStream >> value;
@@ -108,7 +109,15 @@ namespace ft
 					throw std::runtime_error("Server: error_page is not valid");
 				if (lineStream.good() && is_num(code_str))
 				{
-					int code = std::stoi(code_str);
+					int code = ::atoi(code_str.c_str());
+					try
+					{
+						HttpStatus::resolve(code);
+					}
+					catch (std::exception& e)
+					{
+						//
+					}
 					lineStream >> value;
 					_errorPages[code] = value;
 				}
