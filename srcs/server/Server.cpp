@@ -65,11 +65,11 @@ namespace ft
 				if (tmp.size() != 2)
 					throw std::runtime_error("Server: listen: invalid add/port");
 
-				std::stringstream	add(tmp[0]);
-				std::string			port(tmp[1]);
+				std::string		add(tmp[0]);
+				std::string		port(tmp[1]);
 
 				tmp.clear();
-				Sockt	socket(add, port, Sockt::defaultBacklog);
+				Sockt	sockt_tmp(add, port, Sockt::defaultBacklog);
 			}
 			else if (key == "root" && lineStream.good())
 			{
