@@ -1,4 +1,5 @@
 #include "Location.hpp"
+#include <sstream>
 
 namespace ft
 {
@@ -79,7 +80,7 @@ namespace ft
 			throw std::runtime_error("Location: multiple autoIndex");
 		streamLine >> token;
 		if (token == "on")
-			_autoIndex = true;
+			_autoIndex = on;
 		else if (token != "off")
 			throw std::runtime_error("Location: autoindex is not valid");
 		if (streamLine.good())
@@ -104,8 +105,8 @@ namespace ft
 	void	Location::threat_return(std::stringstream& streamLine, std::string& token)
 	{
 		std::string code_str;
-		lineStream >> code_str;
-		if (lineStream.good() && is_num(code_str))
+		streamLine >> code_str;
+		if (streamLine.good() && is_num(code_str))
 		{
 			int code = ::atoi(code_str.c_str());
 			try
@@ -116,14 +117,14 @@ namespace ft
 			{
 				throw std::runtime_error("Location: return: invalid code");
 			}
-			lineStream >> token;
+			streamLine >> token;
 			_redirection = std::make_pair(code, token);
 		}
 		else
 			throw std::runtime_error("Location: invalid code/path");
-		if (lineStream.good())
+		if (streamLine.good())
 		{
-			lineStream >> token;
+			streamLine >> token;
 			if (token != "#")
 				throw std::runtime_error("Location: too many arguments for return");
 		}
@@ -139,16 +140,16 @@ namespace ft
 		else if (token == "methods" && streamLine.good())
 			threat_methods(streamLine, token);
 		else if (token == "index" && streamLine.good())
-			threat_index(streamLine, token);
+			threat_indexes(streamLine, token);
 		else if (token == "upload" && streamLine.good())
 			threat_upload(streamLine, token);
 		else if (token == "autoindex" && streamLine.good())
-			threat_autoindexd(streamLine, token);
+			threat_autoindex(streamLine, token);
 		else if (token == "return" && streamLine.good())
 			threat_return(streamLine, token);
 	}
 
-	Location::Location(std::ifstream& configFile, std::string& root, status autoIndex, std::set<std::string>& indexes, std::set<std::string>& methods) : _root(NULL), _autoIndex(false), _methods(), _indexes(), _redirections(), _uploadPath(NULL)
+	Location::Location(std::ifstream& configFile, std::string& root, status autoIndex, std::set<std::string>& indexes, std::set<std::string>& methods) : _root(""), _autoIndex(off), _methods(), _indexes(), _redirection(), _uploadPath(NULL)
 	{
 		int				inside_location = 0;
 		std::string		line;
@@ -181,9 +182,9 @@ namespace ft
 			throw std::runtime_error("Location: config file is not valid");
 
 		// take server data
-		if (_root == NULL)
+		if (_root == "")
 		{
-			if (root == NULL)
+			if (root == "")
 				throw std::runtime_error("Location: root is not valid");
 			_root = root;
 		}
@@ -206,7 +207,7 @@ namespace ft
 	}
 
 	Location::Location(const Location& src) :	_root(src._root), _autoIndex(src._autoIndex), _methods(src._methods), _indexes(src._indexes),
-												_redirections(src._redirections), _uploadPath(src._uploadPath)
+												_redirection(src._redirection), _uploadPath(src._uploadPath)
 	{
 	}
 
@@ -224,7 +225,7 @@ namespace ft
 		_autoIndex = src._autoIndex;
 		_methods = src._methods;
 		_indexes = src._indexes;
-		_redirections = src._redirections;
+		_redirection = src._redirection;
 		_uploadPath = src._uploadPath;
 	}
 }

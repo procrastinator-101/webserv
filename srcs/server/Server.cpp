@@ -27,7 +27,7 @@ namespace ft
 		return true;
 	}
 
-	static void		threat_autoindex(std::stringstream& streamLine, std::string& token)
+	void		Server::threat_autoindex(std::stringstream& streamLine, std::string& token)
 	{
 		static int i = 0;
 
@@ -35,7 +35,7 @@ namespace ft
 			throw std::runtime_error("Server: multiple autoIndex");
 		streamLine >> token;
 		if (token == "on")
-			_autoIndex = true;
+			_autoIndex = on;
 		else if (token != "off")
 			throw std::runtime_error("Server: autoindex is not valid");
 		if (streamLine.good())
@@ -47,7 +47,7 @@ namespace ft
 		i = 1;
 	}
 
-	Server::Server(std::ifstream& configFile) : _names(), _root(NULL), _autoIndex(false), _methods(), _indexes(), _errorPages(), _locations()
+	Server::Server(std::ifstream& configFile) : _names(), _root(""), _autoIndex(off), _methods(), _indexes(), _errorPages(), _locations()
 	{
 		int					inside_server = 0;
 		std::string			line;

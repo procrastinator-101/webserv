@@ -6,6 +6,8 @@
 #include <string>
 #include <fstream>
 
+#include "../http_status/HttpStatus.hpp"
+
 namespace ft
 {
 	enum status

@@ -68,6 +68,7 @@ namespace ft
 		private:
 			void	_deepCopy(const Server& src);
 			fd_set	_getRawFdSet() const;
+			void	threat_autoindex(std::stringstream& streamLine, std::string& token);
 		//================================================================================================
 		//	private methods End
 		//================================================================================================
