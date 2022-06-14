@@ -19,13 +19,12 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			std::string	_msg;
-			
-			std::string	_method;
-			std::string	_path;
-			std::string	_version;
+			std::string					_msg;
+			std::string					_method;
+			std::string					_path;
+			std::string					_version;
 			std::vector<HeaderField>	_headers;
-			std::string	_body;
+			std::string					_body;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================

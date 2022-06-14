@@ -21,7 +21,7 @@ namespace ft
 			return;
 	}
 
-	Server::Server(const Server& src) :	_sockt(src._sockt), _names(src._names), _root(src._root), _methods(src._methods),
+	Server::Server(const Server& src) :	_sockt(src._sockt), _names(src._names), _root(src._root), _autoIndex(src._autoIndex), _methods(src._methods),
 										_indexes(src._indexes), _errorPages(src._errorPages), _locations(src._locations),
 										_clients(src._clients)
 	{
@@ -98,6 +98,7 @@ namespace ft
 		_sockt = src._sockt;
 		_names = src._names;
 		_root = src._root;
+		_autoIndex = src._autoIndex;
 		_methods = src._methods;
 		_indexes = src._indexes;
 		_errorPages = src._errorPages;

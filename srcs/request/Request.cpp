@@ -39,14 +39,18 @@ namespace ft
 		size_t	offset;
 		std::vector<std::string>	msgLines;
 
+		//split message by \n
 		msgLines = split(_msg, "\n");
-		for (size_t i = 0; i < msgLines.size(); i++)
-		{
-			std::cout << "line : " << msgLines[i] << std::endl;
-		}
+
+		//parse the message
 		offset = _parseStartLine(msgLines);
 		offset = _parseHeaders(msgLines, 1);
 		_parseBody(msgLines, offset);
+
+		//check if the request is valid
+		if (_method == "GET" && !_body.empty())
+			throw std::runtime_error("Bad Request");
+		
 	}
 
 	size_t	Request::_parseStartLine(std::vector<std::string>& msgLines)
@@ -82,11 +86,12 @@ namespace ft
 	size_t	Request::_parseBody(std::vector<std::string>& msgLines, size_t offset)
 	{
 		size_t	i;
+
 		for (i = offset; i < msgLines.size(); i++)
 		{
 			_body.append(msgLines[i]);
-			if (msgLines.s)
-			_body.append("\n");
+			if (i < msgLines.size() - 1)
+				_body.append("\n");
 		}
 		return i;
 	}
