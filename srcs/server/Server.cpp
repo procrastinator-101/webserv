@@ -66,7 +66,7 @@ namespace ft
 					throw std::runtime_error("Server: listen: invalid add/port");
 
 				std::stringstream	add(tmp[0]);
-				srd::string			port(tmp[1]);
+				std::string			port(tmp[1]);
 
 				tmp.clear();
 				Sockt	socket(add, port, Sockt::defaultBacklog);
