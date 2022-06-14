@@ -55,6 +55,8 @@ namespace ft
 			}
 			else if (key == "listen" && lineStream)
 			{
+				
+				Sockt	socket(::inet_addr("127.0.0.1"), 8080, Sockt::defaultBacklog);
 	// *****************************************************************************************
 			}
 			else if (key == "root" && lineStream)
@@ -134,7 +136,7 @@ namespace ft
 				if (_names.size() - size == 0)
 					throw std::runtime_error("Server: server_name is not valid");
 			}
-			else if (key == "location" && listStream)
+			else if (key == "location" && lineStream)
 			{
 				std::string path;
 				lineStream >> path;
@@ -146,17 +148,16 @@ namespace ft
 					if (value != "#")
 						throw std::runtime_error("Server: too many arguments for location");
 				}
-				try {
-					Location location_tmp(configFile);
-					_locations[path] = location_tmp;
-				}
-				catch (std::runtime_error &e)
-					throw std::runtime_error(std::string(e.what()));
+				Location location_tmp(configFile);
+				_locations[path] = location_tmp;
+				
 			}
 			else
 				throw std::runtime_error("Server: config file is not valid");
+		}
 		if (inside_server == 1 || _locations.size() == 0)
 			throw std::runtime_error("Server: config file is not valid");
+		
 	}
 
 	Server::Server(const Server& src) :	_sockt(src._sockt), _names(src._names), _root(src._root), _autoIndex(src._autoIndex), _methods(src._methods),

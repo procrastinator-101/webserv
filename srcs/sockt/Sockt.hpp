@@ -7,6 +7,8 @@
 #include <sys/socket.h>
 #include <sys/_types/_socklen_t.h>
 
+#include <arpa/inet.h>//!!!!!!!!!
+
 #include <ostream>
 #include <iomanip>
 #include <iostream>
@@ -74,6 +76,7 @@ namespace ft
 
 			Sockt(const Sockt& src);
 			Sockt(const int& fd, const int& backlog, const sockaddr_in& address);
+			Sockt(const std::string& ipAddress, const std::string& port, const int& bcklog = Sockt::defaultBacklog);
 
 			//for server sockets only
 			Sockt(const in_addr_t& ipAddress, const in_port_t& port, const int& bcklog, const bool& isDry = false);//might throw
