@@ -27,7 +27,7 @@ namespace ft
 		return true;
 	}
 
-	Server::Server(std::ifstream& configFile)
+	Server::Server(std::ifstream& configFile) : _names(), _root(NULL), _autoIndex(off), _methods(), _indexes(), _errorPages(), _locations()
 	{
 		int					inside_server = 0;
 		std::string			line;
@@ -48,7 +48,7 @@ namespace ft
 			std::string			key;
 			std::string			value;
 			lineStream >> key;
-			if (key[0] == '#')
+			if (key == "#")
 				continue ;
 			if (key == "}")
 			{
@@ -116,7 +116,7 @@ namespace ft
 					}
 					catch (std::exception& e)
 					{
-						//
+						throw std::runtime_error("Server: error_page: invalid code");
 					}
 					lineStream >> value;
 					_errorPages[code] = value;

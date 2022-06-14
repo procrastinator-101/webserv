@@ -60,7 +60,7 @@ namespace ft
 			std::stringstream	lineStream(line);
 			std::string			key;
 			lineStream >> key;
-			if (key[0] == '#')
+			if (key == "#")
 				continue ;
 			if (key == "server")
 			{
