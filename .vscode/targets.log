@@ -8,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Mon Jun 13 13:08:16 2022
+# Make data base, printed on Tue Jun 14 12:28:06 2022
 
 # Variables
 
@@ -18,12 +18,13 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 ?F = $(notdir $?)
 # makefile (from `Makefile', line 92)
 SOCKT_HDR = $(SOCKT_PATH)/Sockt.hpp
-# makefile (from `Makefile', line 105)
+# makefile (from `Makefile', line 115)
 OBJ = $(SRC:.cpp=.o)
 # makefile (from `Makefile', line 59)
 NGINY_SRC = $(NGINY_PATH)/Nginy.cpp
-# makefile (from `Makefile', line 97)
-SRC = $(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HEADER_FIELD_SRC) $(HTTP_STATUS_SRC) $(LOCATION_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) $(SERVER_SRC) $(SOCKT_SRC)
+# makefile (from `Makefile', line 106)
+ 
+SRC = $(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HEADER_FIELD_SRC) $(HTTP_STATUS_SRC) $(LOCATION_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) $(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
 # environment
 VSCODE_LOG_NATIVE = false
 # automatic
@@ -48,6 +49,8 @@ _ = /usr/bin/make
 CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
 # makefile (from `Makefile', line 49)
 LOCATION_PATH = $(SRCS_PATH)/location
+# makefile (from `Makefile', line 100)
+STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 # makefile (from `Makefile', line 89)
 SOCKT_PATH = $(SRCS_PATH)/sockt
 # makefile (from `Makefile', line 1)
@@ -59,11 +62,13 @@ SERVER_HDR = $(SERVER_PATH)/Server.hpp
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-22a343ea-ea87-4000-91ea-4c4a3ed03fcd.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-d629f67d-89a7-480a-b410-98dbc48d8b12.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.sd4onfIYlw/Render
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.OUwClkg95p/Render
+# makefile (from `Makefile', line 97)
+STDLIB_PATH = $(SRCS_PATH)/stdlib
 # environment
 PATH = /Users/yarroubi/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki
 # makefile (from `Makefile', line 44)
@@ -81,7 +86,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from `Makefile', line 41)
 HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.MmwM5dufe6/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.AaKMm1daDb/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -148,6 +153,8 @@ USER = yarroubi
 NAME = webserv
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
+# makefile (from `Makefile', line 99)
+STDLIB_SRC = $(STDLIB_PATH)/split.cpp
 # default
 MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
 # default
@@ -169,7 +176,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.microsoft.VSCode.4840
+XPC_SERVICE_NAME = com.microsoft.VSCode.1212
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
@@ -196,8 +203,8 @@ SUFFIXES :=
 .INCLUDE_DIRS = /usr/local/include
 # makefile (from `Makefile', line 68)
 REQUEST_HDR = $(REQUEST_PATH)/Request.hpp
-# makefile (from `Makefile', line 101)
-HDR = $(CLIENT_HDR) $(HEADER_FIELD_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR)
+# makefile (from `Makefile', line 110)
+HDR = $(CLIENT_HDR) $(HEADER_FIELD_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR) $(STDLIB_HDR)
 # environment
 MAKELEVEL := 0
 # environment
@@ -205,11 +212,11 @@ LANG = C
 # makefile (from `Makefile', line 35)
 HEADER_FIELD_SRC = $(HEADER_FIELD_PATH)/HeaderField.cpp
 # environment
-VSCODE_PID = 3937
+VSCODE_PID = 3696
 # makefile (from `Makefile', line 52)
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 # variable set hash-table stats:
-# Load=98/1024=10%, Rehash=0, Collisions=14/214=7%
+# Load=101/1024=10%, Rehash=0, Collisions=14/226=6%
 
 # Pattern-specific Variable Values
 
@@ -224,7 +231,8 @@ LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 # Implicit Rules
 
 %.o: %.cpp
-#  commands to execute (from `Makefile', line 113):
+ 
+#  commands to execute (from `Makefile', line 123):
 	@$(CC) $(CFLAGS) -o $@ -c $<
 	
 
@@ -235,7 +243,7 @@ LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 # Not a target:
 srcs/server/Server.hpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-05 14:28:34
+#  Last modified 2022-06-13 18:10:21
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -244,7 +252,7 @@ srcs/server/Server.hpp:
 # Not a target:
 srcs/location/Location.hpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-05 14:22:19
+#  Last modified 2022-06-13 14:39:58
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -257,12 +265,12 @@ all: webserv
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/33=0%
+# Load=0/32=0%, Rehash=0, Collisions=0/36=0%
 
-webserv: srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockt/Sockt.cpp srcs/client/Client.hpp srcs/header_field/HeaderField.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockt/Sockt.hpp
+webserv: srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockt/Sockt.cpp srcs/stdlib/split.cpp srcs/client/Client.hpp srcs/header_field/HeaderField.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockt/Sockt.hpp srcs/stdlib/stdlib.hpp
 #  Implicit rule search has not been done.
 #  Implicit/static pattern stem: `'
-#  Last modified 2022-06-05 15:13:45
+#  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # automatic
@@ -272,19 +280,18 @@ webserv: srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp 
 # automatic
 # * := 
 # automatic
- 
-# + := srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockt/Sockt.cpp srcs/client/Client.hpp srcs/header_field/HeaderField.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockt/Sockt.hpp
+# + := srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockt/Sockt.cpp srcs/stdlib/split.cpp srcs/client/Client.hpp srcs/header_field/HeaderField.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockt/Sockt.hpp srcs/stdlib/stdlib.hpp
 # automatic
 # | := 
 # automatic
 # < := srcs/main.cpp
 # automatic
-# ^ := srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockt/Sockt.cpp srcs/client/Client.hpp srcs/header_field/HeaderField.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockt/Sockt.hpp
+# ^ := srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockt/Sockt.cpp srcs/stdlib/split.cpp srcs/client/Client.hpp srcs/header_field/HeaderField.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockt/Sockt.hpp srcs/stdlib/stdlib.hpp
 # automatic
-# ? := srcs/nginy/Nginy.cpp srcs/nginy/Nginy.hpp
+# ? := srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockt/Sockt.cpp srcs/stdlib/split.cpp srcs/client/Client.hpp srcs/header_field/HeaderField.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockt/Sockt.hpp srcs/stdlib/stdlib.hpp
 # variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=35/42=83%
-#  commands to execute (from `Makefile', line 110):
+# Load=8/32=25%, Rehash=0, Collisions=39/45=87%
+#  commands to execute (from `Makefile', line 120):
 	@$(CC) $(CFLAGS) -o $@ $(SRC)
 	
 
@@ -314,7 +321,7 @@ srcs/http_status/HttpStatus.cpp:
 # Not a target:
 srcs/request/Request.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-04 18:35:57
+#  Last modified 2022-06-14 12:23:59
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -338,7 +345,7 @@ srcs/header_field/HeaderField.cpp:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-05 15:11:55
+#  Last modified 2022-06-14 12:26:11
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -347,7 +354,16 @@ Makefile:
 # Not a target:
 srcs/nginy/Nginy.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-05 15:52:56
+#  Last modified 2022-06-13 18:58:33
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+srcs/stdlib/split.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-14 12:17:09
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -365,7 +381,7 @@ srcs/http_status/HttpStatus.hpp:
 # Not a target:
 srcs/request/Request.hpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-04 21:34:38
+#  Last modified 2022-06-14 12:19:39
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -383,7 +399,7 @@ srcs/header_field/HeaderField.hpp:
 # Not a target:
 srcs/nginy/Nginy.hpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-05 15:41:56
+#  Last modified 2022-06-13 18:13:00
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -394,14 +410,14 @@ fclean: clean
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 119):
+#  commands to execute (from `Makefile', line 129):
 	@rm -rf $(NAME)
 	
 
 # Not a target:
 srcs/main.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-05 15:13:36
+#  Last modified 2022-06-14 09:49:05
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -440,7 +456,7 @@ re: fclean all
 # Not a target:
 srcs/client/Client.hpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-05 15:04:32
+#  Last modified 2022-06-13 17:31:07
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -451,14 +467,24 @@ clean:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 116):
+#  commands to execute (from `Makefile', line 126):
 	@rm -rf $(OBJ)
 	
+
+ 
+# Not a target:
+srcs/stdlib/stdlib.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-14 12:18:22
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
 srcs/sockt/Sockt.hpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-03 16:34:00
+#  Last modified 2022-06-14 09:42:29
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -467,7 +493,7 @@ srcs/sockt/Sockt.hpp:
 # Not a target:
 srcs/server/Server.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-02 14:23:13
+#  Last modified 2022-06-13 18:59:09
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -476,7 +502,7 @@ srcs/server/Server.cpp:
 # Not a target:
 srcs/location/Location.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-05 14:22:19
+#  Last modified 2022-06-13 14:39:15
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -492,7 +518,7 @@ srcs/response/Response.cpp:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # files hash-table stats:
-# Load=28/1024=3%, Rehash=0, Collisions=0/68=0%
+# Load=30/1024=3%, Rehash=0, Collisions=0/72=0%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -504,6 +530,6 @@ srcs/response/Response.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Mon Jun 13 13:08:16 2022
+# Finished Make data base on Tue Jun 14 12:28:06 2022
 
  

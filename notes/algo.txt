@@ -2,16 +2,15 @@ for each server
 	-	create a socket
 	-	bind it to an address
 	-	listen on that socket
-	-	accept connecttions
-		-	if the client already accepted
-			-	use that client
-		-	otherwise
-			-	create a client for each accepted connection
-	-	select
-		-	request
+	-	select client
+	-	accept connection
+		-	is the client already accepted
+			-	yes : use that client
+			-	no : create a new client
+		-	is ready for input
 			-	recv
 			-	handle request
-		-	response
+		-	is ready for output
 			-	handle response
 			-	send
 

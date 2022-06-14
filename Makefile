@@ -92,14 +92,24 @@ SOCKT_SRC = $(SOCKT_PATH)/Sockt.cpp
 SOCKT_HDR = $(SOCKT_PATH)/Sockt.hpp
 #================================================================================
 
+# stdlib
+#================================================================================
+STDLIB_PATH = $(SRCS_PATH)/stdlib
+
+STDLIB_SRC = $(STDLIB_PATH)/split.cpp
+STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
+#================================================================================
+
+
 
 
 SRC =	$(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HEADER_FIELD_SRC) $(HTTP_STATUS_SRC) \
 		$(LOCATION_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) $(SERVER_SRC) \
-		$(SOCKT_SRC)
+		$(SOCKT_SRC) $(STDLIB_SRC)
 
 HDR =	$(CLIENT_HDR) $(HEADER_FIELD_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) \
-		$(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR)
+		$(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR) \
+		$(STDLIB_HDR)
 
 
 OBJ = $(SRC:.cpp=.o)

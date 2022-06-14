@@ -2,9 +2,13 @@
 # define REQUEST_HPP
 
 
+#include <sstream>
+#include <iomanip>
 #include <string>
+#include <sys/_types/_size_t.h>
 #include <vector>
 
+#include "../stdlib/stdlib.hpp"
 #include "../header_field/HeaderField.hpp"
 
 namespace ft
@@ -32,6 +36,7 @@ namespace ft
 			Request();
 			~Request();
 
+			Request(std::string& msg);
 			Request(const Request& src);
 
 			Request	&operator=(const Request& rop);
@@ -44,6 +49,10 @@ namespace ft
 		//	Request operations
 		//================================================================================================
 		public:
+			void	_parseMessage();
+			size_t	_parseStartLine(std::vector<std::string>& msgLines);
+			size_t	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
+			size_t	_parseBody(std::vector<std::string>& msgLines, size_t offset);
 		//================================================================================================
 		//	Request operations End
 		//================================================================================================
@@ -55,6 +64,15 @@ namespace ft
 			void	_deepCopy(const Request& src);
 		//================================================================================================
 		//	private methods End
+		//================================================================================================
+
+		//================================================================================================
+		//	overload << for Sockt
+		//================================================================================================
+		public:
+			friend std::ostream	&operator<<(std::ostream& ostr, const Request& request);
+		//================================================================================================
+		//	overload << for Sockt End
 		//================================================================================================
 	};
 }

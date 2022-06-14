@@ -1,5 +1,7 @@
 #include "Nginy.hpp"
+#include <stdexcept>
 #include <sys/_types/_fd_def.h>
+#include <utility>
 
 namespace ft
 {
@@ -27,23 +29,21 @@ namespace ft
 		return *this;
 	}
 
-	void	Nginy::select()
+	void	Nginy::serve()
 	{
-		fd_set	monitoredSockets;
-
-		monitoredSockets = _getMonitoredSockets();
-	}
-	
-	fd_set	Nginy::_getMonitoredSockets() const
-	{
-		fd_set	ret;
-
-		FD_ZERO(&ret);
-		for (std::vector<Server>::size_type i = 0; i < _servers.size(); i++)
+		std::pair<Client*, action>	client;
+		for (std::vector<Server>::size_type i = 0; i < _servers.size();)
 		{
-			
+			client = _servers[i].select();
+			// if (client.second == aWrite)
+			// 	client.first->handleResponse();
+			// else if ()
+			// 	client.first->handleRequest();
+			// else
+				i++;
 		}
 	}
+	
 
 	void	Nginy::_parseConfigFile()
 	{

@@ -1,4 +1,11 @@
 #include "Request.hpp"
+#include <cstring>
+#include <sstream>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <sys/_types/_size_t.h>
+#include <vector>
 
 namespace ft
 {
@@ -8,6 +15,11 @@ namespace ft
 
 	Request::~Request()
 	{
+	}
+
+	Request::Request(std::string& msg) : _msg(msg)
+	{
+		_parseMessage();
 	}
 
 	Request::Request(const Request& src) : _msg(src._msg), _method(src._method), _path(src._body), _version(src._version), _headers(src._headers), _body(src._body)
@@ -22,6 +34,63 @@ namespace ft
 		return *this;
 	}
 
+	void	Request::_parseMessage()
+	{
+		size_t	offset;
+		std::vector<std::string>	msgLines;
+
+		msgLines = split(_msg, "\n");
+		for (size_t i = 0; i < msgLines.size(); i++)
+		{
+			std::cout << "line : " << msgLines[i] << std::endl;
+		}
+		offset = _parseStartLine(msgLines);
+		offset = _parseHeaders(msgLines, 1);
+		_parseBody(msgLines, offset);
+	}
+
+	size_t	Request::_parseStartLine(std::vector<std::string>& msgLines)
+	{
+		std::vector<std::string>	startLine;
+
+		if (msgLines.empty())
+			throw std::runtime_error("Bad Request");
+		startLine = split(msgLines[0], " ");
+		if (startLine.size() != 3)
+			throw std::runtime_error("Bad Request");
+		_method = startLine[0];
+		_path = startLine[1];
+		_version = startLine[2];
+		return 1;
+	}
+
+	size_t	Request::_parseHeaders(std::vector<std::string>& msgLines, size_t offset)
+	{
+		size_t	i;
+		std::vector<std::string>	header;
+
+		for (i = offset; i < msgLines.size() && !msgLines[i].empty(); i++)
+		{
+			header = split(msgLines[i], ": ");
+			if (header.size() != 2)
+				throw std::runtime_error("Bad Request");
+			_headers.push_back(HeaderField(header[0], header[1]));
+		}
+		return std::min(i + 1, msgLines.size());
+	}
+
+	size_t	Request::_parseBody(std::vector<std::string>& msgLines, size_t offset)
+	{
+		size_t	i;
+		for (i = offset; i < msgLines.size(); i++)
+		{
+			_body.append(msgLines[i]);
+			if (msgLines.s)
+			_body.append("\n");
+		}
+		return i;
+	}
+	
 	void	Request::_deepCopy(const Request& src)
 	{
 		_msg = src._msg;
@@ -30,5 +99,24 @@ namespace ft
 		_version = src._version;
 		_headers = src._headers;
 		_body = src._body;
+	}
+
+	std::ostream	&operator<<(std::ostream& ostr, const ft::Request& request)
+	{
+		const int	fieldSize = 30;
+
+		ostr << std::left;
+		ostr << "____________________________ Request ____________________________" << std::endl;
+		ostr << "-- start line ----------------" << std::endl;
+		ostr << std::setw(fieldSize) << "method : " << request._method << std::endl;
+		ostr << std::setw(fieldSize) << "path : " << request._path << std::endl;
+		ostr << std::setw(fieldSize) << "version : " << request._version << std::endl;
+		ostr << "-- headers--------------------" << std::endl;
+		for (size_t i = 0; i < request._headers.size(); i++)
+			ostr << std::setw(fieldSize) << request._headers[i].key << " : " << request._headers[i].value << std::endl;
+		ostr << "-- body ----------------------" << std::endl;
+		ostr << request._body << std::endl;
+		ostr << "________________________________________________________________" << std::endl;
+		return ostr;
 	}
 }
