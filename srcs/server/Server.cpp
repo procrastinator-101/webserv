@@ -15,7 +15,7 @@ namespace ft
 	{
 	}
 
-	static	is_num(std::string &str)
+	static	bool is_num(std::string &str)
 	{
 		for (int i = 0; i < str.size(); i++)
 		{
@@ -113,7 +113,7 @@ namespace ft
 					lineStream >> value;
 					if (value == "#")
 						break ;
-					if (value == "GET" || value == "POST" value == "DELETE")
+					if (value == "GET" || value == "POST" || value == "DELETE")
 						_methods.insert(value);
 					else
 						throw std::runtime_error("Invalid method");

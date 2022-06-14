@@ -79,6 +79,8 @@ namespace ft
 				throw std::runtime_error("Invalid config file");
 			}
 		}
+		if (_servers.empty())
+			throw std::runtime_error("config file: No server found");
 		if (_configFile.close() != 0)
 			throw std::runtime_error("Could not close config file");
 	}
