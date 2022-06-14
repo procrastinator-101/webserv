@@ -1,16 +1,21 @@
-for each server
-	-	create a socket
-	-	bind it to an address
-	-	listen on that socket
-	-	select client
-	-	accept connection
-		-	is the client already accepted
-			-	yes : use that client
-			-	no : create a new client
-		-	is ready for input
+-	initiate servers:
+	for each server
+		-	create a socket
+		-	bind it to an address
+		-	listen on that socket
+-	add all the servers the monitored fds
+-	select on the monitored fds
+	*	if ready to read
+		-	fd is server socket:
+			-	accept the connection
+			-	add the new connection to the monitored fds
+		-	fd is a client socket
 			-	recv
 			-	handle request
-		-	is ready for output
+	*	if ready to write
+		-	fd is server socket:
+			-	ignore
+		-	fd is a client socket
 			-	handle response
 			-	send
 
