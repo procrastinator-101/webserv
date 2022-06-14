@@ -70,6 +70,7 @@ namespace ft
 
 				tmp.clear();
 				Sockt	sockt_tmp(add, port, Sockt::defaultBacklog);
+				_sockt = sockt_tmp;
 			}
 			else if (key == "root" && lineStream.good())
 			{
