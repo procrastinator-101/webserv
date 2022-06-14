@@ -27,7 +27,27 @@ namespace ft
 		return true;
 	}
 
-	Server::Server(std::ifstream& configFile) : _names(), _root(NULL), _autoIndex(off), _methods(), _indexes(), _errorPages(), _locations()
+	static void		threat_autoindex(std::stringstream& streamLine, std::string& token)
+	{
+		static int i = 0;
+
+		if (i == 1)
+			throw std::runtime_error("Server: multiple autoIndex");
+		streamLine >> token;
+		if (token == "on")
+			_autoIndex = true;
+		else if (token != "off")
+			throw std::runtime_error("Server: autoindex is not valid");
+		if (streamLine.good())
+		{
+			streamLine >> token;
+			if (token != "#")
+				throw std::runtime_error("Server: too many arguments for autoindex");
+		}
+		i = 1;
+	}
+
+	Server::Server(std::ifstream& configFile) : _names(), _root(NULL), _autoIndex(false), _methods(), _indexes(), _errorPages(), _locations()
 	{
 		int					inside_server = 0;
 		std::string			line;
@@ -93,9 +113,9 @@ namespace ft
 				int size = _indexes.size();
 				while (lineStream.good())
 				{
+					lineStream >> value;
 					if (value == "#")
 						break ;
-					lineStream >> value;
 					_indexes.insert(value);
 				}
 				if (_indexes.size() - size == 0)
@@ -141,7 +161,7 @@ namespace ft
 					if (value == "GET" || value == "POST" || value == "DELETE")
 						_methods.insert(value);
 					else
-						throw std::runtime_error("Invalid method");
+						throw std::runtime_error("Server: invalid method");
 				}
 				if (_methods.size() - size == 0)
 					throw std::runtime_error("Server: methods is not valid");
@@ -159,6 +179,8 @@ namespace ft
 				if (_names.size() - size == 0)
 					throw std::runtime_error("Server: server_name is not valid");
 			}
+			else if (key == "autoindex" && lineStream.good())
+				threat_autoindex(lineStream, value);
 			else if (key == "location" && lineStream.good())
 			{
 				std::string path;
@@ -171,7 +193,7 @@ namespace ft
 					if (value != "#")
 						throw std::runtime_error("Server: too many arguments for location");
 				}
-				Location location_tmp(configFile);
+				Location location_tmp(configFile, _root, _autoIndex, _indexes, _methods);
 				_locations[path] = location_tmp;
 			}
 			else
