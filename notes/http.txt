@@ -39,11 +39,6 @@ request format :
 	-	header
 	-	empty line
 	-	body
-
-
-body:
-	-	GET : no
-	-	POST : yes
 =================================================================================================
 
 
@@ -95,3 +90,27 @@ headers:
 	encoding ??
 =================================================================================================
 
+=================================================================================================
+GET:
+	-	body : no, but the spec does not forbid it
+	-	cacheable : yes
+=================================================================================================
+
+=================================================================================================
+POST:
+	-	body : yes
+	-	cacheable : Only if freshness information is included
+=================================================================================================
+
+=================================================================================================
+DELETE:
+	-	body : may
+	-	cacheable : no
+
+responses:
+	-	202 : status code if the action will likely succeed but has not yet been enacted.
+	-	204 : status code if the action has been enacted and no further information is to be supplied.
+	-	200 : status code if the action has been enacted and the response message includes a 
+			  representation describing the status (like an html index saying that the resource is 
+			  deleted).
+=================================================================================================

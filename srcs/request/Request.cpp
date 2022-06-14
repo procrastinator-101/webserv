@@ -46,11 +46,6 @@ namespace ft
 		offset = _parseStartLine(msgLines);
 		offset = _parseHeaders(msgLines, 1);
 		_parseBody(msgLines, offset);
-
-		//check if the request is valid
-		if (_method == "GET" && !_body.empty())
-			throw std::runtime_error("Bad Request");
-		
 	}
 
 	size_t	Request::_parseStartLine(std::vector<std::string>& msgLines)
