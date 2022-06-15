@@ -1,11 +1,5 @@
 #include "Selecter.hpp"
 #include "Action.hpp"
-#include <set>
-#include <stdexcept>
-#include <sys/_select.h>
-#include <sys/_types/_fd_def.h>
-#include <sys/_types/_timeval.h>
-#include <utility>
 
 namespace ft
 {
@@ -20,7 +14,9 @@ namespace ft
 	{
 	}
 
-	Selecter::Selecter(const Selecter& src) : _readfds(src._readfds), _writefds(src._writefds), _exceptfds(src._exceptfds)
+	Selecter::Selecter(const Selecter& src) :	_readfds(src._readfds), _writefds(src._writefds), _exceptfds(src._exceptfds),
+												_readMonitered(src._readMonitered), _writeMonitered(src._writeMonitered),
+												_exceptMonitered(src._exceptMonitered)
 	{
 	}
 
@@ -32,39 +28,41 @@ namespace ft
 		return *this;
 	}
 
-	void	Selecter::add(int fd, Action action)
+	void	Selecter::add(int fd, int options)
 	{
-		switch (action)
+		if (options & aRead)
 		{
-			case aAll:
-			case aRead:
-				FD_SET(fd, &_readfds);
-				_readMonitered.insert(fd);
-			case aWrite:
-				FD_SET(fd, &_writefds);
-				_writeMonitered.insert(fd);
-			case aExcept:
-				FD_SET(fd, &_exceptfds);
-				_exceptMonitered.insert(fd);
-			break;
+			FD_SET(fd, &_readfds);
+			_readMonitered.insert(fd);
+		}
+		if (options & aWrite)
+		{
+			FD_SET(fd, &_writefds);
+			_writeMonitered.insert(fd);
+		}
+		if (options & aExcept)
+		{
+			FD_SET(fd, &_exceptfds);
+			_exceptMonitered.insert(fd);
 		}
 	}
 
-	void	Selecter::del(int fd, Action action)
+	void	Selecter::del(int fd, int options)
 	{
-		switch (action)
+		if (options & aRead)
 		{
-			case aAll:
-			case aRead:
-				FD_CLR(fd, &_readfds);
-				_readMonitered.erase(fd);
-			case aWrite:
-				FD_CLR(fd, &_writefds);
-				_writeMonitered.erase(fd);
-			case aExcept:
-				FD_CLR(fd, &_exceptfds);
-				_exceptMonitered.erase(fd);
-			break;
+			FD_CLR(fd, &_readfds);
+			_readMonitered.erase(fd);
+		}
+		if (options & aWrite)
+		{
+			FD_CLR(fd, &_writefds);
+			_writeMonitered.erase(fd);
+		}
+		if (options & aExcept)
+		{
+			FD_CLR(fd, &_exceptfds);
+			_exceptMonitered.erase(fd);
 		}
 	}
 

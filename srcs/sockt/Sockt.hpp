@@ -5,13 +5,15 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include <sys/_types/_socklen_t.h>
+// #include <sys/_types/_socklen_t.h>
 
 #include <arpa/inet.h>//!!!!!!!!!
 
 #include <ostream>
 #include <iomanip>
 #include <iostream>
+
+#include <cstring>
 
 //colors
 #define BLACK "\x1B[0m"

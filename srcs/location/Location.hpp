@@ -6,6 +6,8 @@
 #include <string>
 #include <fstream>
 
+#include <cstdlib>
+
 #include "../http_status/HttpStatus.hpp"
 
 namespace ft

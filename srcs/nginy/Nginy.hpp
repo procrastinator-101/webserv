@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include <sys/_types/_fd_def.h>
+// #include <sys/_types/_fd_def.h>
 
 
 #include "../sockt/Sockt.hpp"
@@ -32,7 +32,6 @@ namespace ft
 		//================================================================================================
 		private:
 			std::string			_configFileName;
-			std::ifstream		_configFile;
 			Selecter			_multiplexer;
 			std::vector<Server>	_servers;
 		//================================================================================================
@@ -51,7 +50,7 @@ namespace ft
 			Nginy();
 			~Nginy();
 
-			Nginy(const std::string& configFile);
+			Nginy(const std::string& configFileName);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================

@@ -5,10 +5,10 @@ namespace ft
 {
 	enum Action
 	{
-		aWrite,
-		aRead,
-		aExcept,
-		aAll
+		aRead = 1,
+		aWrite = aRead * 2,
+		aExcept = aWrite * 2,
+		aAll = aRead | aWrite | aExcept
 	};
 }
 

@@ -1,8 +1,4 @@
 #include "Sockt.hpp"
-#include <exception>
-#include <netinet/in.h>
-#include <sys/_types/_socklen_t.h>
-#include <sys/socket.h>
 
 namespace ft
 {
@@ -88,7 +84,7 @@ namespace ft
 	{
 		int	ret;
 
-		ret = ::bind(fd, reinterpret_cast<sockaddr *>(&address), address.sin_len);
+		ret = ::bind(fd, reinterpret_cast<sockaddr *>(&address), addressLen);//!!!
 		if (ret < 0)
 			throw std::runtime_error("socket binding failure");
 	}
@@ -111,7 +107,7 @@ namespace ft
 		bzero(&dst, addressLen);
 		dst.sin_port = port;
 		dst.sin_family = AF_INET;
-		dst.sin_len = addressLen;
+		// dst.sin_len = addressLen;!!
 		dst.sin_addr.s_addr = ipAddress;
 
 		ret = ::connect(fd, reinterpret_cast<sockaddr *>(&dst), addressLen);
@@ -154,7 +150,7 @@ namespace ft
 		bzero(&address, addressLen);
 		address.sin_port = port;
 		address.sin_family = AF_INET;
-		address.sin_len = addressLen;
+		// address.sin_len = addressLen;
 		address.sin_addr.s_addr = ipAddress;
 
 		//set the backlog
@@ -169,7 +165,7 @@ namespace ft
 		ostr << "____________________________ Sockt ____________________________" << std::endl;
 		ostr << std::setw(fieldSize) << "fd : " << sockt.fd << std::endl;
 		ostr << std::setw(fieldSize) << "backlog : " << sockt.backlog << std::endl;
-		ostr << std::setw(fieldSize) << "sin_len : " << sockt.address.sin_len << std::endl;
+		// ostr << std::setw(fieldSize) << "sin_len : " << sockt.address.sin_len << std::endl;
 		ostr << std::setw(fieldSize) << "sin_family : " << sockt.address.sin_family << std::endl;
 		ostr << std::setw(fieldSize) << "sin_port : " << sockt.address.sin_port << std::endl;
 		ostr << std::setw(fieldSize) << "sin_addr : " << sockt.address.sin_addr.s_addr << std::endl;

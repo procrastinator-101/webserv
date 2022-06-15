@@ -3,8 +3,11 @@
 
 #include <set>
 #include <utility>
+#include <stdexcept>
+#include <exception>
+
 #include <sys/select.h>
-#include <sys/_types/_fd_def.h>
+// #include <sys/_types/_fd_def.h>
 
 #include "Action.hpp"
 
@@ -46,8 +49,8 @@ namespace ft
 		//	Selecter operations
 		//================================================================================================
 		public:
-			void	add(int fd, Action action);
-			void	del(int fd, Action action);
+			void	add(int fd, int options);
+			void	del(int fd, int options);
 
 			std::pair<int, Action>	fetch(unsigned long milliseconds = 0) const;
 		//================================================================================================

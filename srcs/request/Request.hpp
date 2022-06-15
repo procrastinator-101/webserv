@@ -1,12 +1,11 @@
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 
+#include <string>
+#include <vector>
 
 #include <sstream>
 #include <iomanip>
-#include <string>
-#include <sys/_types/_size_t.h>
-#include <vector>
 
 #include "../stdlib/stdlib.hpp"
 #include "../header_field/HeaderField.hpp"

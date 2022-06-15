@@ -1,11 +1,4 @@
 #include "Request.hpp"
-#include <cstring>
-#include <sstream>
-#include <iostream>
-#include <stdexcept>
-#include <string>
-#include <sys/_types/_size_t.h>
-#include <vector>
 
 namespace ft
 {

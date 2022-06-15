@@ -1,7 +1,5 @@
 #include "stdlib.hpp"
 
-#include <iostream>
-
 namespace ft
 {
 	std::vector<std::string>	split(std::string str, std::string delimiter)

@@ -1,8 +1,5 @@
 #include "Nginy.hpp"
-#include <stdexcept>
-#include <sys/_types/_fd_def.h>
-#include <sys/_types/_size_t.h>
-#include <utility>
+#include <fstream>
 
 namespace ft
 {
@@ -14,11 +11,11 @@ namespace ft
 	{
 	}
 
-	Nginy::Nginy(const std::string& configFile) : _configFile(configFile)
+	Nginy::Nginy(const std::string& configFileName) : _configFileName(configFileName)
 	{
 	}
 
-	Nginy::Nginy(const Nginy& src) : _configFileName(src._configFileName) ,_configFile(src._configFileName), _servers(src._servers)
+	Nginy::Nginy(const Nginy& src) : _configFileName(src._configFileName), _multiplexer(src._multiplexer), _servers(src._servers)
 	{
 	}
 
@@ -41,9 +38,15 @@ namespace ft
 				continue ;
 			for (size_t i = 0; i < _servers.size(); i++)
 			{
-				if (candidate.first == _servers[i].getFD())
+				if (candidate.first == _servers[i]._sockt.fd)
 				{
 					if (candidate.second == aRead)
+					{
+						Client	client;
+
+						client._sockt = _servers[i]._sockt.accept();
+						_servers[i]._clients[client._sockt.fd] = client;
+					}
 						;//accept the new connection
 					break ;
 				}
@@ -52,12 +55,12 @@ namespace ft
 			{
 				for (size_t j = 0; j < _servers[i]._clients.size(); j++)
 				{
-					if (candidate.first == _servers[j]._clients[j].getFD())
+					if (candidate.first == _servers[j]._clients[j]._sockt.fd)
 					{
 						if (candidate.second == aRead)
-							;//_servers[i].handleResponse();
+							std::cout << "handle response" << std::endl;//_servers[i].handleResponse();
 						else if (candidate.second == aWrite)
-							;//_servers[i].handleRequest();
+							std::cout << "handle request" << std::endl;;//_servers[i].handleRequest();
 						break ;
 					}
 				}
@@ -69,15 +72,16 @@ namespace ft
 	{
 		std::string			key;
 		std::string			line;
+		std::ifstream		configFile;
 		std::stringstream	lineStream;
 
-		_configFile.open(_configFileName.c_str());
-		if (!_configFile.is_open())
+		configFile.open(_configFileName.c_str());
+		if (!configFile.is_open())
 			throw std::runtime_error("Could not open config file");
 
-		while (_configFile.good())
+		while (configFile.good())
 		{
-			std::getline(_configFile, line);
+			std::getline(configFile, line);
 			if (line.empty())
 				continue ;
 			lineStream << line;
@@ -88,7 +92,7 @@ namespace ft
 			{
 				try
 				{
-					_servers.push_back(Server(_configFile));
+					_servers.push_back(Server(configFile));
 				}
 				catch (std::exception& e)
 				{
@@ -102,16 +106,13 @@ namespace ft
 		}
 		if (_servers.empty())
 			throw std::runtime_error("config file: No server found");
-		_configFile.close();
+		configFile.close();
 	}
 	
 	void	Nginy::_deepCopy(const Nginy& src)
 	{
 		_configFileName = src._configFileName;
-		//kind of = op for ifstream
-		_configFile.close();
-		_configFile.open(_configFileName, src._configFile.flags());//flags
-		_configFile.copyfmt(src._configFile);
+		_multiplexer = src._multiplexer;
 		_servers = src._servers;
 	}
 }

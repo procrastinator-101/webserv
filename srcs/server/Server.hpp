@@ -17,6 +17,7 @@ namespace ft
 {
 	class Server
 	{
+		friend class Nginy;
 		//================================================================================================
 		//	attributes
 		//================================================================================================
@@ -67,7 +68,15 @@ namespace ft
 		//================================================================================================
 		private:
 			void	_deepCopy(const Server& src);
-			void	_manageAutoIndex(std::stringstream& streamLine, std::string& token);
+
+			void	_fetchSockt(std::stringstream& lineStream);
+			void	_fetchServerNames(std::stringstream& lineStream);
+			void	_fetchRoot(std::stringstream& lineStream);
+			void	_fetchAutoIndex(std::stringstream& streamLine);
+			void	_fetchMethods(std::stringstream& lineStream);
+			void	_fetchIndexes(std::stringstream& lineStream);
+			void	_fetchErrorPages(std::stringstream& lineStream);
+			void	_fetchLocation(std::stringstream& lineStream, std::ifstream& configFile);
 		//================================================================================================
 		//	private methods End
 		//================================================================================================

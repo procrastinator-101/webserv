@@ -14,7 +14,7 @@ Author = younes
 
 NAME = webserv
 
-CC = clang++
+CC = g++
 CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
 
@@ -105,7 +105,8 @@ SOCKT_HDR = $(SOCKT_PATH)/Sockt.hpp
 #================================================================================
 STDLIB_PATH = $(SRCS_PATH)/stdlib
 
-STDLIB_SRC = $(STDLIB_PATH)/split.cpp
+STDLIB_SRC = $(STDLIB_PATH)/isnumber.cpp \
+			 $(STDLIB_PATH)/split.cpp
 STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 #================================================================================
 
