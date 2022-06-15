@@ -52,6 +52,15 @@ LOCATION_SRC = $(LOCATION_PATH)/Location.cpp
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 #================================================================================
 
+# multiplex
+#================================================================================
+MULTIPLEX_PATH = $(SRCS_PATH)/multiplex
+
+MULTIPLEX_SRC = $(MULTIPLEX_PATH)/Selecter.cpp
+MULTIPLEX_HDR = $(MULTIPLEX_PATH)/Action.hpp \
+				$(MULTIPLEX_PATH)/Selecter.hpp
+#================================================================================
+
 # nginy
 #================================================================================
 NGINY_PATH = $(SRCS_PATH)/nginy
@@ -104,12 +113,12 @@ STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 
 
 SRC =	$(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HEADER_FIELD_SRC) $(HTTP_STATUS_SRC) \
-		$(LOCATION_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) $(SERVER_SRC) \
-		$(SOCKT_SRC) $(STDLIB_SRC)
+		$(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) \
+		$(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
 
 HDR =	$(CLIENT_HDR) $(HEADER_FIELD_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) \
-		$(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR) \
-		$(STDLIB_HDR)
+		$(MULTIPLEX_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) \
+		$(SOCKT_HDR) $(STDLIB_HDR)
 
 
 OBJ = $(SRC:.cpp=.o)

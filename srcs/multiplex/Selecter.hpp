@@ -1,40 +1,27 @@
-#ifndef NGINY_HPP
-# define NGINY_HPP
+#ifndef SELECTER_HPP
+#define SELECTER_HPP
 
-#include <fstream>
-#include <string>
-#include <vector>
-
+#include <set>
+#include <utility>
+#include <sys/select.h>
 #include <sys/_types/_fd_def.h>
 
-
-#include "../sockt/Sockt.hpp"
-
-#include "../client/Client.hpp"
-#include "../server/Server.hpp"
-
-#include "../multiplex/Selecter.hpp"
-
-#include "../http_status/HttpStatus.hpp"
-#include "../header_field/HeaderField.hpp"
-
-#include "../location/Location.hpp"
-
-#include "../request/Request.hpp"
-#include "../response/Response.hpp"
+#include "Action.hpp"
 
 namespace ft
 {
-	class Nginy
+	class Selecter
 	{
 		//================================================================================================
 		//	attributes
 		//================================================================================================
 		private:
-			std::string			_configFileName;
-			std::ifstream		_configFile;
-			Selecter			_multiplexer;
-			std::vector<Server>	_servers;
+			fd_set	_readfds;
+			fd_set	_writefds;
+			fd_set	_exceptfds;
+			std::set<int>	_readMonitered;
+			std::set<int>	_writeMonitered;
+			std::set<int>	_exceptMonitered;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
@@ -43,27 +30,28 @@ namespace ft
 		//================================================================================================
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
-		private:
-			Nginy(const Nginy& src);
-			Nginy	&operator=(const Nginy& rop);
-
 		public:
-			Nginy();
-			~Nginy();
+			Selecter();
+			~Selecter();
 
-			Nginy(const std::string& configFile);
+			Selecter(const Selecter& src);
+
+			Selecter	&operator=(const Selecter& rop);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================
 
 
 		//================================================================================================
-		//	Nginy operations
+		//	Selecter operations
 		//================================================================================================
 		public:
-			void	serve();
+			void	add(int fd, Action action);
+			void	del(int fd, Action action);
+
+			std::pair<int, Action>	fetch(unsigned long milliseconds = 0) const;
 		//================================================================================================
-		//	Nginy operations End
+		//	Selecter operations End
 		//================================================================================================
 
 
@@ -71,8 +59,12 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
-			void	_parseConfigFile();
-			void	_deepCopy(const Nginy& src);
+			void	_deepCopy(const Selecter& src);
+
+			int	_checkFetchRead(fd_set readfds) const;
+			int	_checkFetchWrite(fd_set writefds) const;
+			int	_checkFetchExcept(fd_set exceptfds) const;
+			std::pair<int, Action>	_checkFetchedFds(fd_set readfds, fd_set writefds, fd_set exceptfds) const;
 		//================================================================================================
 		//	private methods End
 		//================================================================================================

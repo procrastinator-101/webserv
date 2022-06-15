@@ -104,3 +104,10 @@ token = server
 		_locations.insert(location tmp(configFile));
 
 
+multiplex:
+	*	
+	-	add fd
+	-	delete fd
+	-	multiplexFunction -> fetch
+
+

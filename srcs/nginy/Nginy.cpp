@@ -1,6 +1,7 @@
 #include "Nginy.hpp"
 #include <stdexcept>
 #include <sys/_types/_fd_def.h>
+#include <sys/_types/_size_t.h>
 #include <utility>
 
 namespace ft
@@ -31,34 +32,55 @@ namespace ft
 
 	void	Nginy::serve()
 	{
-		std::pair<Client*, action>	client;
-		for (std::vector<Server>::size_type i = 0; i < _servers.size();)
+		std::pair<int, Action>	candidate;
+
+		while (1)
 		{
-			client = _servers[i].select();
-			// if (client.second == aWrite)
-			// 	client.first->handleResponse();
-			// else if ()
-			// 	client.first->handleRequest();
-			// else
-				i++;
+			candidate = _multiplexer.fetch();
+			if (candidate.first == -1)
+				continue ;
+			for (size_t i = 0; i < _servers.size(); i++)
+			{
+				if (candidate.first == _servers[i].getFD())
+				{
+					if (candidate.second == aRead)
+						;//accept the new connection
+					break ;
+				}
+			}
+			for (size_t i = 0; i < _servers.size(); i++)
+			{
+				for (size_t j = 0; j < _servers[i]._clients.size(); j++)
+				{
+					if (candidate.first == _servers[j]._clients[j].getFD())
+					{
+						if (candidate.second == aRead)
+							;//_servers[i].handleResponse();
+						else if (candidate.second == aWrite)
+							;//_servers[i].handleRequest();
+						break ;
+					}
+				}
+			}
 		}
 	}
 	
-
 	void	Nginy::_parseConfigFile()
 	{
-		std::string	line;
+		std::string			key;
+		std::string			line;
+		std::stringstream	lineStream;
 
 		_configFile.open(_configFileName.c_str());
 		if (!_configFile.is_open())
 			throw std::runtime_error("Could not open config file");
 
-		while (std::getline(_configFile, line))
+		while (_configFile.good())
 		{
+			std::getline(_configFile, line);
 			if (line.empty())
 				continue ;
-			std::stringstream	lineStream(line);
-			std::string			key;
+			lineStream << line;
 			lineStream >> key;
 			if (key == "#")
 				continue ;
@@ -66,16 +88,15 @@ namespace ft
 			{
 				try
 				{
-					Server	server_tmp(_configFile);
-					_servers.push_back(server_tmp);
+					_servers.push_back(Server(_configFile));
 				}
 				catch (std::exception& e)
 				{
-					// std::cerr << "Error: " << e.what() << std::endl;
 					throw std::runtime_error("Error: " + std::string(e.what()));
 				}
 			}
-			else {
+			else
+			{
 				throw std::runtime_error("Invalid config file");
 			}
 		}

@@ -1,5 +1,6 @@
 make --dry-run --keep-going --print-directory
 make: Entering directory `/Users/yarroubi/Desktop/webserv'
-clang++ -Wall -Werror -Wextra -std=c++98 -fsanitize=address -o webserv srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockt/Sockt.cpp srcs/stdlib/split.cpp
+clang++ -Wall -Werror -Wextra -std=c++98 -fsanitize=address -o webserv srcs/main.cpp srcs/client/Client.cpp srcs/header_field/HeaderField.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockt/Sockt.cpp srcs/stdlib/split.cpp
+ 
 make: Leaving directory `/Users/yarroubi/Desktop/webserv'
  
