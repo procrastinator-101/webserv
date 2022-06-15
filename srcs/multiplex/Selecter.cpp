@@ -1,5 +1,6 @@
 #include "Selecter.hpp"
 #include "Action.hpp"
+#include <utility>
 
 namespace ft
 {
@@ -66,7 +67,7 @@ namespace ft
 		}
 	}
 
-	std::pair<int, Action>	Selecter::fetch(unsigned long milliseconds) const
+	std::map<int, int>	Selecter::fetch(unsigned long milliseconds) const
 	{
 		int		ret;
 		int		nfds;
@@ -105,59 +106,43 @@ namespace ft
 		return _checkFetchedFds(_readfdsCopy, _writefdsCopy, _exceptfdsCopy);
 	}
 
-	std::pair<int, Action>	Selecter::_checkFetchedFds(fd_set readfds, fd_set writefds, fd_set exceptfds) const
+	std::map<int, int>	Selecter::_checkFetchedFds(fd_set readfds, fd_set writefds, fd_set exceptfds) const
 	{
-		int	ret;
-
-		ret = _checkFetchRead(readfds);
-		if (ret >= 0)
-			return std::make_pair(ret, aRead);
-		ret = _checkFetchWrite(writefds);
-		if (ret >= 0)
-			return std::make_pair(ret, aWrite);
-		ret = _checkFetchExcept(exceptfds);
-		if (ret >= 0)
-			return std::make_pair(ret, aExcept);
-		return std::make_pair(ret, aAll);
-	}
-
-	int	Selecter::_checkFetchRead(fd_set readfds) const
-	{
+		std::map<int, int>	ret;
 		std::set<int>::const_iterator	it;
+		std::map<int, int>::iterator	mit;
 
 		it = _readMonitered.begin();
 		while (it != _readMonitered.end())
 		{
 			if (FD_ISSET(*it, &readfds))
-				return *it;
+				ret.insert(std::make_pair(*it, aRead));
 		}
-		return -1;
-	}
-
-	int	Selecter::_checkFetchWrite(fd_set writefds) const
-	{
-		std::set<int>::const_iterator	it;
-
 		it = _writeMonitered.begin();
 		while (it != _writeMonitered.end())
 		{
 			if (FD_ISSET(*it, &writefds))
-				return *it;
+			{
+				mit = ret.find(*it);
+				if (mit != ret.end())
+					mit->second |= aWrite;
+				else
+					ret.insert(std::make_pair(*it, aWrite));
+			}
 		}
-		return -1;
-	}
-
-	int	Selecter::_checkFetchExcept(fd_set exceptfds) const
-	{
-		std::set<int>::const_iterator	it;
-
 		it = _exceptMonitered.begin();
 		while (it != _exceptMonitered.end())
 		{
 			if (FD_ISSET(*it, &exceptfds))
-				return *it;
+			{
+				mit = ret.find(*it);
+				if (mit != ret.end())
+					mit->second |= aExcept;
+				else
+					ret.insert(std::make_pair(*it, aExcept));
+			}
 		}
-		return -1;
+		return ret;
 	}
 
 	void	Selecter::_deepCopy(const Selecter& src)

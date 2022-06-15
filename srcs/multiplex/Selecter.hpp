@@ -2,6 +2,7 @@
 #define SELECTER_HPP
 
 #include <set>
+#include <map>
 #include <utility>
 #include <stdexcept>
 #include <exception>
@@ -52,7 +53,7 @@ namespace ft
 			void	add(int fd, int options);
 			void	del(int fd, int options);
 
-			std::pair<int, Action>	fetch(unsigned long milliseconds = 0) const;
+			std::map<int, int>	fetch(unsigned long milliseconds = 0) const;
 		//================================================================================================
 		//	Selecter operations End
 		//================================================================================================
@@ -64,10 +65,7 @@ namespace ft
 		private:
 			void	_deepCopy(const Selecter& src);
 
-			int	_checkFetchRead(fd_set readfds) const;
-			int	_checkFetchWrite(fd_set writefds) const;
-			int	_checkFetchExcept(fd_set exceptfds) const;
-			std::pair<int, Action>	_checkFetchedFds(fd_set readfds, fd_set writefds, fd_set exceptfds) const;
+			std::map<int, int>	_checkFetchedFds(fd_set readfds, fd_set writefds, fd_set exceptfds) const;
 		//================================================================================================
 		//	private methods End
 		//================================================================================================

@@ -29,40 +29,42 @@ namespace ft
 
 	void	Nginy::serve()
 	{
-		std::pair<int, Action>	candidate;
+		std::map<int, int>	candidates;
+		std::map<int, int>::iterator	it;
 
 		while (1)
 		{
-			candidate = _multiplexer.fetch();
-			if (candidate.first == -1)
+			candidates = _multiplexer.fetch();
+			if (candidates.empty())
 				continue ;
+			//accept new connections
 			for (size_t i = 0; i < _servers.size(); i++)
 			{
-				if (candidate.first == _servers[i]._sockt.fd)
+				it = candidates.find(_servers[i]._sockt.fd);
+				if (it == candidates.end())
+					continue;
+				if (it->second & aRead)
 				{
-					if (candidate.second == aRead)
-					{
-						Client	client;
+					Client	client;
 
-						client._sockt = _servers[i]._sockt.accept();
-						_servers[i]._clients[client._sockt.fd] = client;
-					}
-						;//accept the new connection
-					break ;
+					client._sockt = _servers[i]._sockt.accept();
+					_servers[i]._clients[client._sockt.fd] = client;
 				}
 			}
+			//handle current connections
 			for (size_t i = 0; i < _servers.size(); i++)
 			{
 				for (size_t j = 0; j < _servers[i]._clients.size(); j++)
 				{
-					if (candidate.first == _servers[j]._clients[j]._sockt.fd)
-					{
-						if (candidate.second == aRead)
-							std::cout << "handle response" << std::endl;//_servers[i].handleResponse();
-						else if (candidate.second == aWrite)
-							std::cout << "handle request" << std::endl;;//_servers[i].handleRequest();
-						break ;
-					}
+					it = candidates.find(_servers[j]._clients[j]._sockt.fd);
+					if (it == candidates.end())
+						continue;
+					if (it->second & aRead)
+						std::cout << "handle response" << std::endl;
+					else if (it->second & aWrite)
+						std::cout << "handle request" << std::endl;
+					else
+						std::cout << "fd except" << std::endl;
 				}
 			}
 		}
@@ -73,7 +75,7 @@ namespace ft
 		std::string			key;
 		std::string			line;
 		std::ifstream		configFile;
-		std::stringstream	lineStream;
+		
 
 		configFile.open(_configFileName.c_str());
 		if (!configFile.is_open())
@@ -84,7 +86,7 @@ namespace ft
 			std::getline(configFile, line);
 			if (line.empty())
 				continue ;
-			lineStream << line;
+			std::stringstream	lineStream(line);
 			lineStream >> key;
 			if (key == "#")
 				continue ;
