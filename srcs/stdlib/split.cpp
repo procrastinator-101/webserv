@@ -2,7 +2,7 @@
 
 namespace ft
 {
-	std::vector<std::string>	split(std::string str, std::string delimiter)
+	std::vector<std::string>	split(const std::string str, const std::string delimiter)
 	{
 		size_t	len;
 		size_t	end;

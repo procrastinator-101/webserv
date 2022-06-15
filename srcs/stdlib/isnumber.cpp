@@ -2,7 +2,7 @@
 
 namespace ft
 {
-	bool isnumber(std::string &str)
+	bool isnumber(const std::string &str)
 	{
 		for (size_t i = 0; i < str.size(); i++)
 		{

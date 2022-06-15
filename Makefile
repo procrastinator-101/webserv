@@ -93,12 +93,17 @@ SERVER_SRC = $(SERVER_PATH)/Server.cpp
 SERVER_HDR = $(SERVER_PATH)/Server.hpp
 #================================================================================
 
-# sockt
+# sockets
 #================================================================================
-SOCKT_PATH = $(SRCS_PATH)/sockt
+SOCKT_PATH = $(SRCS_PATH)/sockets
 
-SOCKT_SRC = $(SOCKT_PATH)/Sockt.cpp
-SOCKT_HDR = $(SOCKT_PATH)/Sockt.hpp
+SOCKT_SRC = $(SOCKT_PATH)/ClientSockt.cpp \
+			$(SOCKT_PATH)/ServerSockt.cpp \
+			$(SOCKT_PATH)/Sockt.cpp
+
+SOCKT_HDR = $(SOCKT_PATH)/ClientSockt.hpp \
+			$(SOCKT_PATH)/ServerSockt.hpp \
+			$(SOCKT_PATH)/Sockt.hpp
 #================================================================================
 
 # stdlib
