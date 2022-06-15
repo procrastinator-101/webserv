@@ -14,6 +14,8 @@
 #include <iostream>
 
 #include <cstring>
+#include <cstdlib>
+
 
 #include "../stdlib/stdlib.hpp"
 

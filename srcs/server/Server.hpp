@@ -7,11 +7,11 @@
 #include <fstream>
 #include <utility>
 
-#include "../utility/utility.hpp"
 
-#include "../sockt/Sockt.hpp"
 #include "../client/Client.hpp"
 #include "../location/Location.hpp"
+
+#include "../sockets/ServerSockt.hpp"
 
 namespace ft
 {
@@ -22,7 +22,7 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			Sockt								_sockt;
+			ServerSockt							_sockt;
 			std::set<std::string>				_names;
 			std::string							_root;
 			status								_autoIndex;

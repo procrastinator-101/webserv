@@ -12,7 +12,7 @@ namespace ft
 	{
 	}
 
-	Server::Server(std::ifstream& configFile) : _names(), _root(""), _autoIndex(off), _methods(), _indexes(), _errorPages(), _locations()
+	Server::Server(std::ifstream& configFile)
 	{
 		bool				isClosed;
 		std::string			key;
@@ -88,7 +88,7 @@ namespace ft
 		tmp = ft::split(value, ":");
 		if (tmp.size() != 2)
 			throw std::runtime_error("Server: listen: invalid add/port");
-		_sockt = Sockt(tmp[0], tmp[1], Sockt::defaultBacklog);
+		_sockt = ServerSockt(tmp[0], tmp[1]);
 	}
 
 	void	Server::_fetchServerNames(std::stringstream& lineStream)

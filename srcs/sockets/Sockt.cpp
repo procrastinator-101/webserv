@@ -1,7 +1,4 @@
 #include "Sockt.hpp"
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <stdexcept>
 
 namespace ft
 {
@@ -22,7 +19,7 @@ namespace ft
 		in_addr_t	inAddr;
 
 		inAddr = inet_addr(ipAddress.c_str());
-		if (inAddr == -1)
+		if (inAddr == static_cast<in_addr_t>(-1))
 			throw std::invalid_argument("Sockt:: invalid ip adress");
 		if (port.empty() || !isnumber(port))
 			throw std::invalid_argument("Sockt:: invalid port");
@@ -88,6 +85,15 @@ namespace ft
 		dst.sin_addr.s_addr = ipAddress;
 
 		ret = ::connect(fd, reinterpret_cast<sockaddr *>(&dst), addressLen);
+		if (ret < 0)
+			throw std::runtime_error("socket:: connect failed");
+	}
+
+	void	Sockt::connect(const Sockt dst)
+	{
+		int	ret;
+		
+		ret = ::connect(fd, reinterpret_cast<const sockaddr *>(&dst.address), addressLen);
 		if (ret < 0)
 			throw std::runtime_error("socket:: connect failed");
 	}

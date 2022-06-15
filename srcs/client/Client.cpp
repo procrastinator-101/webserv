@@ -9,7 +9,7 @@ namespace ft
 
 	Client::~Client()
 	{
-		_sockt.destroy();
+		_sockt.close();
 	}
 
 	Client::Client(const Client& src) : _keepAlive(src._keepAlive), _sockt(src._sockt), _request(src._request), _response(src._response)
