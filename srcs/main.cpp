@@ -13,13 +13,22 @@ int main(int argc, char** argv)
     {
         if (argc != 2)
             throw std::invalid_argument("use ./webser configuration_file");
-        ft::Nginy   nginy(argv[1]);
+        
+        // ft::Nginy   nginy(argv[1]);
         // nginy.up();
-        std::cout << nginy << std::endl;
+
+
+        //for debugging only : until parsing is done
+        std::cout << argv[1] << std::endl;
+
+        ft::Nginy   nginy;
+        // std::cout << nginy << std::endl;
+        nginy.up();
     }
     catch (std::exception& e)
     {
         std::cerr << RED;
+        std::cerr << "Error" << std::endl;
         std::cerr << e.what() << std::endl;
         std::cerr << BLACK;
         exit(EXIT_FAILURE);

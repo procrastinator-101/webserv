@@ -6,6 +6,20 @@ namespace ft
 {
 	Nginy::Nginy()
 	{
+		//!!!!!!!! to remove
+		Server	server;
+
+		server._sockt = ServerSockt("127.0.0.1", "8080");
+		// server._sockt.wakeUp();
+		// Sockt	sockt = server._sockt.accept();
+
+		// char host[NI_MAXHOST];
+		// char service[NI_MAXSERV];
+
+		// getnameinfo(reinterpret_cast<sockaddr*>(&sockt.address), sockt.addressLen, host, NI_MAXHOST, service, NI_MAXSERV, 0);
+		// std::cout << "communication initiated with : " << host << " at service : " << service << std::endl;
+		_servers.push_back(server);
+		// std::cout << "constructor ok" << std::endl;
 	}
 	
 	Nginy::~Nginy()
@@ -14,6 +28,7 @@ namespace ft
 
 	Nginy::Nginy(const std::string& configFileName) : _configFileName(configFileName)
 	{
+		_parseConfigFile();
 	}
 
 	Nginy::Nginy(const Nginy& src) : _configFileName(src._configFileName), _multiplexer(src._multiplexer), _servers(src._servers)
@@ -35,9 +50,18 @@ namespace ft
 		_initiateServers();
 		while (1)
 		{
+			// std::cout << *this << std::endl;
+			std::cout << _multiplexer << std::endl;
+			std::cout << "fetching started" << std::endl;
 			candidates = _multiplexer.fetch();
+			std::cout << "fetching ended" << std::endl;
 			if (candidates.empty())
 				continue ;
+			std::cout << "candidates" << std::endl;
+			for (std::map<int, int>::const_iterator it = candidates.begin(); it != candidates.end(); ++it)
+				std::cout << it->first << " ";
+			std::cout << "candidatesEnd" << std::endl;
+			std::cout << std::endl;
 			_acceptNewClients(candidates);
 			_serveClients(candidates);
 		}
@@ -49,8 +73,10 @@ namespace ft
 		for (size_t i = 0; i < _servers.size(); i++)
 		{
 			_servers[i]._sockt.wakeUp();
+			_multiplexer.add(_servers[i]._sockt.fd, aRead);
 			std::cout << "servers[" << i << "].fd : " << _servers[i]._sockt.fd << std::endl;
 		}
+
 	}
 
 	void	Nginy::_serveClients(std::map<int, int>& candidates)
@@ -61,13 +87,13 @@ namespace ft
 		{
 			for (size_t j = 0; j < _servers[i]._clients.size(); j++)
 			{
-				it = candidates.find(_servers[j]._clients[j]._sockt.fd);
+				it = candidates.find(_servers[i]._clients[j]._sockt.fd);
 				if (it == candidates.end())
 					continue;
 				if (it->second & aRead)
-					std::cout << "handle response" << std::endl;
-				else if (it->second & aWrite)
 					std::cout << "handle request" << std::endl;
+				else if (it->second & aWrite)
+					std::cout << "handle response" << std::endl;
 				else
 					std::cout << "fd except" << std::endl;
 			}
@@ -89,6 +115,7 @@ namespace ft
 
 				client._sockt = _servers[i]._sockt.accept();
 				_servers[i]._clients[client._sockt.fd] = client;
+				_multiplexer.add(client._sockt.fd, aRead);
 			}
 		}
 	}
@@ -114,20 +141,9 @@ namespace ft
 			if (key == "#")
 				continue ;
 			if (key == "server")
-			{
-				try
-				{
-					_servers.push_back(Server(configFile));
-				}
-				catch (std::exception& e)
-				{
-					throw std::runtime_error("Error: " + std::string(e.what()));
-				}
-			}
+				_servers.push_back(Server(configFile));
 			else
-			{
 				throw std::runtime_error("Invalid config file");
-			}
 		}
 		if (_servers.empty())
 			throw std::runtime_error("config file: No server found");

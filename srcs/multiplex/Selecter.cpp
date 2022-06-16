@@ -81,12 +81,13 @@ namespace ft
 		nfds = 0;
 		//set nfds
 		if (!_readMonitered.empty())
-			nfds = *_readMonitered.rbegin();
+			nfds = *_readMonitered.rbegin() + 1;
 		if (!_writeMonitered.empty())
-			nfds = std::max(nfds, *_writeMonitered.rbegin());
+			nfds = std::max(nfds, *_writeMonitered.rbegin() + 1);
 		if (!_exceptMonitered.empty())
-			nfds = std::max(nfds, *_exceptMonitered.rbegin());
+			nfds = std::max(nfds, *_exceptMonitered.rbegin() + 1);
 		
+		std::cout << "nfds = " << nfds << std::endl;
 		//set the copy of monitered fd
 		_readfdsCopy = _readfds;
 		_writefdsCopy = _writefds;
@@ -116,14 +117,12 @@ namespace ft
 		std::set<int>::const_iterator	it;
 		std::map<int, int>::iterator	mit;
 
-		it = _readMonitered.begin();
-		while (it != _readMonitered.end())
+		for (it = _readMonitered.begin(); it != _readMonitered.end(); ++it)
 		{
 			if (FD_ISSET(*it, &readfds))
 				ret.insert(std::make_pair(*it, aRead));
 		}
-		it = _writeMonitered.begin();
-		while (it != _writeMonitered.end())
+		for (it = _writeMonitered.begin(); it != _writeMonitered.end(); ++it)
 		{
 			if (FD_ISSET(*it, &writefds))
 			{
@@ -134,8 +133,7 @@ namespace ft
 					ret.insert(std::make_pair(*it, aWrite));
 			}
 		}
-		it = _exceptMonitered.begin();
-		while (it != _exceptMonitered.end())
+		for (it = _exceptMonitered.begin(); it != _exceptMonitered.end(); ++it)
 		{
 			if (FD_ISSET(*it, &exceptfds))
 			{
@@ -154,5 +152,32 @@ namespace ft
 		_readfds = src._readfds;
 		_writefds = src._writefds;
 		_exceptfds = src._exceptfds;
+	}
+
+	std::ostream	&operator<<(std::ostream& ostr, const Selecter& selecter)
+	{
+		ostr << std::left;
+		ostr << getDisplayHeader("Selecter", SELECTER_HSIZE) << std::endl;
+
+		ostr << getDisplaySubHeader("_readMonitered") << std::endl;
+		for (std::set<int>::const_iterator it = selecter._readMonitered.begin(); it != selecter._readMonitered.end(); ++it)
+			ostr << *it << " ";
+		ostr << std::endl;
+		ostr << getDisplaySubFooter("_readMonitered") << std::endl;
+
+		ostr << getDisplaySubHeader("_writeMonitered") << std::endl;
+		for (std::set<int>::const_iterator it = selecter._writeMonitered.begin(); it != selecter._writeMonitered.end(); ++it)
+			ostr << *it << " ";
+		ostr << std::endl;
+		ostr << getDisplaySubFooter("_writeMonitered") << std::endl;
+
+		ostr << getDisplaySubHeader("_exceptMonitered") << std::endl;
+		for (std::set<int>::const_iterator it = selecter._exceptMonitered.begin(); it != selecter._exceptMonitered.end(); ++it)
+			ostr << *it << " ";
+		ostr << std::endl;
+		ostr << getDisplaySubFooter("_exceptMonitered") << std::endl;
+
+		ostr << getDisplayFooter(SELECTER_HSIZE) << std::endl;
+		return ostr;
 	}
 }

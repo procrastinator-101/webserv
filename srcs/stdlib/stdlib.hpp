@@ -9,11 +9,12 @@
 #define REQUEST_HSIZE		15
 #define RESPONSE_HSIZE		15
 
-#define CLIENT_HSIZE		20
+#define CLIENT_HSIZE		30
 
-#define SERVER_HSIZE		25
+#define SERVER_HSIZE		40
+#define SELECTER_HSIZE		40
 
-#define NGINY_HSIZE			30
+#define NGINY_HSIZE			50
 
 
 namespace ft

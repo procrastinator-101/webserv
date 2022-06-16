@@ -49,22 +49,22 @@ namespace ft
 
 	std::string	getDisplayFooter(size_t n)
 	{
-		return std::string('_', 40 + n);
+		return std::string( 40 + n, '_');
 	}
 
 	std::string	getDisplayHeader(std::string str, size_t n)
 	{
-		std::string	decoration('_', 20);
+		std::string	decoration(20, '_');
 		return decoration + centerString(n, str) + decoration;
 	}
 
 	std::string	getDisplaySubHeader(std::string str)
 	{
-		return std::string('-', 10) + str + ":";
+		return std::string(10, '-') + " " + str + ":";
 	}
 
 	std::string	getDisplaySubFooter(std::string str)
 	{
-		return std::string('-', 10 + str.size());
+		return std::string(12 + str.size(), '-');
 	}
 }

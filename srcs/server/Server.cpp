@@ -11,7 +11,6 @@ namespace ft
 
 	Server::~Server()
 	{
-		_sockt.close();
 	}
 
 	Server::Server(std::ifstream& configFile)
@@ -26,9 +25,10 @@ namespace ft
 		std::stringstream	ss(line);
 		ss >> token;
 		if (token != "{")
-			throw std::runtime_error("Server: config file is not valid");
-		while (std::getline(configFile, line))
+			throw std::runtime_error("Server:: invalid token {" + token + "}");
+		while (configFile.good())
 		{
+			std::getline(configFile, line);
 			if (line.empty())
 				continue ;
 			std::stringstream	lineStream(line);
@@ -41,27 +41,30 @@ namespace ft
 				isClosed = true;
 				break ;
 			}
-			else if (key == "listen" && lineStream.good())
+			std::cout << key << std::endl;
+			if (!lineStream.good())
+				throw std::runtime_error("Server:: invalid configuration!!");
+			else if (key == "listen")
 				_fetchSockt(lineStream);
-			else if (key == "server_name" && lineStream.good())
+			else if (key == "server_name")
 				_fetchServerNames(lineStream);
-			else if (key == "root" && lineStream.good())
+			else if (key == "root")
 				_fetchRoot(lineStream);
-			else if (key == "autoindex" && lineStream.good())
+			else if (key == "autoindex")
 				_fetchAutoIndex(lineStream);
-			else if (key == "methods" && lineStream.good())
+			else if (key == "methods")
 				_fetchMethods(lineStream);
-			else if (key == "index" && lineStream.good())
+			else if (key == "index")
 				_fetchIndexes(lineStream);
-			else if (key == "error_page" && lineStream.good())
+			else if (key == "error_page")
 				_fetchErrorPages(lineStream);
-			else if (key == "location" && lineStream.good())
+			else if (key == "location")
 				_fetchLocation(lineStream, configFile);
 			else
-				throw std::runtime_error("Server: config file is not valid");
+				throw std::runtime_error("Server:: invalid key {" + key + "}");
 		}
 		if (!isClosed || _locations.size() == 0)
-			throw std::runtime_error("Server: config file is not valid");
+			throw std::runtime_error("Server:: invalid configuration");
 	}
 
 	Server::Server(const Server& src) :	_sockt(src._sockt), _names(src._names), _root(src._root), _autoIndex(src._autoIndex), _methods(src._methods),
@@ -85,11 +88,11 @@ namespace ft
 
 		lineStream >> value;
 		if (lineStream.good())
-			throw std::runtime_error("Server: too many arguments for listen");
+			throw std::runtime_error("Server:: too many arguments for listen");
 		
 		tmp = ft::split(value, ":");
 		if (tmp.size() != 2)
-			throw std::runtime_error("Server: listen: invalid add/port");
+			throw std::runtime_error("Server:: listen: invalid add/port");
 		_sockt = ServerSockt(tmp[0], tmp[1]);
 	}
 
@@ -107,7 +110,7 @@ namespace ft
 			_names.insert(value);
 		}
 		if (_names.size() - size == 0)
-			throw std::runtime_error("Server: server_name is not valid");
+			throw std::runtime_error("Server:: server_name is not valid");
 	}
 
 	void	Server::_fetchRoot(std::stringstream& lineStream)
@@ -118,32 +121,32 @@ namespace ft
 		if (value != "#")
 			_root = value;
 		else
-			throw std::runtime_error("Server: root is not valid");
+			throw std::runtime_error("Server:: root is not valid");
 		if (lineStream.good())
 		{
 			lineStream >> value;
 			if (value != "#")
-				throw std::runtime_error("Server: too many arguments for root");
+				throw std::runtime_error("Server:: too many arguments for root");
 		}
 	}
 
-	void	Server::_fetchAutoIndex(std::stringstream& streamLine)
+	void	Server::_fetchAutoIndex(std::stringstream& lineStream)
 	{
 		std::string	value;
 		static int i = 0;//!!!!!!!! error
 
 		if (i == 1)
-			throw std::runtime_error("Server: multiple autoIndex");
-		streamLine >> value;
+			throw std::runtime_error("Server:: multiple autoIndex");
+		lineStream >> value;
 		if (value == "on")
 			_autoIndex = true;
 		else if (value != "off")
-			throw std::runtime_error("Server: autoindex is not valid");
-		if (streamLine.good())
+			throw std::runtime_error("Server:: autoindex is not valid");
+		if (lineStream.good())
 		{
-			streamLine >> value;
+			lineStream >> value;
 			if (value != "#")
-				throw std::runtime_error("Server: too many arguments for autoindex");
+				throw std::runtime_error("Server:: too many arguments for autoindex");
 		}
 		i = 1;
 	}
@@ -162,10 +165,10 @@ namespace ft
 			if (value == "GET" || value == "POST" || value == "DELETE")
 				_methods.insert(value);
 			else
-				throw std::runtime_error("Server: invalid method");
+				throw std::runtime_error("Server:: invalid method");
 		}
 		if (_methods.size() - size == 0)
-			throw std::runtime_error("Server: methods is not valid");
+			throw std::runtime_error("Server:: methods is not valid");
 	}
 
 	void	Server::_fetchIndexes(std::stringstream& lineStream)
@@ -182,7 +185,7 @@ namespace ft
 			_indexes.insert(value);
 		}
 		if (_indexes.size() == size)
-			throw std::runtime_error("Server: index is not valid");
+			throw std::runtime_error("Server:: index is not valid");
 	}
 
 	void	Server::_fetchErrorPages(std::stringstream& lineStream)
@@ -193,7 +196,7 @@ namespace ft
 
 		lineStream >> code_str;
 		if (code_str == "#")
-			throw std::runtime_error("Server: error_page is not valid");
+			throw std::runtime_error("Server:: error_page is not valid");
 		if (lineStream.good() && isnumber(code_str))
 		{
 			code = ::atoi(code_str.c_str());
@@ -203,7 +206,7 @@ namespace ft
 			}
 			catch (std::exception& e)
 			{
-				throw std::runtime_error("Server: error_page: invalid code");
+				throw std::runtime_error("Server:: error_page: invalid code");
 			}
 			lineStream >> value;
 			//value == # ????
@@ -215,7 +218,7 @@ namespace ft
 		{
 			lineStream >> value;
 			if (value != "#")
-				throw std::runtime_error("Server: too many arguments for error_page");
+				throw std::runtime_error("Server:: too many arguments for error_page");
 		}
 	}
 
@@ -224,14 +227,15 @@ namespace ft
 		std::string path;
 		std::string	value;
 		
+		//opening and clonsing brackets are not handled
 		lineStream >> path;
 		if (path == "#")
-			throw std::runtime_error("Server: location is not valid");
+			throw std::runtime_error("Server:: location is not valid");
 		if (lineStream.good())
 		{
 			lineStream >> value;
 			if (value != "#")
-				throw std::runtime_error("Server: too many arguments for location");
+				throw std::runtime_error("Server:: too many arguments for location");
 		}
 		_locations[path] = Location(configFile, _root, _autoIndex, _indexes, _methods);
 	}
@@ -258,28 +262,28 @@ namespace ft
 
 		ostr << server._sockt << std::endl;
 
-		ostr << getDisplaySubHeader("server names");
+		ostr << getDisplaySubHeader("server names") << std::endl;
 		for (std::set<std::string>::const_iterator it = server._names.begin(); it != server._names.end(); ++it)
 			ostr << *it << std::endl;
-		ostr << getDisplaySubFooter("server names");
+		ostr << getDisplaySubFooter("server names") << std::endl;
 
 		ostr << std::setw(fieldSize) << "root : " << server._root << std::endl;
 		ostr << std::setw(fieldSize) << "autoIndex : " << server._autoIndex << std::endl;
 
-		ostr << getDisplaySubHeader("methods");
+		ostr << getDisplaySubHeader("methods") << std::endl;
 		for (std::set<std::string>::const_iterator it = server._methods.begin(); it != server._methods.end(); ++it)
 			ostr << *it << std::endl;
-		ostr << getDisplaySubFooter("methods");
+		ostr << getDisplaySubFooter("methods") << std::endl;
 
-		ostr << getDisplaySubHeader("indexes");
+		ostr << getDisplaySubHeader("indexes") << std::endl;
 		for (std::set<std::string>::const_iterator it = server._indexes.begin(); it != server._indexes.end(); ++it)
 			ostr << *it << std::endl;
-		ostr << getDisplaySubFooter("indexes");
+		ostr << getDisplaySubFooter("indexes") << std::endl;
 
-		ostr << getDisplaySubHeader("errorPages");
+		ostr << getDisplaySubHeader("errorPages") << std::endl;
 		for (std::map<int, std::string>::const_iterator it = server._errorPages.begin(); it != server._errorPages.end(); ++it)
 			ostr << std::setw(fieldSize) << it->first << " : " << it->second << std::endl;
-		ostr << getDisplaySubFooter("errorPages");
+		ostr << getDisplaySubFooter("errorPages") << std::endl;
 
 		for (std::map<std::string, Location>::const_iterator it = server._locations.begin(); it != server._locations.end(); ++it)
 			ostr << it->second << std::endl;

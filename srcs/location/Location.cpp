@@ -246,20 +246,20 @@ namespace ft
 		ostr << std::setw(fieldSize) << "root : " << location._root << std::endl;
 		ostr << std::setw(fieldSize) << "autoIndex : " << location._autoIndex << std::endl;
 
-		ostr << getDisplaySubHeader("methods");
+		ostr << getDisplaySubHeader("methods") << std::endl;
 		for (std::set<std::string>::const_iterator it = location._methods.begin(); it != location._methods.end(); ++it)
 			ostr << *it << std::endl;
-		ostr << getDisplaySubFooter("methods");
+		ostr << getDisplaySubFooter("methods") << std::endl;
 
-		ostr << getDisplaySubHeader("indexes");
+		ostr << getDisplaySubHeader("indexes") << std::endl;
 		for (std::set<std::string>::const_iterator it = location._indexes.begin(); it != location._indexes.end(); ++it)
 			ostr << *it << std::endl;
-		ostr << getDisplaySubFooter("indexes");
+		ostr << getDisplaySubFooter("indexes") << std::endl;
 
-		ostr << getDisplaySubHeader("errorPages");
+		ostr << getDisplaySubHeader("errorPages") << std::endl;
 		for (std::map<int, std::string>::const_iterator it = location._redirections.begin(); it != location._redirections.end(); ++it)
 			ostr << std::setw(fieldSize) << it->first << " : " << it->second << std::endl;
-		ostr << getDisplaySubFooter("errorPages");
+		ostr << getDisplaySubFooter("errorPages") << std::endl;
 
 		ostr << std::setw(fieldSize) << "uploadPath : " << location._uploadPath << std::endl;
 

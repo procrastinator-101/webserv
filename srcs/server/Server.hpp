@@ -40,7 +40,7 @@ namespace ft
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
 		public:
-			Server();//might throw : socket related problem
+			Server();
 			~Server();
 
 			//might throw
@@ -72,7 +72,7 @@ namespace ft
 			void	_fetchSockt(std::stringstream& lineStream);
 			void	_fetchServerNames(std::stringstream& lineStream);
 			void	_fetchRoot(std::stringstream& lineStream);
-			void	_fetchAutoIndex(std::stringstream& streamLine);
+			void	_fetchAutoIndex(std::stringstream& lineStream);
 			void	_fetchMethods(std::stringstream& lineStream);
 			void	_fetchIndexes(std::stringstream& lineStream);
 			void	_fetchErrorPages(std::stringstream& lineStream);

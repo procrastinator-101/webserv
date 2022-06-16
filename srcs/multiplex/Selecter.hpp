@@ -8,9 +8,9 @@
 #include <exception>
 
 #include <sys/select.h>
-// #include <sys/_types/_fd_def.h>
 
 #include "Action.hpp"
+#include "../stdlib/stdlib.hpp"
 
 namespace ft
 {
@@ -68,6 +68,15 @@ namespace ft
 			std::map<int, int>	_checkFetchedFds(fd_set readfds, fd_set writefds, fd_set exceptfds) const;
 		//================================================================================================
 		//	private methods End
+		//================================================================================================
+
+		//================================================================================================
+		//	overload << for Selecter
+		//================================================================================================
+		public:
+			friend std::ostream	&operator<<(std::ostream& ostr, const Selecter& selecter);
+		//================================================================================================
+		//	overload << for Selecter End
 		//================================================================================================
 	};
 }
