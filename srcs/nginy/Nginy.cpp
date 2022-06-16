@@ -140,4 +140,20 @@ namespace ft
 		_multiplexer = src._multiplexer;
 		_servers = src._servers;
 	}
+
+	std::ostream	&operator<<(std::ostream& ostr, const Nginy& nginy)
+	{
+		const int	fieldSize = 30;
+
+		ostr << std::left;
+		ostr << getDisplayHeader("Nginy", NGINY_HSIZE) << std::endl;
+
+		
+		ostr << std::setw(fieldSize) << "configFileName : " << nginy._configFileName << std::endl;
+		for (size_t i = 0; i < nginy._servers.size(); i++)
+			ostr << nginy._servers[i] << std::endl;
+
+		ostr << getDisplayFooter(NGINY_HSIZE) << std::endl;
+		return ostr;
+	}
 }
