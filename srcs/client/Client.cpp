@@ -23,6 +23,35 @@ namespace ft
 		return *this;
 	}
 
+	bool	Client::handleRequest()
+	{
+		int		ret;
+		int		end;
+		char	*ptr;
+		char	buffer[bufferSize + 1];
+
+		ret = ::recv(_sockt.fd, buffer, bufferSize, 0);
+		if (ret < 0)
+			throw std::runtime_error("Client:: recv failed");
+		buffer[ret] = 0;
+		ptr = ::strstr(buffer, "\r\n\r\n");
+		if (!ptr)
+			_request._msg.append(buffer);
+		else
+		{
+			end = ptr - buffer;
+			_request._msg.append(buffer, end);
+			_request._parseMessage();
+			
+		}
+		return false;
+	}
+
+	bool	Client::handleResponse(const Server& server)
+	{
+		return false;
+	}
+
 	void	Client::_deepCopy(const Client& src)
 	{
 		_keepAlive = src._keepAlive;

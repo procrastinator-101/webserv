@@ -78,8 +78,8 @@ namespace ft
 		fd_set	_writefdsCopy;
 		fd_set	_exceptfdsCopy;
 
-		nfds = 0;
 		//set nfds
+		nfds = 0;
 		if (!_readMonitered.empty())
 			nfds = *_readMonitered.rbegin() + 1;
 		if (!_writeMonitered.empty())
@@ -87,7 +87,6 @@ namespace ft
 		if (!_exceptMonitered.empty())
 			nfds = std::max(nfds, *_exceptMonitered.rbegin() + 1);
 		
-		std::cout << "nfds = " << nfds << std::endl;
 		//set the copy of monitered fd
 		_readfdsCopy = _readfds;
 		_writefdsCopy = _writefds;

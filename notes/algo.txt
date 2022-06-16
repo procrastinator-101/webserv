@@ -1,9 +1,17 @@
+
+=====================================================================================================
+nginy:
+	*	servers
+	*	multiplexer
+	*	configFileName
+
+
 -	initiate servers:
 	for each server
 		-	create a socket
 		-	bind it to an address
 		-	listen on that socket
--	add all the servers the monitored fds
+-	add all the servers the read monitored fds
 -	select on the monitored fds
 	*	if ready to read
 		-	fd is server socket:
@@ -12,20 +20,15 @@
 		-	fd is a client socket
 			-	recv
 			-	handle request
-	*	if ready to write
-		-	fd is server socket:
-			-	ignore
-		-	fd is a client socket
+			-	remove fd from the read monitered fds and add it to the write monitered fds
+	*	if ready to write (a server fd is never going to be here)
 			-	handle response
 			-	send
+=====================================================================================================
 
 
-handle request:
-	-	parse request
 
-handle response:
-	-	
-
+=====================================================================================================
 server:
 	-	socket : ip port
 	-	servernames
@@ -45,14 +48,15 @@ location:
 	-	redirections
 	-	uploadPath
 	-	default served file??
+=====================================================================================================
 
 
+=====================================================================================================
 client:
 	-	socket
 	-	request
 	-	response
 	-	keep alive
-
 
 request:
 	-	msg
@@ -60,13 +64,7 @@ request:
 	-	path
 	-	version
 	-	headers
-	-	body
-
-
-header :
-	-	key
-	-	value
-	+	checkValidity
+	-	body -> file
 
 response:
 	-	msg
@@ -76,10 +74,38 @@ response:
 	-	body
 
 
+handle request:
+	-	read to a buffer
+	-	check if there is a blank line
+		-	yes:
+			-	add what is before it to msg
+			-	write what is after it to a tmp file to hold the body
+		-	no
+			-	add the buffer to the msg
+	-	parse request
+	-	use the body length to know when to stop reading
+	-	prepare the response
+
+
+handle response:
+	-	
+
+=====================================================================================================
+
+
+=====================================================================================================
+header :
+	-	key
+	-	value
+	+	checkValidity
+
 HttpStatus:
 	code
 	msg
+=====================================================================================================
 
+
+=====================================================================================================
 sockt:
 	-	create
 	-	bind
@@ -96,6 +122,7 @@ serverSockt:
 clientSockt
 	-	setup
 	-	wakeup
+=====================================================================================================
 
 
 nginy
@@ -105,7 +132,12 @@ token = server
 
 
 multiplex:
-	*	
+	*	_readfds
+	*	_writefds
+	*	_exceptfds
+	*	_readMonitered
+	*	_writeMonitered
+	*	_exceptMonitered
 	-	add fd
 	-	delete fd
 	-	multiplexFunction -> fetch
