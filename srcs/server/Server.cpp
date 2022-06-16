@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include <cstddef>
+#include <sys/_types/_size_t.h>
 
 namespace ft
 {
@@ -10,6 +11,7 @@ namespace ft
 
 	Server::~Server()
 	{
+		_sockt.close();
 	}
 
 	Server::Server(std::ifstream& configFile)
@@ -245,5 +247,47 @@ namespace ft
 		_errorPages = src._errorPages;
 		_locations = src._locations;
 		_clients = src._clients;
+	}
+
+	std::ostream	&operator<<(std::ostream& ostr, const Server& server)
+	{
+		const int	fieldSize = 30;
+
+		ostr << std::left;
+		ostr << getDisplayHeader("Server", SERVER_HSIZE) << std::endl;
+
+		ostr << server._sockt << std::endl;
+
+		ostr << getDisplaySubHeader("server names");
+		for (std::set<std::string>::const_iterator it = server._names.begin(); it != server._names.end(); ++it)
+			ostr << *it << std::endl;
+		ostr << getDisplaySubFooter("server names");
+
+		ostr << std::setw(fieldSize) << "root : " << server._root << std::endl;
+		ostr << std::setw(fieldSize) << "autoIndex : " <<server._autoIndex << std::endl;
+
+		ostr << getDisplaySubHeader("methods");
+		for (std::set<std::string>::const_iterator it = server._methods.begin(); it != server._methods.end(); ++it)
+			ostr << *it << std::endl;
+		ostr << getDisplaySubFooter("methods");
+
+		ostr << getDisplaySubHeader("indexes");
+		for (std::set<std::string>::const_iterator it = server._indexes.begin(); it != server._indexes.end(); ++it)
+			ostr << *it << std::endl;
+		ostr << getDisplaySubFooter("indexes");
+
+		ostr << getDisplaySubHeader("errorPages");
+		for (std::map<int, std::string>::const_iterator it = server._errorPages.begin(); it != server._errorPages.end(); ++it)
+			ostr << std::setw(fieldSize) << it->first << " : " << it->second << std::endl;
+		ostr << getDisplaySubFooter("errorPages");
+
+		for (std::map<std::string, Location>::const_iterator it = server._locations.begin(); it != server._locations.end(); ++it)
+			ostr << it->second << std::endl;
+		
+		for (std::map<int, Client>::const_iterator it = server._clients.begin(); it != server._clients.end(); ++it)
+			ostr << it->second << std::endl;
+		
+		ostr << getDisplayFooter(SERVER_HSIZE) << std::endl;
+		return ostr;
 	}
 }

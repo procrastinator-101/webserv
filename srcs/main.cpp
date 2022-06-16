@@ -9,23 +9,13 @@
 
 int main(int argc, char** argv)
 {
-    std::map<int, ft::Server> servers;
-
     try
     {
         if (argc != 2)
             throw std::invalid_argument("use ./webser configuration_file");
-		std::cout << argv[1] << std::endl;
-        // initiateServers(argv[1], servers);
-		std::cout << ft::HttpStatus::resolve(200) << std::endl;
-
-        int fd = open(argv[1], O_RDONLY);
-        char buffer[10002] ={0};
-        read(fd, buffer, 10002);
-        close(fd);
-        std::string msg = buffer;
-        ft::Request request(msg);
-        std::cout << request;
+        ft::Nginy   nginy(argv[1]);
+        // nginy.up();
+        std::cout << nginy << std::endl;
     }
     catch (std::exception& e)
     {

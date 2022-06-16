@@ -110,8 +110,7 @@ SOCKT_HDR = $(SOCKT_PATH)/ClientSockt.hpp \
 #================================================================================
 STDLIB_PATH = $(SRCS_PATH)/stdlib
 
-STDLIB_SRC = $(STDLIB_PATH)/isnumber.cpp \
-			 $(STDLIB_PATH)/split.cpp
+STDLIB_SRC = $(STDLIB_PATH)/stdlib.cpp
 STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 #================================================================================
 

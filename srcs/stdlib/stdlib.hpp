@@ -4,11 +4,29 @@
 #include <string>
 #include <vector>
 
+#define SOCKT_HSIZE			15
+#define LOCATION_HSIZE		15
+#define REQUEST_HSIZE		15
+#define RESPONSE_HSIZE		15
+
+#define CLIENT_HSIZE		20
+
+#define SERVER_HSIZE		25
+
+#define NGINY_HSIZE			30
+
+
 namespace ft
 {
 	bool	isnumber(const std::string &str);
 	
 	std::vector<std::string>	split(const std::string str, const std::string delimiter);
+
+	std::string	getDisplayFooter(size_t n);
+	std::string	getDisplayHeader(std::string str, size_t n);
+
+	std::string	getDisplaySubHeader(std::string str);
+	std::string	getDisplaySubFooter(std::string str);
 }
 
 #endif
