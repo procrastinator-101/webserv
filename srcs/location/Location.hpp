@@ -5,48 +5,85 @@
 #include <map>
 #include <string>
 #include <fstream>
+#include <sstream>
 
 #include <cstdlib>
 
+#include "../stdlib/stdlib.hpp"
 #include "../http_status/HttpStatus.hpp"
 
 namespace ft
 {
-	enum status
-	{
-		on = true,
-		off = false
-	};
-
 	class Location
 	{
+		//================================================================================================
+		//	attributes
+		//================================================================================================
 		private:
 			std::string					_root;
-			status						_autoIndex;
+			bool						_autoIndex;
 			std::set<std::string>		_methods;
 			std::set<std::string>		_indexes;
-			std::pair<int, std::string>	_redirection;
+			std::map<int, std::string>	_redirections;
 			std::string					_uploadPath;
-
-			void	_deepCopy(const Location& src);
-
-			void	threat_line(std::stringstream& streamLine, std::string& token);
-			void	threat_root(std::stringstream& streamLine, std::string& token);
-			void	threat_methods(std::stringstream& streamLine, std::string& token);
-			void	threat_indexes(std::stringstream& streamLine, std::string& token);
-			void	threat_upload(std::stringstream& streamLine, std::string& token);
-			void	threat_autoindex(std::stringstream& streamLine, std::string& token);
-			void	threat_return(std::stringstream& streamLine, std::string& token);
+		//================================================================================================
+		//	attributes End
+		//================================================================================================
 		
+		//================================================================================================
+		//	destructors, constructors, and assignment operators
+		//================================================================================================
 		public:
 			Location();
 			~Location();
 
 			//might throw
-			Location(std::ifstream& configFile, std::string& root, status autoIndex, std::set<std::string>& indexes, std::set<std::string>& methods);
+			Location(std::ifstream& configFile, std::string& root, bool autoIndex, std::set<std::string>& indexes, std::set<std::string>& methods);
 			Location(const Location& src);
 			
 			Location	&operator=(const Location& rop);
+		//================================================================================================
+		//	destructors, constructors, and assignment operators End
+		//================================================================================================
+
+
+		//================================================================================================
+		//	Location operations
+		//================================================================================================
+		public:
+			
+		//================================================================================================
+		//	Location operations End
+		//================================================================================================
+
+
+		//================================================================================================
+		//	private methods
+		//================================================================================================
+		private:
+			void	_deepCopy(const Location& src);
+
+			void	threat_line(std::stringstream& streamLine, std::string& token);
+
+			void	_fetchRoot(std::stringstream& streamLine);
+			void	_fetchMethods(std::stringstream& streamLine);
+			void	_fetchIndexes(std::stringstream& streamLine);
+			void	_fetchUploadPath(std::stringstream& streamLine);
+			void	_fetchAutoIndex(std::stringstream& streamLine);
+			void	_fetchRedirections(std::stringstream& streamLine);
+		//================================================================================================
+		//	private methods End
+		//================================================================================================
+
+
+		//================================================================================================
+		//	overload << for Location
+		//================================================================================================
+		public:
+			friend std::ostream	&operator<<(std::ostream& ostr, const Location& location);
+		//================================================================================================
+		//	overload << for Location End
+		//================================================================================================
 	};
 }
 

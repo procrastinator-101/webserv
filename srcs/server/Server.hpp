@@ -25,7 +25,7 @@ namespace ft
 			ServerSockt							_sockt;
 			std::set<std::string>				_names;
 			std::string							_root;
-			status								_autoIndex;
+			bool								_autoIndex;
 			std::set<std::string>				_methods;
 			std::set<std::string>				_indexes;
 			std::map<int, std::string>			_errorPages;

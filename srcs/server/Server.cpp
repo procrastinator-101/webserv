@@ -136,7 +136,7 @@ namespace ft
 			throw std::runtime_error("Server: multiple autoIndex");
 		streamLine >> value;
 		if (value == "on")
-			_autoIndex = on;
+			_autoIndex = true;
 		else if (value != "off")
 			throw std::runtime_error("Server: autoindex is not valid");
 		if (streamLine.good())
@@ -264,7 +264,7 @@ namespace ft
 		ostr << getDisplaySubFooter("server names");
 
 		ostr << std::setw(fieldSize) << "root : " << server._root << std::endl;
-		ostr << std::setw(fieldSize) << "autoIndex : " <<server._autoIndex << std::endl;
+		ostr << std::setw(fieldSize) << "autoIndex : " << server._autoIndex << std::endl;
 
 		ostr << getDisplaySubHeader("methods");
 		for (std::set<std::string>::const_iterator it = server._methods.begin(); it != server._methods.end(); ++it)
