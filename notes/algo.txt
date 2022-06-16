@@ -2,6 +2,7 @@
 =====================================================================================================
 nginy:
 	*	servers
+	*	clients
 	*	multiplexer
 	*	configFileName
 
@@ -14,7 +15,7 @@ nginy:
 -	add all the servers the read monitored fds
 -	select on the monitored fds
 	*	if ready to read
-		-	fd is server socket:
+		-	fd is server socket
 			-	accept the connection
 			-	add the new connection to the monitored fds
 		-	fd is a client socket
@@ -29,15 +30,14 @@ nginy:
 
 
 =====================================================================================================
-server:
-	-	socket : ip port
+server :
+	-	sockt
 	-	servernames
 	-	root
 	-	allowed methods
 	-	indexes
 	-	error pages
 	-	served locations
-	-	clients
 
 
 location:
@@ -84,12 +84,12 @@ handle request:
 			-	add the buffer to the msg
 	-	parse request
 	-	use the body length to know when to stop reading
+	-	fetch the targeted host
 	-	prepare the response
 
 
 handle response:
 	-	
-
 =====================================================================================================
 
 
@@ -125,12 +125,7 @@ clientSockt
 =====================================================================================================
 
 
-nginy
-token = server
-	server tmp(configFile)
-		_locations.insert(location tmp(configFile));
-
-
+=====================================================================================================
 multiplex:
 	*	_readfds
 	*	_writefds
@@ -141,5 +136,9 @@ multiplex:
 	-	add fd
 	-	delete fd
 	-	multiplexFunction -> fetch
+=====================================================================================================
 
 
+=====================================================================================================
+
+=====================================================================================================
