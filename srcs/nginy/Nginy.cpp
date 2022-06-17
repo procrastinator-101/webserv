@@ -1,25 +1,14 @@
 #include "Nginy.hpp"
-#include <fstream>
-#include <sys/_types/_size_t.h>
 
 namespace ft
 {
 	Nginy::Nginy()
 	{
 		//!!!!!!!! to remove
-		Server	server;
+		Server	*server = new Server;
 
-		server._sockt = ServerSockt("127.0.0.1", "8080");
-		// server._sockt.wakeUp();
-		// Sockt	sockt = server._sockt.accept();
-
-		// char host[NI_MAXHOST];
-		// char service[NI_MAXSERV];
-
-		// getnameinfo(reinterpret_cast<sockaddr*>(&sockt.address), sockt.addressLen, host, NI_MAXHOST, service, NI_MAXSERV, 0);
-		// std::cout << "communication initiated with : " << host << " at service : " << service << std::endl;
-		_servers.push_back(server);
-		// std::cout << "constructor ok" << std::endl;
+		server->_sockt = ServerSockt("127.0.0.1", "8080");
+		_servers.insert(std::make_pair(server->_sockt.fd, server));
 	}
 	
 	Nginy::~Nginy()
@@ -70,24 +59,25 @@ namespace ft
 	void	Nginy::_initiateServers()
 	{
 		//stop or retrying waking it up ????
-		for (size_t i = 0; i < _servers.size(); i++)
+		for (std::map<int, Server *>::iterator sit = _servers.begin(); sit != _servers.end(); ++sit)
 		{
-			_servers[i]._sockt.wakeUp();
-			_multiplexer.add(_servers[i]._sockt.fd, aRead);
-			std::cout << "servers[" << i << "].fd : " << _servers[i]._sockt.fd << std::endl;
+			sit->second->_sockt.wakeUp();
+			_multiplexer.add(sit->second->_sockt.fd, aRead);
+			std::cout << "servers[" << sit->first << "].fd : " << sit->second->_sockt.fd << std::endl;
 		}
-
 	}
 
 	void	Nginy::_serveClients(std::map<int, int>& candidates)
 	{
-		std::map<int, int>::iterator	it;
+		std::map<int, int>::iterator		it;
+		std::map<int, Client *>::iterator	cit;
+		std::map<int, Server *>::iterator	sit;
 
-		for (size_t i = 0; i < _servers.size(); i++)
+		for (sit = _servers.begin(); sit != _servers.end(); ++sit)
 		{
-			for (size_t j = 0; j < _servers[i]._clients.size(); j++)
+			for (cit = _clients.begin(); cit != _clients.end(); ++cit)
 			{
-				it = candidates.find(_servers[i]._clients[j]._sockt.fd);
+				it = candidates.find(cit->first);
 				if (it == candidates.end())
 					continue;
 				if (it->second & aRead)
@@ -104,18 +94,26 @@ namespace ft
 	{
 		std::map<int, int>::iterator	it;
 
-		for (size_t i = 0; i < _servers.size(); i++)
+		for (std::map<int, Server *>::iterator sit = _servers.begin(); sit != _servers.end(); ++sit)
 		{
-			it = candidates.find(_servers[i]._sockt.fd);
+			it = candidates.find(sit->second->_sockt.fd);
 			if (it == candidates.end())
 				continue;
 			if (it->second & aRead)
 			{
-				Client	client;
+				Client	*client = new Client;
 
-				client._sockt = _servers[i]._sockt.accept();
-				_servers[i]._clients[client._sockt.fd] = client;
-				_multiplexer.add(client._sockt.fd, aRead);
+				try 
+				{
+					client->_sockt = sit->second->_sockt.accept();
+					sit->second->_clients[client->_sockt.fd] = client;
+					_multiplexer.add(client->_sockt.fd, aRead);
+				}
+				catch (std::exception& e)
+				{
+					delete client;
+					throw ;
+				}
 			}
 		}
 	}
@@ -141,7 +139,7 @@ namespace ft
 			if (key == "#")
 				continue ;
 			if (key == "server")
-				_servers.push_back(Server(configFile));
+				_parseServerBlock();
 			else
 				throw std::runtime_error("Invalid config file");
 		}
@@ -150,6 +148,10 @@ namespace ft
 		configFile.close();
 	}
 	
+	void	Nginy::_parseServerBlock()
+	{
+	}
+
 	void	Nginy::_deepCopy(const Nginy& src)
 	{
 		_configFileName = src._configFileName;
@@ -164,10 +166,12 @@ namespace ft
 		ostr << std::left;
 		ostr << getDisplayHeader("Nginy", NGINY_HSIZE) << std::endl;
 
-		
 		ostr << std::setw(fieldSize) << "configFileName : " << nginy._configFileName << std::endl;
-		for (size_t i = 0; i < nginy._servers.size(); i++)
-			ostr << nginy._servers[i] << std::endl;
+
+		ostr << getDisplaySubHeader("servers") << std::endl;
+		for (std::map<int, Server *>::const_iterator sit = nginy._servers.begin(); sit != nginy._servers.end(); ++sit)
+			ostr << *sit->second << std::endl;
+		ostr << getDisplaySubFooter("servers") << std::endl;
 
 		ostr << getDisplayFooter(NGINY_HSIZE) << std::endl;
 		return ostr;

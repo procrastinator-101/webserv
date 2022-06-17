@@ -10,6 +10,7 @@
 #define RESPONSE_HSIZE		15
 
 #define CLIENT_HSIZE		30
+#define HOST_HSIZE		30
 
 #define SERVER_HSIZE		40
 #define SELECTER_HSIZE		40

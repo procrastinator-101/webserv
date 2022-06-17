@@ -31,7 +31,7 @@ namespace ft
 		//	static attributes
 		//================================================================================================
 		public:
-			const size_t bufferSize = 1024;
+			static const size_t bufferSize;
 		//================================================================================================
 		//	static attributes End
 		//================================================================================================
@@ -43,8 +43,8 @@ namespace ft
 			Client();
 			~Client();
 
+		private:
 			Client(const Client& src);
-
 			Client	&operator=(const Client& rop);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End

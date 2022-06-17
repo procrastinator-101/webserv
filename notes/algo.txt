@@ -2,7 +2,6 @@
 =====================================================================================================
 nginy:
 	*	servers
-	*	clients
 	*	multiplexer
 	*	configFileName
 
@@ -28,11 +27,15 @@ nginy:
 =====================================================================================================
 
 
-
 =====================================================================================================
-server :
+server:
 	-	sockt
+	-	host
+	-	clients
+
+host :
 	-	servernames
+	-	body_size
 	-	root
 	-	allowed methods
 	-	indexes
@@ -142,3 +145,16 @@ multiplex:
 =====================================================================================================
 
 =====================================================================================================
+server
+	*	_parse server block
+		-	host
+		-	socket
+		key = listen
+			socket = fetchServeSocket
+		else
+			_fetchHost(lineStream, key, host)
+	socket servers
+		target = servers.find(socket)
+		if target == end
+			target = create new server
+		target.hosts.push_back(host)

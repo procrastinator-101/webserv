@@ -6,10 +6,11 @@
 #include <string>
 #include <fstream>
 #include <utility>
+#include <vector>
 
 
+#include "../host/Host.hpp"
 #include "../client/Client.hpp"
-#include "../location/Location.hpp"
 
 #include "../sockets/ServerSockt.hpp"
 
@@ -22,15 +23,9 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			ServerSockt							_sockt;
-			std::set<std::string>				_names;
-			std::string							_root;
-			bool								_autoIndex;
-			std::set<std::string>				_methods;
-			std::set<std::string>				_indexes;
-			std::map<int, std::string>			_errorPages;
-			std::map<std::string, Location>		_locations;
-			std::map<int, Client>				_clients;
+			ServerSockt				_sockt;
+			std::vector<Host *>		_hosts;
+			std::map<int, Client *>	_clients;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
@@ -43,10 +38,8 @@ namespace ft
 			Server();
 			~Server();
 
-			//might throw
-			Server(std::ifstream& configFile);
+		private:
 			Server(const Server& src);
-
 			Server	&operator=(const Server& rop);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
@@ -57,7 +50,6 @@ namespace ft
 		//	Server operations
 		//================================================================================================
 		public:
-			
 		//================================================================================================
 		//	Server operations End
 		//================================================================================================
@@ -68,15 +60,6 @@ namespace ft
 		//================================================================================================
 		private:
 			void	_deepCopy(const Server& src);
-
-			void	_fetchSockt(std::stringstream& lineStream);
-			void	_fetchServerNames(std::stringstream& lineStream);
-			void	_fetchRoot(std::stringstream& lineStream);
-			void	_fetchAutoIndex(std::stringstream& lineStream);
-			void	_fetchMethods(std::stringstream& lineStream);
-			void	_fetchIndexes(std::stringstream& lineStream);
-			void	_fetchErrorPages(std::stringstream& lineStream);
-			void	_fetchLocation(std::stringstream& lineStream, std::ifstream& configFile);
 		//================================================================================================
 		//	private methods End
 		//================================================================================================

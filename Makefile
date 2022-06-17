@@ -36,6 +36,14 @@ HEADER_FIELD_SRC = $(HEADER_FIELD_PATH)/HeaderField.cpp
 HEADER_FIELD_HDR = $(HEADER_FIELD_PATH)/HeaderField.hpp
 #================================================================================
 
+# host
+#================================================================================
+HOST_PATH = $(SRCS_PATH)/host
+
+HOST_SRC = $(HOST_PATH)/Host.cpp
+HOST_HDR = $(HOST_PATH)/Host.hpp
+#================================================================================
+
 # http_status
 #================================================================================
 HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
@@ -117,11 +125,11 @@ STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 
 
 
-SRC =	$(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HEADER_FIELD_SRC) $(HTTP_STATUS_SRC) \
-		$(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) \
-		$(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
+SRC =	$(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HEADER_FIELD_SRC) $(HOST_SRC) \
+		$(HTTP_STATUS_SRC) $(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) \
+		$(REQUEST_SRC) $(RESPONSE_SRC) $(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
 
-HDR =	$(CLIENT_HDR) $(HEADER_FIELD_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) \
+HDR =	$(CLIENT_HDR) $(HEADER_FIELD_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) \
 		$(MULTIPLEX_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) \
 		$(SOCKT_HDR) $(STDLIB_HDR)
 

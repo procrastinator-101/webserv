@@ -1,57 +1,57 @@
-#ifndef LOCATION_HPP
-# define LOCATION_HPP
+#ifndef HOST_HPP
+#define HOST_HPP
 
 #include <set>
 #include <map>
 #include <string>
 #include <fstream>
-#include <sstream>
+#include <utility>
 
-#include <cstdlib>
-
-#include "../stdlib/stdlib.hpp"
-#include "../http_status/HttpStatus.hpp"
+#include "../location/Location.hpp"
 
 namespace ft
 {
-	class Location
+	class Host
 	{
+		friend class Nginy;
 		//================================================================================================
 		//	attributes
 		//================================================================================================
 		private:
-			std::string					_root;
-			bool						_autoIndex;
-			std::set<std::string>		_methods;
-			std::set<std::string>		_indexes;
-			std::pair<int, std::string>	_redirection;
-			std::string					_uploadPath;
+			std::set<std::string>				_names;
+			std::string							_root;
+			bool								_autoIndex;
+			std::set<std::string>				_methods;
+			std::set<std::string>				_indexes;
+			std::map<int, std::string>			_errorPages;
+			std::map<std::string, Location>		_locations;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
+		
 		
 		//================================================================================================
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
 		public:
-			Location();
-			~Location();
+			Host();
+			~Host();
 
-			Location(const Location& src);
-			
-			Location	&operator=(const Location& rop);
+			Host(const Host& src);
+
+			Host	&operator=(const Host& rop);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================
 
 
 		//================================================================================================
-		//	Location operations
+		//	Host operations
 		//================================================================================================
 		public:
 			
 		//================================================================================================
-		//	Location operations End
+		//	Host operations End
 		//================================================================================================
 
 
@@ -59,19 +59,18 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
-			void	_deepCopy(const Location& src);
+			void	_deepCopy(const Host& src);
 		//================================================================================================
 		//	private methods End
 		//================================================================================================
-
-
+	
 		//================================================================================================
-		//	overload << for Location
+		//	overload << for Host
 		//================================================================================================
 		public:
-			friend std::ostream	&operator<<(std::ostream& ostr, const Location& location);
+			friend std::ostream	&operator<<(std::ostream& ostr, const Host& host);
 		//================================================================================================
-		//	overload << for Location End
+		//	overload << for Host End
 		//================================================================================================
 	};
 }

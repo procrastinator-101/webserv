@@ -2,7 +2,8 @@
 
 namespace ft
 {
-	
+	const size_t Client::bufferSize = 1024;
+
 	Client::Client() : _keepAlive(true)
 	{
 	}
@@ -49,6 +50,7 @@ namespace ft
 
 	bool	Client::handleResponse(const Server& server)
 	{
+		(void)server;
 		return false;
 	}
 
