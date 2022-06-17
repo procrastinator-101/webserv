@@ -1,4 +1,7 @@
 #include "Response.hpp"
+#include <fstream>
+#include <ostream>
+#include <string>
 
 namespace ft
 {
@@ -10,7 +13,7 @@ namespace ft
 	{
 	}
 
-	Response::Response(const Response& src) : _msg(src._msg), _version(src._version), _status(src._status), _headers(src._headers), _body(src._body)
+	Response::Response(const Response& src)
 	{
 	}
 
@@ -24,16 +27,13 @@ namespace ft
 
 	void	Response::_deepCopy(const Response& src)
 	{
-		_msg = src._msg;
-		_version = src._version;
-		_status = src._status;
-		_headers = src._headers;
-		_body = src._body;
 	}
 
 	std::ostream	&operator<<(std::ostream& ostr, const Response& response)
 	{
-		const int	fieldSize = 30;
+		const int		fieldSize = 30;
+		std::string		line;
+		std::fstream	bodyFile(response._bodyFileName);
 
 		ostr << std::left;
 		ostr << getDisplayHeader("Response", RESPONSE_HSIZE) << std::endl;
@@ -47,7 +47,14 @@ namespace ft
 		ostr << getDisplaySubFooter("headers") << std::endl;
 
 		ostr << getDisplaySubHeader("body") << std::endl;
-		ostr << response._body << std::endl;
+		ostr << "name : " << response._bodyFileName << std::endl;
+		ostr << "=============================================================================" << std::endl;
+		while (bodyFile.good())
+		{
+			std::getline(bodyFile, line);
+			ostr << line << std::endl;
+		}
+		ostr << "=============================================================================" << std::endl;
 		ostr << getDisplaySubFooter("body") << std::endl;
 		
 		ostr << getDisplayFooter(RESPONSE_HSIZE) << std::endl;

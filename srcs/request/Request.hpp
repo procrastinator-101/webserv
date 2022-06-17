@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <sstream>
+#include <fstream>
 #include <iomanip>
 
 #include "../stdlib/stdlib.hpp"
@@ -25,7 +26,8 @@ namespace ft
 			std::string					_path;
 			std::string					_version;
 			std::vector<HeaderField>	_headers;
-			std::string					_body;
+			std::string					_bodyFileName;
+			std::fstream				_body;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
@@ -37,9 +39,10 @@ namespace ft
 			~Request();
 
 			Request(std::string& msg);
-			Request(const Request& src);
-
-			Request	&operator=(const Request& rop);
+		
+		private:
+			Request(const Request& src); // = delete
+			Request	&operator=(const Request& rop); // = delete
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================
@@ -50,9 +53,8 @@ namespace ft
 		//================================================================================================
 		public:
 			void	_parseMessage();
-			size_t	_parseStartLine(std::vector<std::string>& msgLines);
-			size_t	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
-			size_t	_parseBody(std::vector<std::string>& msgLines, size_t offset);
+			void	_parseStartLine(std::vector<std::string>& msgLines);
+			void	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
 		//================================================================================================
 		//	Request operations End
 		//================================================================================================
@@ -61,7 +63,7 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
-			void	_deepCopy(const Request& src);
+			void	_deepCopy(const Request& src); // = delete
 		//================================================================================================
 		//	private methods End
 		//================================================================================================

@@ -9,6 +9,8 @@ namespace ft
 
 	Host::~Host()
 	{
+		for (std::map<std::string, Location *>::iterator it = _locations.begin(); it != _locations.end(); ++it)
+			delete it->second;
 	}
 
 	Host::Host(const Host& src) :	_names(src._names), _root(src._root), _autoIndex(src._autoIndex), _methods(src._methods),

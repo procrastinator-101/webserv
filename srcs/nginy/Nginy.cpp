@@ -12,6 +12,8 @@ namespace ft
 	
 	Nginy::~Nginy()
 	{
+		for (size_t i = 0; i < _servers.size(); i++)
+			delete _servers[i];
 	}
 
 	Nginy::Nginy(const std::string& configFileName) : _configFileName(configFileName)

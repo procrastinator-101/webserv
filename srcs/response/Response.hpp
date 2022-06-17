@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <iomanip>
+#include <fstream>
 
 #include "../stdlib/stdlib.hpp"
 
@@ -20,11 +21,11 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			std::string	_msg;
-			std::string	_version;
-			HttpStatus	_status;
+			std::string					_version;
+			HttpStatus					_status;
 			std::vector<HeaderField>	_headers;
-			std::string	_body;
+			std::string					_bodyFileName;
+			std::fstream				_body;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
@@ -35,8 +36,8 @@ namespace ft
 			Response();
 			~Response();
 
+		private:
 			Response(const Response& src);
-
 			Response	&operator=(const Response& rop);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End

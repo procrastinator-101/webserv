@@ -67,4 +67,17 @@ namespace ft
 	{
 		return std::string(12 + str.size(), '=');
 	}
+
+	std::string	ft_itoa(int n)
+	{
+		std::stringstream	ss;
+
+		ss << n;
+		return ss.str();
+	}
+
+	std::string	getRandomFileName()
+	{
+		return std::string("file" + ft_itoa(time(0)));
+	}
 }

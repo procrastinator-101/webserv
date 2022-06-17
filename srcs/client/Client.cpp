@@ -10,6 +10,7 @@ namespace ft
 
 	Client::~Client()
 	{
+		_sockt.close();
 	}
 
 	Client::Client(const Client& src) : _keepAlive(src._keepAlive), _sockt(src._sockt), _request(src._request), _response(src._response)
@@ -43,7 +44,10 @@ namespace ft
 			end = ptr - buffer;
 			_request._msg.append(buffer, end);
 			_request._parseMessage();
-			
+			_request._msg.clear();
+			if (!_request._body.is_open())
+				_request._body.open(getRandomFileName());
+			_request._body << (buffer + end + 4);
 		}
 		return false;
 	}

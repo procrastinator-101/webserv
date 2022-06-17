@@ -9,6 +9,11 @@ namespace ft
 
 	Server::~Server()
 	{
+		_sockt.close();
+		for (size_t i = 0; i < _hosts.size(); i++)
+			delete _hosts[i];
+		for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+			delete it->second;
 	}
 
 	Server::Server(ServerSockt sockt) : _sockt(sockt)

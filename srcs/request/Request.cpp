@@ -15,7 +15,7 @@ namespace ft
 		_parseMessage();
 	}
 
-	Request::Request(const Request& src) : _msg(src._msg), _method(src._method), _path(src._body), _version(src._version), _headers(src._headers), _body(src._body)
+	Request::Request(const Request& src) 
 	{
 	}
 
@@ -29,19 +29,17 @@ namespace ft
 
 	void	Request::_parseMessage()
 	{
-		size_t	offset;
 		std::vector<std::string>	msgLines;
 
 		//split message by \n
 		msgLines = split(_msg, "\n");
 
 		//parse the message
-		offset = _parseStartLine(msgLines);
-		offset = _parseHeaders(msgLines, 1);
-		_parseBody(msgLines, offset);
+		_parseStartLine(msgLines);
+		_parseHeaders(msgLines, 1);
 	}
 
-	size_t	Request::_parseStartLine(std::vector<std::string>& msgLines)
+	void	Request::_parseStartLine(std::vector<std::string>& msgLines)
 	{
 		std::vector<std::string>	startLine;
 
@@ -53,10 +51,9 @@ namespace ft
 		_method = startLine[0];
 		_path = startLine[1];
 		_version = startLine[2];
-		return 1;
 	}
 
-	size_t	Request::_parseHeaders(std::vector<std::string>& msgLines, size_t offset)
+	void	Request::_parseHeaders(std::vector<std::string>& msgLines, size_t offset)
 	{
 		size_t	i;
 		std::vector<std::string>	header;
@@ -68,35 +65,17 @@ namespace ft
 				throw std::runtime_error("Bad Request");
 			_headers.push_back(HeaderField(header[0], header[1]));
 		}
-		return std::min(i + 1, msgLines.size());
-	}
-	
-	size_t	Request::_parseBody(std::vector<std::string>& msgLines, size_t offset)
-	{
-		size_t	i;
-
-		for (i = offset; i < msgLines.size(); i++)
-		{
-			_body.append(msgLines[i]);
-			if (i < msgLines.size() - 1)
-				_body.append("\n");
-		}
-		return i;
 	}
 	
 	void	Request::_deepCopy(const Request& src)
 	{
-		_msg = src._msg;
-		_method = src._method;
-		_path = src._path;
-		_version = src._version;
-		_headers = src._headers;
-		_body = src._body;
 	}
 
 	std::ostream	&operator<<(std::ostream& ostr, const ft::Request& request)
 	{
-		const int	fieldSize = 30;
+		const int		fieldSize = 30;
+		std::string		line;
+		std::fstream	bodyFile(request._bodyFileName);
 
 		ostr << std::left;
 		ostr << getDisplayHeader("Request", REQUEST_HSIZE) << std::endl;
@@ -111,7 +90,14 @@ namespace ft
 		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
 
 		ostr << getDisplayHeader("body", REQUEST_SHSIZE) << std::endl;
-		ostr << request._body << std::endl;
+		ostr << "name : " << request._bodyFileName << std::endl;
+		ostr << "=============================================================================" << std::endl;
+		while (bodyFile.good())
+		{
+			std::getline(bodyFile, line);
+			ostr << line << std::endl;
+		}
+		ostr << "=============================================================================" << std::endl;
 		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
 		
 		ostr << getDisplayFooter(REQUEST_HSIZE) << std::endl;

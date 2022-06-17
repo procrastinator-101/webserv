@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 //level 1
 //-------------------------------------------------------
@@ -64,6 +65,9 @@ namespace ft
 
 	std::string	getDisplaySubHeader(std::string str);
 	std::string	getDisplaySubFooter(std::string str);
+
+	std::string	getRandomFileName();
+	std::string	ft_itoa(int n);
 }
 
 #endif
