@@ -20,10 +20,11 @@ namespace ft
 		std::string			token;
 		streamLine >> token;
 		if (token != "{")
-			throw std::runtime_error("Location: config file is not valid");
-		
-		while (std::getline(configFile, line))
+			throw std::runtime_error("Location:: invalid configuration");
+		//{ something is an error : handle it
+		while (configFile.good())
 		{
+			std::getline(configFile, line);
 			inside_location = 1;
 			if (line.empty())
 				continue ;
@@ -37,16 +38,16 @@ namespace ft
 				inside_location = 0;
 				break ;
 			}
-			threat_line(streamLine, token);
+			_fetchValue(streamLine, token);
 		}
 		if (inside_location == 1)
-			throw std::runtime_error("Location: config file is not valid");
+			throw std::runtime_error("Location:: invalid configuration");
 
 		// take server data
 		if (_root.empty())
 		{
 			if (root.empty())
-				throw std::runtime_error("Location: root is not valid");
+				throw std::runtime_error("Location:: root not found");
 			_root = root;
 		}
 		if (_autoIndex == false)
@@ -54,19 +55,19 @@ namespace ft
 		if (_indexes.empty())
 		{
 			if (indexes.empty() && _autoIndex == false) 
-				throw std::runtime_error("Location: config file is not valid");
+				throw std::runtime_error("Location:: erroneous indexing");
 			else if (!indexes.empty())
 				_indexes = indexes;
 		}
 		if (_methods.empty())
 		{
 			if (methods.empty())
-				throw std::runtime_error("Location: config file is not valid");
+				throw std::runtime_error("Location:: methods not found");
 			else
 				_methods = methods;
 		}
 	}
-	
+
 	Location::Location(const Location& src) :	_root(src._root), _autoIndex(src._autoIndex), _methods(src._methods), _indexes(src._indexes),
 												_redirection(src._redirection), _uploadPath(src._uploadPath)
 	{
@@ -80,6 +81,22 @@ namespace ft
 		return *this;
 	}
 
+	void	Location::_fetchValue(std::stringstream& streamLine, std::string& key)
+	{
+		if (key == "root" && streamLine.good())
+			_fetchRoot(streamLine);
+		else if (key == "methods" && streamLine.good())
+			_fetchMethods(streamLine);
+		else if (key == "index" && streamLine.good())
+			_fetchIndexes(streamLine);
+		else if (key == "upload" && streamLine.good())
+			_fetchUploadPath(streamLine);
+		else if (key == "autoindex" && streamLine.good())
+			_fetchAutoIndex(streamLine);
+		else if (key == "return" && streamLine.good())
+			_fetchRedirections(streamLine);
+	}
+
 	void	Location::_fetchRoot(std::stringstream& streamLine)
 	{
 		std::string	token;
@@ -88,12 +105,12 @@ namespace ft
 		if (token != "#")
 			_root = token;
 		else
-			throw std::runtime_error("Location: root is not valid");
+			throw std::runtime_error("Location:: root is not valid");
 		if (streamLine.good())
 		{
 			streamLine >> token;
 			if (token != "#")
-				throw std::runtime_error("Location: too many arguments for root");
+				throw std::runtime_error("Location:: too many arguments for root");
 		}
 	}
 
@@ -111,10 +128,10 @@ namespace ft
 			if (token == "GET" || token == "POST" || token == "DELETE")
 				_methods.insert(token);
 			else
-				throw std::runtime_error("Location: method is not valid");
+				throw std::runtime_error("Location:: method is not valid");
 		}
 		if (_methods.size() == size)
-			throw std::runtime_error("Location: methods is not valid");
+			throw std::runtime_error("Location:: methods is not valid");
 	}
 
 	void	Location::_fetchIndexes(std::stringstream& streamLine)
@@ -131,7 +148,7 @@ namespace ft
 			_indexes.insert(token);
 		}
 		if (_indexes.size() == size)
-			throw std::runtime_error("Location: indexes is not valid");
+			throw std::runtime_error("Location:: indexes is not valid");
 	}
 
 	void	Location::_fetchUploadPath(std::stringstream& streamLine)
@@ -142,12 +159,12 @@ namespace ft
 		if (token != "#")
 			_uploadPath = token;
 		else
-			throw std::runtime_error("Location: uploadPath is not valid");
+			throw std::runtime_error("Location:: uploadPath is not valid");
 		if (streamLine.good())
 		{
 			streamLine >> token;
 			if (token != "#")
-				throw std::runtime_error("Location: too many arguments for uploadPath");
+				throw std::runtime_error("Location:: too many arguments for uploadPath");
 		}
 	}
 
@@ -155,22 +172,17 @@ namespace ft
 	{
 		std::string	token;
 
-		static int i = 0;//!!!!!! error
-
-		if (i == 1)
-			throw std::runtime_error("Location: multiple autoIndex");
 		streamLine >> token;
 		if (token == "on")
 			_autoIndex = true;
 		else if (token != "off")
-			throw std::runtime_error("Location: autoindex is not valid");
+			throw std::runtime_error("Location:: autoindex is not valid");
 		if (streamLine.good())
 		{
 			streamLine >> token;
 			if (token != "#")
-				throw std::runtime_error("Location: too many arguments for autoindex");
+				throw std::runtime_error("Location:: too many arguments for autoindex");
 		}
-		i = 1;
 	}
 
 	void	Location::_fetchRedirections(std::stringstream& streamLine)
@@ -188,35 +200,19 @@ namespace ft
 			}
 			catch (std::exception& e)
 			{
-				throw std::runtime_error("Location: return: invalid code");
+				throw std::runtime_error("Location:: return: invalid code");
 			}
 			streamLine >> token;
 			// _redirections = std::make_pair(code, token);!!!!!!!!!!
 		}
 		else
-			throw std::runtime_error("Location: invalid code/path");
+			throw std::runtime_error("Location:: invalid code/path");
 		if (streamLine.good())
 		{
 			streamLine >> token;
 			if (token != "#")
-				throw std::runtime_error("Location: too many arguments for return");
+				throw std::runtime_error("Location:: too many arguments for return");
 		}
-	}
-	
-	void	Location::threat_line(std::stringstream& streamLine, std::string& token)
-	{
-		if (token == "root" && streamLine.good())
-			_fetchRoot(streamLine);
-		else if (token == "methods" && streamLine.good())
-			_fetchMethods(streamLine);
-		else if (token == "index" && streamLine.good())
-			_fetchIndexes(streamLine);
-		else if (token == "upload" && streamLine.good())
-			_fetchUploadPath(streamLine);
-		else if (token == "autoindex" && streamLine.good())
-			_fetchAutoIndex(streamLine);
-		else if (token == "return" && streamLine.good())
-			_fetchRedirections(streamLine);
 	}
 
 	void	Location::_deepCopy(const Location& src)
@@ -236,25 +232,20 @@ namespace ft
 		ostr << std::left;
 		ostr << getDisplayHeader("Location", LOCATION_HSIZE) << std::endl;
 
-
 		ostr << std::setw(fieldSize) << "root : " << location._root << std::endl;
 		ostr << std::setw(fieldSize) << "autoIndex : " << location._autoIndex << std::endl;
+		ostr << std::setw(fieldSize) << "uploadPath : " << location._uploadPath << std::endl;
+		ostr << std::setw(fieldSize) << location._redirection.first << " : " << location._redirection.second << std::endl;
 
-		ostr << getDisplaySubHeader("methods") << std::endl;
+		ostr << getDisplayHeader("methods", LOCATION_SHSIZE) << std::endl;
 		for (std::set<std::string>::const_iterator it = location._methods.begin(); it != location._methods.end(); ++it)
 			ostr << *it << std::endl;
-		ostr << getDisplaySubFooter("methods") << std::endl;
+		ostr << getDisplayFooter(LOCATION_SHSIZE) << std::endl;
 
-		ostr << getDisplaySubHeader("indexes") << std::endl;
+		ostr << getDisplayHeader("indexes", LOCATION_SHSIZE) << std::endl;
 		for (std::set<std::string>::const_iterator it = location._indexes.begin(); it != location._indexes.end(); ++it)
 			ostr << *it << std::endl;
-		ostr << getDisplaySubFooter("indexes") << std::endl;
-
-		ostr << getDisplaySubHeader("redirection") << std::endl;
-		ostr << std::setw(fieldSize) << location._redirection.first << " : " << location._redirection.second << std::endl;
-		ostr << getDisplaySubFooter("redirection") << std::endl;
-
-		ostr << std::setw(fieldSize) << "uploadPath : " << location._uploadPath << std::endl;
+		ostr << getDisplayFooter(LOCATION_SHSIZE) << std::endl;
 
 		ostr << getDisplayFooter(LOCATION_HSIZE) << std::endl;
 		return ostr;

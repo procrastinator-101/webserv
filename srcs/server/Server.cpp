@@ -41,15 +41,15 @@ namespace ft
 
 		ostr << server._sockt << std::endl;
 
-		ostr << getDisplaySubHeader("hosts") << std::endl;
+		ostr << getDisplayHeader("hosts", SERVER_SHSIZE) << std::endl;
 		for (size_t i = 0; i < server._hosts.size(); i++)
 			ostr << *server._hosts[i] << std::endl;
-		ostr << getDisplaySubFooter("hosts") << std::endl;
+		ostr << getDisplayFooter(SERVER_SHSIZE) << std::endl;
 
-		ostr << getDisplaySubHeader("clients") << std::endl;
+		ostr << getDisplayHeader("clients", SERVER_SHSIZE) << std::endl;
 		for (std::map<int, Client *>::const_iterator it = server._clients.begin(); it != server._clients.end(); ++it)
 			ostr << it->second << std::endl;
-		ostr << getDisplaySubFooter("clients") << std::endl;
+		ostr << getDisplayFooter(SERVER_SHSIZE) << std::endl;
 
 		ostr << getDisplayFooter(SERVER_HSIZE) << std::endl;
 		return ostr;

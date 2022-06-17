@@ -35,7 +35,7 @@ namespace ft
 		return true;
 	}
 
-	std::string	centerString(int width, const std::string& str)
+	std::string	centerString(int width, const std::string& str, char c)
 	{
 		int len = str.length();
 		if (width < len)
@@ -44,27 +44,27 @@ namespace ft
 		int diff = width - len;
 		int pad1 = diff / 2;
 		int pad2 = diff - pad1;
-		return std::string(pad1, ' ') + str + std::string(pad2, ' ');
+		return std::string(pad1, c) + str + std::string(pad2, c);
 	}
 
 	std::string	getDisplayFooter(size_t n)
 	{
-		return std::string( 40 + n, '_');
+		return std::string( 40 + n, '-');
 	}
 
 	std::string	getDisplayHeader(std::string str, size_t n)
 	{
 		std::string	decoration(20, '_');
-		return decoration + centerString(n, str) + decoration;
+		return decoration + centerString(n, str, '_') + decoration;
 	}
 
 	std::string	getDisplaySubHeader(std::string str)
 	{
-		return std::string(10, '-') + " " + str + ":";
+		return std::string(10, '=') + " " + str + ":";
 	}
 
 	std::string	getDisplaySubFooter(std::string str)
 	{
-		return std::string(12 + str.size(), '-');
+		return std::string(12 + str.size(), '=');
 	}
 }

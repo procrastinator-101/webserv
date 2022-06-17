@@ -1,17 +1,13 @@
 #include "Nginy.hpp"
-#include <exception>
-#include <string>
-#include <utility>
 
 namespace ft
 {
 	Nginy::Nginy()
 	{
 		//!!!!!!!! to remove
-		Server	*server = new Server;
-
-		server->_sockt = ServerSockt("127.0.0.1", "8080");
-		_servers.insert(std::make_pair(server->_sockt.fd, server));
+		ServerSockt	sockt("127.0.0.1", "8080");
+		Server	*server = new Server(sockt);
+		_servers.push_back(server);
 	}
 	
 	Nginy::~Nginy()
@@ -58,15 +54,21 @@ namespace ft
 			_serveClients(candidates);
 		}
 	}
+
+	void	Nginy::fetchConfiguration(const std::string& configFileName)
+	{
+		_configFileName = configFileName;
+		_parseConfigFile();
+	}
 	
 	void	Nginy::_initiateServers()
 	{
 		//stop or retrying waking it up ????
-		for (std::map<int, Server *>::iterator sit = _servers.begin(); sit != _servers.end(); ++sit)
+		for (size_t i = 0; i < _servers.size(); i++)
 		{
-			sit->second->_sockt.wakeUp();
-			_multiplexer.add(sit->second->_sockt.fd, aRead);
-			std::cout << "servers[" << sit->first << "].fd : " << sit->second->_sockt.fd << std::endl;
+			_servers[i]->_sockt.wakeUp();
+			_multiplexer.add(_servers[i]->_sockt.fd, aRead);
+			std::cout << "servers[" << i << "].fd : " << _servers[i]->_sockt.fd << std::endl;
 		}
 	}
 
@@ -74,11 +76,10 @@ namespace ft
 	{
 		std::map<int, int>::iterator		it;
 		std::map<int, Client *>::iterator	cit;
-		std::map<int, Server *>::iterator	sit;
 
-		for (sit = _servers.begin(); sit != _servers.end(); ++sit)
+		for (size_t i = 0; i < _servers.size(); i++)
 		{
-			for (cit = sit->second->_clients.begin(); cit != sit->second->_clients.end(); ++cit)
+			for (cit = _servers[i]->_clients.begin(); cit != _servers[i]->_clients.end(); ++cit)
 			{
 				it = candidates.find(cit->first);
 				if (it == candidates.end())
@@ -97,9 +98,9 @@ namespace ft
 	{
 		std::map<int, int>::iterator	it;
 
-		for (std::map<int, Server *>::iterator sit = _servers.begin(); sit != _servers.end(); ++sit)
+		for (size_t i = 0; i < _servers.size(); i++)
 		{
-			it = candidates.find(sit->second->_sockt.fd);
+			it = candidates.find(_servers[i]->_sockt.fd);
 			if (it == candidates.end())
 				continue;
 			if (it->second & aRead)
@@ -108,8 +109,8 @@ namespace ft
 
 				try 
 				{
-					client->_sockt = sit->second->_sockt.accept();
-					sit->second->_clients[client->_sockt.fd] = client;
+					client->_sockt = _servers[i]->_sockt.accept();
+					_servers[i]->_clients[client->_sockt.fd] = client;
 					_multiplexer.add(client->_sockt.fd, aRead);
 				}
 				catch (std::exception& e)
@@ -147,7 +148,7 @@ namespace ft
 				throw std::runtime_error("Invalid config file");
 		}
 		if (_servers.empty())
-			throw std::runtime_error("config file: No server found");
+			throw std::runtime_error("config file:: No server found");
 		configFile.close();
 	}
 	
@@ -176,7 +177,11 @@ namespace ft
 					continue ;
 				std::stringstream	lineStream(line);
 				
+				// std::cout << "////////////////////////////////////////////////////" << std::endl;
+				// std::cout << lineStream.str() << std::endl;
+				// std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 				lineStream >> token;
+				// std::cout << token << std::endl;
 				if (token == "#")
 					continue ;
 				if (token == "}")
@@ -184,9 +189,11 @@ namespace ft
 					isClosed = true;
 					break ;
 				}
-				std::cout << token << std::endl;
 				if (!lineStream.good())
+				{
+					std::cout << *host << std::endl;
 					throw std::runtime_error("Server:: invalid configuration!!");
+				}
 				else if (token == "listen")
 					sockt = _fetchServerSockt(lineStream);
 				else
@@ -240,20 +247,27 @@ namespace ft
 
 	void	Nginy::_addHost(ServerSockt& sockt, Host& host)
 	{
+		size_t	i;
 		Server	*target;
-		std::map<int, Server *>::iterator sit;
 
-		for (sit = _servers.begin(); sit != _servers.end(); ++sit)
+		for (i = 0; i < _servers.size(); i++)
 		{
-			if (sit->second->_sockt == sockt)
+			if (_servers[i]->_sockt == sockt)
 				break ;
 		}
-		if (sit == _servers.end())
+		if (i < _servers.size())
+		{
+			// std::cout << "--fd : " << sockt.fd << std::endl;
+			// std::cout << host << std::endl;
+			_servers[i]->_hosts.push_back(&host);
+		}
+		else
 		{
 			target = new Server(sockt);
 			try
 			{
-				_servers.insert(std::make_pair(sockt.fd, target));
+				_servers.push_back(target);
+				// std::cout << "fd : " << sockt.fd << std::endl;
 			}
 			catch (std::exception& e)
 			{
@@ -262,8 +276,6 @@ namespace ft
 			}
 			target->_hosts.push_back(&host);
 		}
-		else
-			sit->second->_hosts.push_back(&host);
 	}
 
 	void	Nginy::_deepCopy(const Nginy& src)
@@ -282,10 +294,10 @@ namespace ft
 
 		ostr << std::setw(fieldSize) << "configFileName : " << nginy._configFileName << std::endl;
 
-		ostr << getDisplaySubHeader("servers") << std::endl;
-		for (std::map<int, Server *>::const_iterator sit = nginy._servers.begin(); sit != nginy._servers.end(); ++sit)
-			ostr << *sit->second << std::endl;
-		ostr << getDisplaySubFooter("servers") << std::endl;
+		ostr << getDisplayHeader("servers", NGINY_SHSIZE) << std::endl;
+		for (size_t i = 0; i < nginy._servers.size(); i++)
+			ostr << *nginy._servers[i] << std::endl;
+		ostr << getDisplayFooter(NGINY_SHSIZE) << std::endl;
 
 		ostr << getDisplayFooter(NGINY_HSIZE) << std::endl;
 		return ostr;

@@ -38,7 +38,7 @@ namespace ft
 			_names.insert(value);
 		}
 		if (_names.size() - size == 0)
-			throw std::runtime_error("Server:: server_name is not valid");
+			throw std::runtime_error("Host:: server_name is not valid");
 	}
 
 	void	Host::fetchRoot(std::stringstream& lineStream)
@@ -49,12 +49,12 @@ namespace ft
 		if (value != "#")
 			_root = value;
 		else
-			throw std::runtime_error("Server:: root is not valid");
+			throw std::runtime_error("Host:: root is not valid");
 		if (lineStream.good())
 		{
 			lineStream >> value;
 			if (value != "#")
-				throw std::runtime_error("Server:: too many arguments for root");
+				throw std::runtime_error("Host:: too many arguments for root");
 		}
 	}
 
@@ -64,17 +64,17 @@ namespace ft
 		static int i = 0;//!!!!!!!! error
 
 		if (i == 1)
-			throw std::runtime_error("Server:: multiple autoIndex");
+			throw std::runtime_error("Host:: multiple autoIndex");
 		lineStream >> value;
 		if (value == "on")
 			_autoIndex = true;
 		else if (value != "off")
-			throw std::runtime_error("Server:: autoindex is not valid");
+			throw std::runtime_error("Host:: autoindex is not valid");
 		if (lineStream.good())
 		{
 			lineStream >> value;
 			if (value != "#")
-				throw std::runtime_error("Server:: too many arguments for autoindex");
+				throw std::runtime_error("Host:: too many arguments for autoindex");
 		}
 		i = 1;
 	}
@@ -93,10 +93,10 @@ namespace ft
 			if (value == "GET" || value == "POST" || value == "DELETE")
 				_methods.insert(value);
 			else
-				throw std::runtime_error("Server:: invalid method");
+				throw std::runtime_error("Host:: invalid method");
 		}
 		if (_methods.size() - size == 0)
-			throw std::runtime_error("Server:: methods is not valid");
+			throw std::runtime_error("Host:: methods is not valid");
 	}
 
 	void	Host::fetchIndexes(std::stringstream& lineStream)
@@ -113,7 +113,7 @@ namespace ft
 			_indexes.insert(value);
 		}
 		if (_indexes.size() == size)
-			throw std::runtime_error("Server:: index is not valid");
+			throw std::runtime_error("Host:: invalid index");
 	}
 
 	void	Host::fetchErrorPages(std::stringstream& lineStream)
@@ -124,7 +124,7 @@ namespace ft
 
 		lineStream >> code_str;
 		if (code_str == "#")
-			throw std::runtime_error("Server:: error_page is not valid");
+			throw std::runtime_error("Host:: invalid error_page");
 		if (lineStream.good() && isnumber(code_str))
 		{
 			code = ::atoi(code_str.c_str());
@@ -134,19 +134,19 @@ namespace ft
 			}
 			catch (std::exception& e)
 			{
-				throw std::runtime_error("Server:: error_page: invalid code");
+				throw std::runtime_error("Host:: invalid error_page code");
 			}
 			lineStream >> value;
 			//value == # ????
 			_errorPages[code] = value;
 		}
 		else
-			throw std::runtime_error("error_page: invalid code/page");
+			throw std::runtime_error("Host:: invalid error_page code/page");
 		if (lineStream.good())
 		{
 			lineStream >> value;
 			if (value != "#")
-				throw std::runtime_error("Server:: too many arguments for error_page");
+				throw std::runtime_error("Host:: too many arguments for error_page");
 		}
 	}
 
@@ -160,12 +160,12 @@ namespace ft
 		//opening and clonsing brackets are not handled
 		lineStream >> path;
 		if (path == "#")
-			throw std::runtime_error("Server:: location is not valid");
+			throw std::runtime_error("Host:: invalid location");
 		if (lineStream.good())
 		{
 			lineStream >> value;
 			if (value != "#")
-				throw std::runtime_error("Server:: too many arguments for location");
+				throw std::runtime_error("Host:: too many arguments for location");
 		}
 		loc = new Location(configFile, _root, _autoIndex, _indexes, _methods);
 		lit = _locations.find(path);
@@ -192,33 +192,33 @@ namespace ft
 		ostr << std::left;
 		ostr << getDisplayHeader("Host", HOST_HSIZE) << std::endl;
 
-		ostr << getDisplaySubHeader("Host names") << std::endl;
-		for (std::set<std::string>::const_iterator it = Host._names.begin(); it != Host._names.end(); ++it)
-			ostr << *it << std::endl;
-		ostr << getDisplaySubFooter("Host names") << std::endl;
-
 		ostr << std::setw(fieldSize) << "root : " << Host._root << std::endl;
 		ostr << std::setw(fieldSize) << "autoIndex : " << Host._autoIndex << std::endl;
 
-		ostr << getDisplaySubHeader("methods") << std::endl;
+		ostr << getDisplayHeader("names", HOST_SHSIZE) << std::endl;
+		for (std::set<std::string>::const_iterator it = Host._names.begin(); it != Host._names.end(); ++it)
+			ostr << *it << std::endl;
+		ostr << getDisplayFooter(HOST_SHSIZE) << std::endl;
+
+		ostr << getDisplayHeader("methods", HOST_SHSIZE) << std::endl;
 		for (std::set<std::string>::const_iterator it = Host._methods.begin(); it != Host._methods.end(); ++it)
 			ostr << *it << std::endl;
-		ostr << getDisplaySubFooter("methods") << std::endl;
+		ostr << getDisplayFooter(HOST_SHSIZE) << std::endl;
 
-		ostr << getDisplaySubHeader("indexes") << std::endl;
+		ostr << getDisplayHeader("indexes", HOST_SHSIZE) << std::endl;
 		for (std::set<std::string>::const_iterator it = Host._indexes.begin(); it != Host._indexes.end(); ++it)
 			ostr << *it << std::endl;
-		ostr << getDisplaySubFooter("indexes") << std::endl;
+		ostr << getDisplayFooter(HOST_SHSIZE) << std::endl;
 
-		ostr << getDisplaySubHeader("errorPages") << std::endl;
+		ostr << getDisplayHeader("errorPages", HOST_SHSIZE) << std::endl;
 		for (std::map<int, std::string>::const_iterator it = Host._errorPages.begin(); it != Host._errorPages.end(); ++it)
 			ostr << std::setw(fieldSize) << it->first << " : " << it->second << std::endl;
-		ostr << getDisplaySubFooter("errorPages") << std::endl;
+		ostr << getDisplayFooter(HOST_SHSIZE) << std::endl;
 
-		ostr << getDisplaySubHeader("locations") << std::endl;
+		ostr << getDisplayHeader("locations", HOST_SHSIZE) << std::endl;
 		for (std::map<std::string, Location *>::const_iterator it = Host._locations.begin(); it != Host._locations.end(); ++it)
 			ostr << *it->second << std::endl;
-		ostr << getDisplaySubFooter("locations") << std::endl;
+		ostr << getDisplayFooter(HOST_SHSIZE) << std::endl;
 
 		ostr << getDisplayFooter(HOST_HSIZE) << std::endl;
 		return ostr;

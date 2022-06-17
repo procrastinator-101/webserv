@@ -63,7 +63,7 @@ namespace ft
 		private:
 			void	_deepCopy(const Location& src);
 
-			void	threat_line(std::stringstream& streamLine, std::string& token);
+			void	_fetchValue(std::stringstream& streamLine, std::string& key);
 
 			void	_fetchRoot(std::stringstream& streamLine);
 			void	_fetchMethods(std::stringstream& streamLine);

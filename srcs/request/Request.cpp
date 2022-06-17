@@ -105,14 +105,14 @@ namespace ft
 		ostr << std::setw(fieldSize) << "path : " << request._path << std::endl;
 		ostr << std::setw(fieldSize) << "version : " << request._version << std::endl;
 
-		ostr << getDisplaySubHeader("headers") << std::endl;
+		ostr << getDisplayHeader("headers", REQUEST_SHSIZE) << std::endl;
 		for (size_t i = 0; i < request._headers.size(); i++)
 			ostr << std::setw(fieldSize) << request._headers[i].key << " : " << request._headers[i].value << std::endl;
-		ostr << getDisplaySubFooter("headers") << std::endl;
+		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
 
-		ostr << getDisplaySubHeader("body") << std::endl;
+		ostr << getDisplayHeader("body", REQUEST_SHSIZE) << std::endl;
 		ostr << request._body << std::endl;
-		ostr << getDisplaySubFooter("body") << std::endl;
+		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
 		
 		ostr << getDisplayFooter(REQUEST_HSIZE) << std::endl;
 		return ostr;
