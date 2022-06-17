@@ -38,6 +38,8 @@ namespace ft
 			Server();
 			~Server();
 
+			Server(ServerSockt sockt);
+
 		private:
 			Server(const Server& src);
 			Server	&operator=(const Server& rop);

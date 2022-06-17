@@ -37,8 +37,10 @@ namespace ft
 			Location();
 			~Location();
 
-			Location(const Location& src);
+			//might throw
+			Location(std::ifstream& configFile, std::string& root, bool autoIndex, std::set<std::string>& indexes, std::set<std::string>& methods);
 			
+			Location(const Location& src);
 			Location	&operator=(const Location& rop);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
@@ -60,6 +62,15 @@ namespace ft
 		//================================================================================================
 		private:
 			void	_deepCopy(const Location& src);
+
+			void	threat_line(std::stringstream& streamLine, std::string& token);
+
+			void	_fetchRoot(std::stringstream& streamLine);
+			void	_fetchMethods(std::stringstream& streamLine);
+			void	_fetchIndexes(std::stringstream& streamLine);
+			void	_fetchUploadPath(std::stringstream& streamLine);
+			void	_fetchAutoIndex(std::stringstream& streamLine);
+			void	_fetchRedirections(std::stringstream& streamLine);
 		//================================================================================================
 		//	private methods End
 		//================================================================================================

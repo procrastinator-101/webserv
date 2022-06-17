@@ -24,6 +24,156 @@ namespace ft
 		return *this;
 	}
 
+	void	Host::fetchNames(std::stringstream& lineStream)
+	{
+		size_t	size;
+		std::string	value;
+
+		size = _names.size();
+		while (lineStream.good())
+		{
+			lineStream >> value;
+			if (value == "#")
+				break ;
+			_names.insert(value);
+		}
+		if (_names.size() - size == 0)
+			throw std::runtime_error("Server:: server_name is not valid");
+	}
+
+	void	Host::fetchRoot(std::stringstream& lineStream)
+	{
+		std::string	value;
+
+		lineStream >> value;
+		if (value != "#")
+			_root = value;
+		else
+			throw std::runtime_error("Server:: root is not valid");
+		if (lineStream.good())
+		{
+			lineStream >> value;
+			if (value != "#")
+				throw std::runtime_error("Server:: too many arguments for root");
+		}
+	}
+
+	void	Host::fetchAutoIndex(std::stringstream& lineStream)
+	{
+		std::string	value;
+		static int i = 0;//!!!!!!!! error
+
+		if (i == 1)
+			throw std::runtime_error("Server:: multiple autoIndex");
+		lineStream >> value;
+		if (value == "on")
+			_autoIndex = true;
+		else if (value != "off")
+			throw std::runtime_error("Server:: autoindex is not valid");
+		if (lineStream.good())
+		{
+			lineStream >> value;
+			if (value != "#")
+				throw std::runtime_error("Server:: too many arguments for autoindex");
+		}
+		i = 1;
+	}
+
+	void	Host::fetchMethods(std::stringstream& lineStream)
+	{
+		size_t	size;
+		std::string	value;
+
+		size = _methods.size();
+		while (lineStream.good())
+		{
+			lineStream >> value;
+			if (value == "#")
+				break ;
+			if (value == "GET" || value == "POST" || value == "DELETE")
+				_methods.insert(value);
+			else
+				throw std::runtime_error("Server:: invalid method");
+		}
+		if (_methods.size() - size == 0)
+			throw std::runtime_error("Server:: methods is not valid");
+	}
+
+	void	Host::fetchIndexes(std::stringstream& lineStream)
+	{
+		size_t	size;
+		std::string	value;
+
+		size = _indexes.size();
+		while (lineStream.good())
+		{
+			lineStream >> value;
+			if (value == "#")
+				break ;
+			_indexes.insert(value);
+		}
+		if (_indexes.size() == size)
+			throw std::runtime_error("Server:: index is not valid");
+	}
+
+	void	Host::fetchErrorPages(std::stringstream& lineStream)
+	{
+		int			code;
+		std::string	value;
+		std::string	code_str;
+
+		lineStream >> code_str;
+		if (code_str == "#")
+			throw std::runtime_error("Server:: error_page is not valid");
+		if (lineStream.good() && isnumber(code_str))
+		{
+			code = ::atoi(code_str.c_str());
+			try
+			{
+				HttpStatus::resolve(code);
+			}
+			catch (std::exception& e)
+			{
+				throw std::runtime_error("Server:: error_page: invalid code");
+			}
+			lineStream >> value;
+			//value == # ????
+			_errorPages[code] = value;
+		}
+		else
+			throw std::runtime_error("error_page: invalid code/page");
+		if (lineStream.good())
+		{
+			lineStream >> value;
+			if (value != "#")
+				throw std::runtime_error("Server:: too many arguments for error_page");
+		}
+	}
+
+	void	Host::fetchLocation(std::ifstream& configFile, std::stringstream& lineStream)
+	{
+		Location	*loc;
+		std::string path;
+		std::string	value;
+		std::map<std::string, Location *>::iterator	lit;
+		
+		//opening and clonsing brackets are not handled
+		lineStream >> path;
+		if (path == "#")
+			throw std::runtime_error("Server:: location is not valid");
+		if (lineStream.good())
+		{
+			lineStream >> value;
+			if (value != "#")
+				throw std::runtime_error("Server:: too many arguments for location");
+		}
+		loc = new Location(configFile, _root, _autoIndex, _indexes, _methods);
+		lit = _locations.find(path);
+		if (lit != _locations.end())
+			delete lit->second;
+		_locations[path] = loc;
+	}
+
 	void	Host::_deepCopy(const Host& src)
 	{
 		_names = src._names;
@@ -66,8 +216,8 @@ namespace ft
 		ostr << getDisplaySubFooter("errorPages") << std::endl;
 
 		ostr << getDisplaySubHeader("locations") << std::endl;
-		for (std::map<std::string, Location>::const_iterator it = Host._locations.begin(); it != Host._locations.end(); ++it)
-			ostr << it->second << std::endl;
+		for (std::map<std::string, Location *>::const_iterator it = Host._locations.begin(); it != Host._locations.end(); ++it)
+			ostr << *it->second << std::endl;
 		ostr << getDisplaySubFooter("locations") << std::endl;
 
 		ostr << getDisplayFooter(HOST_HSIZE) << std::endl;

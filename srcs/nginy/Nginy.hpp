@@ -32,7 +32,6 @@ namespace ft
 			std::string				_configFileName;
 			Selecter				_multiplexer;
 			std::map<int, Server *>	_servers;
-			std::map<int, Client *>	_clients;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
@@ -71,16 +70,14 @@ namespace ft
 		private:
 			void	_parseConfigFile();
 
-			void	_parseServerBlock();
-			void	_fetchServerSockt(std::stringstream& lineStream);
-			void	_fetchServerNames(std::stringstream& lineStream);
-			void	_fetchRoot(std::stringstream& lineStream);
-			void	_fetchAutoIndex(std::stringstream& lineStream);
-			void	_fetchMethods(std::stringstream& lineStream);
-			void	_fetchIndexes(std::stringstream& lineStream);
-			void	_fetchErrorPages(std::stringstream& lineStream);
+			//server block parsing functions
+			void	_parseServerBlock(std::ifstream& configFile);
+			ServerSockt	_fetchServerSockt(std::stringstream& lineStream);
+			void	_fetchHostValue(Host& host, std::ifstream& configFile, std::stringstream &lineStream, std::string& key);
 
+			void	_addHost(ServerSockt& sockt, Host& host);
 
+			//miscellaneous private methods
 			void	_deepCopy(const Nginy& src);
 			void	_initiateServers();
 			void	_serveClients(std::map<int, int>& candidates);

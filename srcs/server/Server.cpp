@@ -11,6 +11,10 @@ namespace ft
 	{
 	}
 
+	Server::Server(ServerSockt sockt) : _sockt(sockt)
+	{
+	}
+
 	Server::Server(const Server& src) :	_sockt(src._sockt), _hosts(src._hosts), _clients(src._clients)
 	{
 	}

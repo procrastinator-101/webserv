@@ -24,7 +24,7 @@ namespace ft
 			std::set<std::string>				_methods;
 			std::set<std::string>				_indexes;
 			std::map<int, std::string>			_errorPages;
-			std::map<std::string, Location>		_locations;
+			std::map<std::string, Location *>	_locations;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
@@ -49,7 +49,13 @@ namespace ft
 		//	Host operations
 		//================================================================================================
 		public:
-			
+			void	fetchNames(std::stringstream& lineStream);
+			void	fetchRoot(std::stringstream& lineStream);
+			void	fetchAutoIndex(std::stringstream& lineStream);
+			void	fetchMethods(std::stringstream& lineStream);
+			void	fetchIndexes(std::stringstream& lineStream);
+			void	fetchErrorPages(std::stringstream& lineStream);
+			void	fetchLocation(std::ifstream& configFile, std::stringstream& lineStream);
 		//================================================================================================
 		//	Host operations End
 		//================================================================================================

@@ -139,6 +139,20 @@ namespace ft
 		backlog = bcklog;
 	}
 
+	bool	operator==(const Sockt& lhs, const Sockt& rhs)
+	{
+		if (lhs.fd != rhs.fd || lhs.backlog != rhs.backlog)
+			return false;
+		if (lhs.address.sin_port != rhs.address.sin_port)
+			return false;
+		return lhs.address.sin_addr.s_addr == rhs.address.sin_addr.s_addr;
+	}
+
+	bool	operator!=(const Sockt& lhs, const Sockt& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
 	std::ostream	&operator<<(std::ostream& ostr, const ft::Sockt& sockt)
 	{
 		const int	fieldSize = 30;

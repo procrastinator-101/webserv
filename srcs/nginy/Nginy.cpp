@@ -1,4 +1,7 @@
 #include "Nginy.hpp"
+#include <exception>
+#include <string>
+#include <utility>
 
 namespace ft
 {
@@ -75,7 +78,7 @@ namespace ft
 
 		for (sit = _servers.begin(); sit != _servers.end(); ++sit)
 		{
-			for (cit = _clients.begin(); cit != _clients.end(); ++cit)
+			for (cit = sit->second->_clients.begin(); cit != sit->second->_clients.end(); ++cit)
 			{
 				it = candidates.find(cit->first);
 				if (it == candidates.end())
@@ -139,7 +142,7 @@ namespace ft
 			if (key == "#")
 				continue ;
 			if (key == "server")
-				_parseServerBlock();
+				_parseServerBlock(configFile);
 			else
 				throw std::runtime_error("Invalid config file");
 		}
@@ -148,8 +151,119 @@ namespace ft
 		configFile.close();
 	}
 	
-	void	Nginy::_parseServerBlock()
+	void	Nginy::_parseServerBlock(std::ifstream& configFile)
 	{
+		Host		*host;
+		bool		isClosed;
+		ServerSockt	sockt;
+		std::string	line;
+		std::string	token;
+
+		sockt.fd = 0;
+		host = new Host;
+		isClosed = false;
+		try
+		{
+			std::getline(configFile, line);
+			std::stringstream	ss(line);
+			ss >> token;
+			if (token != "{")
+				throw std::runtime_error("Server:: unexpected token {" + token + "}");
+			while (configFile.good())
+			{
+				std::getline(configFile, line);
+				if (line.empty())
+					continue ;
+				std::stringstream	lineStream(line);
+				
+				lineStream >> token;
+				if (token == "#")
+					continue ;
+				if (token == "}")
+				{
+					isClosed = true;
+					break ;
+				}
+				std::cout << token << std::endl;
+				if (!lineStream.good())
+					throw std::runtime_error("Server:: invalid configuration!!");
+				else if (token == "listen")
+					sockt = _fetchServerSockt(lineStream);
+				else
+					_fetchHostValue(*host, configFile, lineStream, token);
+			}
+			if (!isClosed || !sockt.fd)
+				throw std::runtime_error("Server:: invalid configuration");
+			_addHost(sockt, *host);
+		}
+		catch (std::exception& e)
+		{
+			delete host;
+			throw ;
+		}
+	}
+
+	void	Nginy::_fetchHostValue(Host& host, std::ifstream& configFile, std::stringstream &lineStream, std::string& key)
+	{
+		if (key == "server_name")
+			host.fetchNames(lineStream);
+		else if (key == "root")
+			host.fetchRoot(lineStream);
+		else if (key == "autoindex")
+			host.fetchAutoIndex(lineStream);
+		else if (key == "methods")
+			host.fetchMethods(lineStream);
+		else if (key == "index")
+			host.fetchIndexes(lineStream);
+		else if (key == "error_page")
+			host.fetchErrorPages(lineStream);
+		else if (key == "location")
+			host.fetchLocation(configFile, lineStream);
+		else
+			throw std::runtime_error("Server:: invalid key {" + key + "}");
+	}
+
+	ServerSockt	Nginy::_fetchServerSockt(std::stringstream& lineStream)
+	{
+		std::string	value;
+		std::vector<std::string> tmp;
+
+		lineStream >> value;
+		if (lineStream.good())
+			throw std::runtime_error("Server:: too many arguments for listen");
+		
+		tmp = ft::split(value, ":");
+		if (tmp.size() != 2)
+			throw std::runtime_error("Server:: listen: invalid add/port");
+		return ServerSockt(tmp[0], tmp[1]);
+	}
+
+	void	Nginy::_addHost(ServerSockt& sockt, Host& host)
+	{
+		Server	*target;
+		std::map<int, Server *>::iterator sit;
+
+		for (sit = _servers.begin(); sit != _servers.end(); ++sit)
+		{
+			if (sit->second->_sockt == sockt)
+				break ;
+		}
+		if (sit == _servers.end())
+		{
+			target = new Server(sockt);
+			try
+			{
+				_servers.insert(std::make_pair(sockt.fd, target));
+			}
+			catch (std::exception& e)
+			{
+				delete target;
+				throw ;
+			}
+			target->_hosts.push_back(&host);
+		}
+		else
+			sit->second->_hosts.push_back(&host);
 	}
 
 	void	Nginy::_deepCopy(const Nginy& src)

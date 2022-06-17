@@ -106,12 +106,14 @@ namespace ft
 
 
 		//================================================================================================
-		//	overload << for Sockt
+		//	overload operators for Sockt
 		//================================================================================================
 		public:
+			friend bool	operator==(const Sockt& lhs, const Sockt& rhs);
+			friend bool	operator!=(const Sockt& lhs, const Sockt& rhs);
 			friend std::ostream	&operator<<(std::ostream& ostr, const Sockt& sockt);
 		//================================================================================================
-		//	overload << for Sockt End
+		//	overload operators for Sockt End
 		//================================================================================================
 	};
 }
