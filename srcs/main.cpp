@@ -25,8 +25,8 @@ int main(int argc, char** argv)
 		{
 			std::cout << argv[1] << std::endl;
 		}
-		std::cout << nginy << std::endl;
-		// nginy.up();
+		// std::cout << nginy << std::endl;
+		nginy.up();
 	}
 	catch (std::exception& e)
 	{

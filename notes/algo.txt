@@ -91,6 +91,13 @@ handle request:
 	-	prepare the response
 
 
+prepare the response:
+	-	status line
+	-	headers:
+		-	content-length
+		-	keepAlive
+	-	body
+
 handle response:
 	-	
 =====================================================================================================

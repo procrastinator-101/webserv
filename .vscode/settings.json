@@ -3,5 +3,8 @@
   "[cpp]": {
     "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
   },
-  "editor.insertSpaces": false
+"editor.insertSpaces": false,
+"[html]": {
+	"editor.defaultFormatter": "vscode.html-language-features"
+}
 }

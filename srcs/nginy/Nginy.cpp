@@ -41,17 +41,17 @@ namespace ft
 		while (1)
 		{
 			// std::cout << *this << std::endl;
-			std::cout << _multiplexer << std::endl;
-			std::cout << "fetching started" << std::endl;
+			// std::cout << _multiplexer << std::endl;
+			// std::cout << "fetching started" << std::endl;
 			candidates = _multiplexer.fetch();
-			std::cout << "fetching ended" << std::endl;
+			// std::cout << "fetching ended" << std::endl;
 			if (candidates.empty())
 				continue ;
-			std::cout << "candidates" << std::endl;
-			for (std::map<int, int>::const_iterator it = candidates.begin(); it != candidates.end(); ++it)
-				std::cout << it->first << " ";
-			std::cout << "candidatesEnd" << std::endl;
-			std::cout << std::endl;
+			// std::cout << "candidates" << std::endl;
+			// for (std::map<int, int>::const_iterator it = candidates.begin(); it != candidates.end(); ++it)
+				// std::cout << it->first << " ";
+			// std::cout << "candidatesEnd" << std::endl;
+			// std::cout << std::endl;
 			_acceptNewClients(candidates);
 			_serveClients(candidates);
 		}
@@ -70,12 +70,13 @@ namespace ft
 		{
 			_servers[i]->_sockt.wakeUp();
 			_multiplexer.add(_servers[i]->_sockt.fd, aRead);
-			std::cout << "servers[" << i << "].fd : " << _servers[i]->_sockt.fd << std::endl;
+			// std::cout << "servers[" << i << "].fd : " << _servers[i]->_sockt.fd << std::endl;
 		}
 	}
 
 	void	Nginy::_serveClients(std::map<int, int>& candidates)
 	{
+		bool	isFinished;
 		std::map<int, int>::iterator		it;
 		std::map<int, Client *>::iterator	cit;
 
@@ -87,9 +88,30 @@ namespace ft
 				if (it == candidates.end())
 					continue;
 				if (it->second & aRead)
-					std::cout << "handle request" << std::endl;
+				{
+					isFinished = cit->second->handleRequest();
+					if (isFinished)
+					{
+						_multiplexer.del(cit->first, aRead);
+						_multiplexer.add(cit->first, aWrite);
+						std::cout << cit->second->_request << std::endl;
+					}
+				}
 				else if (it->second & aWrite)
-					std::cout << "handle response" << std::endl;
+				{
+					// std::cout << "handle response" << std::endl;
+					if (isFinished)
+					{
+						_multiplexer.del(cit->first, aWrite);
+						if (cit->second->keepAlive())
+							_multiplexer.add(cit->first, aRead);
+						else
+						{
+							delete cit->second;
+							_servers[i]->_clients.erase(it->second);
+						}
+					}
+				}
 				else
 					std::cout << "fd except" << std::endl;
 			}

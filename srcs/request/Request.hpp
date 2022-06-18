@@ -1,6 +1,8 @@
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 
+#include <cstddef>
+#include <cstring>
 #include <string>
 #include <vector>
 
@@ -21,6 +23,10 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
+			bool						_keepAlive;
+			size_t						_bodySize;
+			size_t						_contentLength;
+			
 			std::string					_msg;
 			std::string					_method;
 			std::string					_path;
@@ -52,6 +58,8 @@ namespace ft
 		//	Request operations
 		//================================================================================================
 		public:
+			bool	parse(char *buffer, size_t size);
+
 			void	_parseMessage();
 			void	_parseStartLine(std::vector<std::string>& msgLines);
 			void	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
@@ -63,6 +71,7 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
+			bool	_checkEndParse();
 			void	_deepCopy(const Request& src); // = delete
 		//================================================================================================
 		//	private methods End

@@ -2,7 +2,7 @@
 
 namespace ft
 {
-	Request::Request()
+	Request::Request() : _keepAlive(false), _bodySize(0), _contentLength(0)
 	{
 	}
 
@@ -10,13 +10,14 @@ namespace ft
 	{
 	}
 
-	Request::Request(std::string& msg) : _msg(msg)
+	Request::Request(std::string& msg) :  _keepAlive(false), _bodySize(0), _contentLength(0), _msg(msg)
 	{
 		_parseMessage();
 	}
 
-	Request::Request(const Request& src) 
+	Request::Request(const Request& src)
 	{
+		(void)src;
 	}
 
 	Request	&Request::operator=(const Request& rop)
@@ -25,6 +26,51 @@ namespace ft
 			return *this;
 		_deepCopy(rop);
 		return *this;
+	}
+
+	bool	Request::parse(char *buffer, size_t size)
+	{
+		int		end;
+		char	*ptr;
+
+		//if the header is completely received
+		if (_bodySize)
+		{
+			_body << buffer;
+			_bodySize += size;
+		}
+		//the header is still not completely received
+		else
+		{
+			ptr = ::strstr(buffer, "\r\n\r\n");
+			if (!ptr)
+				_msg.append(buffer);
+			else
+			{
+				end = ptr - buffer;
+				_msg.append(buffer, end);
+				_parseMessage();
+				_msg.clear();
+				_bodyFileName = getRandomFileName();
+				_body.open(_bodyFileName.c_str(), std::ios_base::out);
+				_body << (buffer + end + 4);
+				_bodySize += size - end - 4;
+			}
+		}
+		return _checkEndParse();
+	}
+
+	bool	Request::_checkEndParse()
+	{
+		if (_bodySize == _contentLength)
+		{
+			_body.close();
+			_bodySize = 0;
+			return true;
+		}
+		else if (_bodySize > _contentLength)
+			throw std::runtime_error("Bad Request");
+		return false;
 	}
 
 	void	Request::_parseMessage()
@@ -69,17 +115,19 @@ namespace ft
 	
 	void	Request::_deepCopy(const Request& src)
 	{
+		(void)src;
 	}
 
 	std::ostream	&operator<<(std::ostream& ostr, const ft::Request& request)
 	{
 		const int		fieldSize = 30;
 		std::string		line;
-		std::fstream	bodyFile(request._bodyFileName);
+		std::ifstream	bodyFile;
 
 		ostr << std::left;
 		ostr << getDisplayHeader("Request", REQUEST_HSIZE) << std::endl;
 
+		ostr << std::setw(fieldSize) << "keepAlive : " << request._keepAlive << std::endl;
 		ostr << std::setw(fieldSize) << "method : " << request._method << std::endl;
 		ostr << std::setw(fieldSize) << "path : " << request._path << std::endl;
 		ostr << std::setw(fieldSize) << "version : " << request._version << std::endl;
@@ -92,11 +140,13 @@ namespace ft
 		ostr << getDisplayHeader("body", REQUEST_SHSIZE) << std::endl;
 		ostr << "name : " << request._bodyFileName << std::endl;
 		ostr << "=============================================================================" << std::endl;
+		bodyFile.open((request._bodyFileName.c_str()));
 		while (bodyFile.good())
 		{
 			std::getline(bodyFile, line);
 			ostr << line << std::endl;
 		}
+		bodyFile.close();
 		ostr << "=============================================================================" << std::endl;
 		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
 		

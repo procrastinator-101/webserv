@@ -104,7 +104,7 @@ namespace ft
 			timeout.tv_usec = (milliseconds % 1000) * 1000;
 			ret = ::select(nfds, &_readfdsCopy, &_writefdsCopy, &_exceptfdsCopy, &timeout);
 		}
-		std::cerr << "select:: errno = " << strerror(errno) << std::endl;
+		// std::cerr << "select:: errno = " << strerror(errno) << std::endl;
 		if (ret < 0)
 			throw std::runtime_error("select fecthing failure");
 		return _checkFetchedFds(_readfdsCopy, _writefdsCopy, _exceptfdsCopy);

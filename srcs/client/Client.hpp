@@ -4,6 +4,7 @@
 #include "../sockets/Sockt.hpp"
 #include "../request/Request.hpp"
 #include "../response/Response.hpp"
+#include <cstddef>
 
 #define HTTP_NEWLINE "\r\n"
 
@@ -19,7 +20,6 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			bool	_keepAlive;
 			Sockt	_sockt;
 			Request	_request;
 			Response	_response;
@@ -55,6 +55,7 @@ namespace ft
 		//	Client operations
 		//================================================================================================
 		public:
+			bool	keepAlive() const;
 			/**
 			 * @brief 
 			 * 
@@ -79,6 +80,8 @@ namespace ft
 		//================================================================================================
 		private:
 			void	_deepCopy(const Client& src);
+
+			void	_prepareResponse();
 		//================================================================================================
 		//	private methods End
 		//================================================================================================

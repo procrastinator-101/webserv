@@ -15,6 +15,7 @@ namespace ft
 
 	Response::Response(const Response& src)
 	{
+		(void)src;
 	}
 
 	Response	&Response::operator=(const Response& rop)
@@ -27,13 +28,14 @@ namespace ft
 
 	void	Response::_deepCopy(const Response& src)
 	{
+		(void)src;
 	}
 
 	std::ostream	&operator<<(std::ostream& ostr, const Response& response)
 	{
 		const int		fieldSize = 30;
 		std::string		line;
-		std::fstream	bodyFile(response._bodyFileName);
+		std::ifstream	bodyFile;
 
 		ostr << std::left;
 		ostr << getDisplayHeader("Response", RESPONSE_HSIZE) << std::endl;
@@ -49,11 +51,13 @@ namespace ft
 		ostr << getDisplaySubHeader("body") << std::endl;
 		ostr << "name : " << response._bodyFileName << std::endl;
 		ostr << "=============================================================================" << std::endl;
+		bodyFile.open((response._bodyFileName.c_str()));
 		while (bodyFile.good())
 		{
 			std::getline(bodyFile, line);
 			ostr << line << std::endl;
 		}
+		bodyFile.close();
 		ostr << "=============================================================================" << std::endl;
 		ostr << getDisplaySubFooter("body") << std::endl;
 		
