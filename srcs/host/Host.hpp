@@ -54,6 +54,7 @@ namespace ft
 		//	Host operations
 		//================================================================================================
 		public:
+			bool	hasName(const std::string& name) const;
 			void	fetchNames(std::stringstream& lineStream);
 			void	fetchRoot(std::stringstream& lineStream);
 			void	fetchAutoIndex(std::stringstream& lineStream);

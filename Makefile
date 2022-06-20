@@ -28,14 +28,6 @@ CLIENT_SRC = $(CLIENT_PATH)/Client.cpp
 CLIENT_HDR = $(CLIENT_PATH)/Client.hpp
 #================================================================================
 
-# header_field
-#================================================================================
-HEADER_FIELD_PATH = $(SRCS_PATH)/header_field
-
-HEADER_FIELD_SRC = $(HEADER_FIELD_PATH)/HeaderField.cpp
-HEADER_FIELD_HDR = $(HEADER_FIELD_PATH)/HeaderField.hpp
-#================================================================================
-
 # host
 #================================================================================
 HOST_PATH = $(SRCS_PATH)/host
@@ -125,20 +117,20 @@ STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 
 # includes
 #--------------------------------------------------------------------------------
-NGINY_CONF_PATH_INC = NGINY_CONF_PATH_INC=\"$$PWD/confFiles/default.conf\"
-NGINY_VAR_PATH_INC = NGINY_VAR_PATH_INC=\"/goinfre/$$USER/var/nginy\"
+NGINY_CONF_PATH_INC = NGINY_CONF_PATH=\"$$PWD/confFiles/default.conf\"
+NGINY_VAR_PATH_INC = NGINY_VAR_PATH=\"/goinfre/$$USER/var/nginy\"
+NGINY_INDEX_PATH_INC = NGINY_INDEX_PATH=\"$$PWD/indexes\"
 
-INCLUDE_PARAMS = $(NGINY_CONF_PATH_INC) $(NGINY_VAR_PATH_INC)
+INCLUDE_PARAMS = $(NGINY_CONF_PATH_INC) $(NGINY_VAR_PATH_INC) $(NGINY_INDEX_PATH_INC)
 #--------------------------------------------------------------------------------
 
 
-SRC =	$(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HEADER_FIELD_SRC) $(HOST_SRC) \
-		$(HTTP_STATUS_SRC) $(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) \
-		$(REQUEST_SRC) $(RESPONSE_SRC) $(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
+SRC =	$(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HOST_SRC) $(HTTP_STATUS_SRC) \
+		$(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) \
+		$(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
 
-HDR =	$(CLIENT_HDR) $(HEADER_FIELD_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) \
-		$(MULTIPLEX_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) \
-		$(SOCKT_HDR) $(STDLIB_HDR)
+HDR =	$(CLIENT_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) $(MULTIPLEX_HDR) \
+		$(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR) $(STDLIB_HDR)
 
 
 INC = $(INCLUDE_PARAMS:%=-D%)

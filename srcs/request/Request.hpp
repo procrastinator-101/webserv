@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include <map>
 #include <sstream>
 #include <fstream>
 #include <iomanip>
@@ -14,9 +15,10 @@
 
 #include "../sockets/Sockt.hpp"
 #include "../stdlib/stdlib.hpp"
-#include "../header_field/HeaderField.hpp"
 
 #define NGINY_VAR_PATH_INC	""
+
+# define BUFFER_SIZE 1024
 
 namespace ft
 {
@@ -29,29 +31,19 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			bool						_keepAlive;
-			size_t						_bodySize;
-			size_t						_contentLength;
-			
-			std::string					_msg;
-			std::string					_method;
-			std::string					_path;
-			std::string					_version;
-			std::vector<HeaderField>	_headers;
-			std::string					_bodyFileName;
-			std::fstream				_body;
+			bool								_keepAlive;
+			size_t								_bodySize;
+			size_t								_contentLength;		
+			std::string							_msg;
+
+			std::string							_method;
+			std::string							_path;
+			std::string							_version;
+			std::map<std::string, std::string>	_headers;
+			std::string							_bodyFileName;
+			std::fstream						_body;
 		//================================================================================================
 		//	attributes End
-		//================================================================================================
-
-
-		//================================================================================================
-		//	static attributes
-		//================================================================================================
-		public:
-			static const size_t bufferSize;
-		//================================================================================================
-		//	static attributes End
 		//================================================================================================
 
 

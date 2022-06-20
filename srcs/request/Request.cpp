@@ -2,8 +2,6 @@
 
 namespace ft
 {
-	const size_t Request::bufferSize = 1024;
-
 	Request::Request() : _keepAlive(false), _bodySize(0), _contentLength(0)
 	{
 	}
@@ -34,12 +32,12 @@ namespace ft
 	{
 		bool	ret;
 		int		received;
-		char	buffer[bufferSize + 1];
+		char	buffer[BUFFER_SIZE + 1];
 
 		ret = true;
-		received = ::recv(fd, buffer, bufferSize, 0);
+		received = ::recv(fd, buffer, BUFFER_SIZE, 0);
 		if (received < 0)
-			throw std::runtime_error("Client:: recv failed");
+			throw std::runtime_error("Request:: recv failed");
 		if (received)
 		{
 			buffer[received] = 0;
@@ -84,7 +82,7 @@ namespace ft
 				end = ptr - buffer;
 				_msg.append(buffer, end);
 				_parseMessage();
-				_bodyFileName = getRandomFileName();
+				_bodyFileName = NGINY_VAR_PATH + "/" + getRandomFileName();
 				_body.open(_bodyFileName.c_str(), std::ios_base::out);
 				_body << (buffer + end + 4);
 				_bodySize += size - end - 4;
@@ -138,7 +136,7 @@ namespace ft
 			header = split(msgLines[i], ": ");
 			if (header.size() != 2)
 				throw std::runtime_error("Bad Request");
-			_headers.push_back(HeaderField(header[0], header[1]));
+			_headers.insert(std::make_pair(header[0], header[1]));
 		}
 	}
 	
@@ -162,8 +160,8 @@ namespace ft
 		ostr << std::setw(fieldSize) << "version : " << request._version << std::endl;
 
 		ostr << getDisplayHeader("headers", REQUEST_SHSIZE) << std::endl;
-		for (size_t i = 0; i < request._headers.size(); i++)
-			ostr << std::setw(fieldSize) << request._headers[i].key << " : " << request._headers[i].value << std::endl;
+		for (std::map<std::string, std::string>::const_iterator it = request._headers.begin(); it != request._headers.end(); ++it)
+			ostr << std::setw(fieldSize) << it->first << " : " << it->second << std::endl;
 		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
 
 		ostr << getDisplayHeader("body", REQUEST_SHSIZE) << std::endl;

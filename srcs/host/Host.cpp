@@ -26,6 +26,14 @@ namespace ft
 		return *this;
 	}
 
+	bool	Host::hasName(const std::string& name) const
+	{
+		std::set<std::string>::const_iterator	it;
+
+		it = _names.find(name);
+		return it != _names.end();
+	}
+
 	void	Host::fetchNames(std::stringstream& lineStream)
 	{
 		size_t	size;

@@ -1,5 +1,7 @@
 #include "Client.hpp"
 
+#include "../server/Server.hpp"
+
 namespace ft
 {
 	Client::Client()
@@ -23,28 +25,25 @@ namespace ft
 		return *this;
 	}
 
-	bool	Client::handleRequest()
+	bool	Client::handleRequest(const Server& server)
 	{
 		bool	ret;
 		
 		ret = _request.receive(_sockt.fd);
 		if (!ret)
 			return ret;
-		host = _fetchTargetedHost();
-		_response.build(host);
+		_response.build(server._hosts, _request);
 		_request.reset();
 		return ret;
 	}
 
 	void	Client::_prepareResponse()
 	{
-
 	}
 
-	bool	Client::handleResponse(const Server& server)
+	bool	Client::handleResponse()
 	{
-		(void)server;
-		return false;
+		return _response.send(_sockt.fd);
 	}
 
 	bool	Client::keepAlive() const

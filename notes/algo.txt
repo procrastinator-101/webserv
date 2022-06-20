@@ -117,6 +117,16 @@ prepare the response:
 
 handle response:
 	-	
+
+
+*	send response:
+	-	!isHeaderSent
+		-	buffer + (msg + sent)
+		-	if header is sent 
+			-	isHeaderSent = 1
+	-	isHeaderSent
+		-	fill str from body
+		-	buffer + str
 =====================================================================================================
 
 

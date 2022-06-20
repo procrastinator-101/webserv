@@ -5,6 +5,8 @@
 #include <vector>
 #include <sstream>
 
+#include <sys/stat.h>
+
 //level 1
 //-------------------------------------------------------
 #define SOCKT_HSIZE			20
@@ -68,6 +70,8 @@ namespace ft
 
 	std::string	getRandomFileName();
 	std::string	ft_itoa(int n);
+
+	size_t	getFileSize(const std::string& fileName);
 }
 
 #endif

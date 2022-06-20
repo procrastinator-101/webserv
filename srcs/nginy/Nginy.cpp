@@ -89,7 +89,7 @@ namespace ft
 					continue;
 				if (it->second & aRead)
 				{
-					isFinished = cit->second->handleRequest(_servers[i]->_hosts);
+					isFinished = cit->second->handleRequest(*_servers[i]);
 					if (isFinished)
 					{
 						_multiplexer.del(cit->first, aRead);
@@ -100,8 +100,10 @@ namespace ft
 				else if (it->second & aWrite)
 				{
 					// std::cout << "handle response" << std::endl;
+					isFinished = cit->second->handleResponse();
 					if (isFinished)
 					{
+						cit->second->_response.reset();
 						_multiplexer.del(cit->first, aWrite);
 						if (cit->second->keepAlive())
 							_multiplexer.add(cit->first, aRead);

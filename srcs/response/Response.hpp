@@ -2,6 +2,7 @@
 # define RESPONSE_HPP
 
 #include <string>
+#include <sys/_types/_size_t.h>
 #include <vector>
 #include <iomanip>
 #include <fstream>
@@ -12,8 +13,9 @@
 
 #include "../request/Request.hpp"
 
+#include "../host/Host.hpp"
+
 #include "../http_status/HttpStatus.hpp"
-#include "../header_field/HeaderField.hpp"
 
 namespace ft
 {
@@ -28,11 +30,15 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			std::string					_version;
-			HttpStatus					_status;
-			std::vector<HeaderField>	_headers;
-			std::string					_bodyFileName;
-			std::fstream				_body;
+			size_t								_sent;
+			size_t								_contentLength;
+			std::string							_msg;
+
+			std::string							_version;
+			HttpStatus							_status;
+			std::map<std::string, std::string>	_headers;
+			std::string							_bodyFileName;
+			std::fstream						_body;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
@@ -55,7 +61,9 @@ namespace ft
 		//	Response operations
 		//================================================================================================
 		public:
-			void	build(std::vector<Host *>& hosts, Request& request);
+			void	reset();
+			bool	send(int fd);
+			void	build(const std::vector<Host *>& hosts, const Request& request);
 		//================================================================================================
 		//	Response operations End
 		//================================================================================================
@@ -64,7 +72,20 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
-			Host	*_fetchTargetedHost(std::vector<Host *>& hosts);
+
+			void	_prepare(const Host* host, const Request& request);
+			void	_handleGetMethod(const Host* host, const Request& request);
+			void	_handlePostMethod(const Host* host, const Request& request);
+			void	_handleDeleteMethod(const Host* host, const Request& request);
+
+
+			void	_constructStatusLine();
+			void	_constructHeaders(const Request& request);
+			void	_constructBody(const Request& request);
+
+			void	_buildBadRequestResponse();
+			const Host	*_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name);
+
 			void	_deepCopy(const Response& src);
 		//================================================================================================
 		//	private methods End

@@ -14,7 +14,6 @@
 #include "../multiplex/Selecter.hpp"
 
 #include "../http_status/HttpStatus.hpp"
-#include "../header_field/HeaderField.hpp"
 
 #include "../location/Location.hpp"
 

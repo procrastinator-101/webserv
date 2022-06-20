@@ -1,5 +1,4 @@
 #include "stdlib.hpp"
-#include <string>
 
 namespace ft
 {
@@ -79,5 +78,14 @@ namespace ft
 	std::string	getRandomFileName()
 	{
 		return std::string("file" + ft_itoa(time(0)));
+	}
+
+	//returns the file size in bytes
+	size_t	getFileSize(const std::string& fileName)
+	{
+		struct stat	fileStat;
+
+		lstat(fileName.c_str(), &fileStat);
+		return fileStat.st_size;
 	}
 }
