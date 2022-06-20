@@ -63,10 +63,7 @@ namespace ft
 	void	Host::fetchAutoIndex(std::stringstream& lineStream)
 	{
 		std::string	value;
-		static int i = 0;//!!!!!!!! error
 
-		if (i == 1)
-			throw std::runtime_error("Host:: multiple autoIndex");
 		lineStream >> value;
 		if (value == "on")
 			_autoIndex = true;
@@ -78,7 +75,6 @@ namespace ft
 			if (value != "#")
 				throw std::runtime_error("Host:: too many arguments for autoindex");
 		}
-		i = 1;
 	}
 
 	void	Host::fetchMethods(std::stringstream& lineStream)
@@ -139,7 +135,8 @@ namespace ft
 				throw std::runtime_error("Host:: invalid error_page code");
 			}
 			lineStream >> value;
-			//value == # ????
+			if (value == "#")
+				throw std::runtime_error("Host:: invalid error_page");
 			_errorPages[code] = value;
 		}
 		else
@@ -159,7 +156,7 @@ namespace ft
 		std::string	value;
 		std::map<std::string, Location *>::iterator	lit;
 		
-		//opening and clonsing brackets are not handled
+		//opening and clonsing brackets are not handled // it's handled inside fonc line 169
 		lineStream >> path;
 		if (path == "#")
 			throw std::runtime_error("Host:: invalid location");

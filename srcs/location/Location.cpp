@@ -18,10 +18,17 @@ namespace ft
 		std::getline(configFile, line);
 		std::stringstream	streamLine(line);
 		std::string			token;
+
 		streamLine >> token;
 		if (token != "{")
 			throw std::runtime_error("Location:: invalid configuration");
-		//{ something is an error : handle it
+		if (streamLine.good())
+		{
+			streamLine >> token;
+			if (token != "#")
+				throw std::runtime_error("Location:: invalid configuration");
+		}
+		//{ something is an error : handle it // I think done
 		while (configFile.good())
 		{
 			std::getline(configFile, line);
@@ -55,7 +62,7 @@ namespace ft
 		if (_indexes.empty())
 		{
 			if (indexes.empty() && _autoIndex == false) 
-				throw std::runtime_error("Location:: erroneous indexing");
+				throw std::runtime_error("Location:: erroneous indexing");//??
 			else if (!indexes.empty())
 				_indexes = indexes;
 		}
@@ -203,7 +210,7 @@ namespace ft
 				throw std::runtime_error("Location:: return: invalid code");
 			}
 			streamLine >> token;
-			// _redirections = std::make_pair(code, token);!!!!!!!!!!
+			_redirection = std::make_pair(code, token);
 		}
 		else
 			throw std::runtime_error("Location:: invalid code/path");
