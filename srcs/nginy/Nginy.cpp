@@ -92,9 +92,10 @@ namespace ft
 					isFinished = cit->second->handleRequest(*_servers[i]);
 					if (isFinished)
 					{
+						std::cout << cit->second->_request << std::endl;
+						cit->second->_request.reset();
 						_multiplexer.del(cit->first, aRead);
 						_multiplexer.add(cit->first, aWrite);
-						std::cout << cit->second->_request << std::endl;
 					}
 				}
 				else if (it->second & aWrite)
@@ -103,6 +104,7 @@ namespace ft
 					isFinished = cit->second->handleResponse();
 					if (isFinished)
 					{
+						// std::cout << cit->second->_response << std::endl;
 						cit->second->_response.reset();
 						_multiplexer.del(cit->first, aWrite);
 						if (cit->second->keepAlive())

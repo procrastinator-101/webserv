@@ -33,7 +33,6 @@ namespace ft
 		if (!ret)
 			return ret;
 		_response.build(server._hosts, _request);
-		_request.reset();
 		return ret;
 	}
 

@@ -117,9 +117,14 @@ STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 
 # includes
 #--------------------------------------------------------------------------------
-NGINY_CONF_PATH_INC = NGINY_CONF_PATH=\"$$PWD/confFiles/default.conf\"
-NGINY_VAR_PATH_INC = NGINY_VAR_PATH=\"/goinfre/$$USER/var/nginy\"
-NGINY_INDEX_PATH_INC = NGINY_INDEX_PATH=\"$$PWD/indexes\"
+_NGINY_CONF_PATH = $$PWD/confFiles/default.conf
+_NGINY_VAR_PATH = /goinfre/$$USER/var/nginy
+_NGINY_INDEX_PATH = $$PWD/indexes
+
+
+NGINY_CONF_PATH_INC = NGINY_CONF_PATH=\"$(_NGINY_CONF_PATH)\"
+NGINY_VAR_PATH_INC = NGINY_VAR_PATH=\"$(_NGINY_VAR_PATH)\"
+NGINY_INDEX_PATH_INC = NGINY_INDEX_PATH=\"$(_NGINY_INDEX_PATH)\"
 
 INCLUDE_PARAMS = $(NGINY_CONF_PATH_INC) $(NGINY_VAR_PATH_INC) $(NGINY_INDEX_PATH_INC)
 #--------------------------------------------------------------------------------
@@ -139,11 +144,15 @@ OBJ = $(SRC:.cpp=.o)
 
 all : $(NAME)
 
-$(NAME) : $(SRC) $(HDR)
+$(NAME) : NGINX_PATHS $(SRC) $(HDR)
 	@$(CC) $(CFLAGS) $(INC) -o $@ $(SRC)
 
 %.o: %.cpp
 	@$(CC) $(CFLAGS) $(INC) -o $@ -c $<
+
+
+NGINX_PATHS :
+	@mkdir -p $(_NGINY_VAR_PATH)
 
 clean:
 	@rm -rf $(OBJ)
@@ -153,4 +162,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY : clean fclean re
+.PHONY : clean fclean re NGINX_PATHS

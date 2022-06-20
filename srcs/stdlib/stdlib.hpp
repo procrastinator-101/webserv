@@ -5,6 +5,10 @@
 #include <vector>
 #include <sstream>
 
+// #define NGINY_CONF_PATH	""
+// #define NGINY_VAR_PATH		""
+// #define NGINY_INDEX_PATH	""
+
 #include <sys/stat.h>
 
 //level 1

@@ -16,8 +16,6 @@
 #include "../sockets/Sockt.hpp"
 #include "../stdlib/stdlib.hpp"
 
-#define NGINY_VAR_PATH_INC	""
-
 # define BUFFER_SIZE 1024
 
 namespace ft

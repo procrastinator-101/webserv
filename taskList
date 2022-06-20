@@ -3,10 +3,6 @@ documentation of the config file
 	-	syntax
 	-	errors
 
-parse
-
-socket
-
 handle request
 
 handle response:

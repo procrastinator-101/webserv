@@ -1,4 +1,5 @@
 #include "Request.hpp"
+#include <string>
 
 namespace ft
 {
@@ -82,7 +83,7 @@ namespace ft
 				end = ptr - buffer;
 				_msg.append(buffer, end);
 				_parseMessage();
-				_bodyFileName = NGINY_VAR_PATH + "/" + getRandomFileName();
+				_bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
 				_body.open(_bodyFileName.c_str(), std::ios_base::out);
 				_body << (buffer + end + 4);
 				_bodySize += size - end - 4;

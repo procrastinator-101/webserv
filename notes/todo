@@ -9,3 +9,5 @@ concepts :
 	-	conf file
 
 	-	set an error mechanism
+
+	-	check handle request

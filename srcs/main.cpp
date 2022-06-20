@@ -1,6 +1,7 @@
 #include "http_status/HttpStatus.hpp"
 #include "nginy/Nginy.hpp"
 #include "request/Request.hpp"
+#include "stdlib/stdlib.hpp"
 #include <fcntl.h>
 #include <iostream>
 #include <istream>
@@ -17,7 +18,7 @@ int main(int argc, char** argv)
 		if (argc != 2)
 			throw std::invalid_argument("use ./webser configuration_file");
 		
-		std::cout << NGINY_CONF_PATH_INC << std::endl;
+		std::cout << NGINY_CONF_PATH << std::endl;
 		if (debug)
 		{
 			nginy.fetchConfiguration(argv[1]);

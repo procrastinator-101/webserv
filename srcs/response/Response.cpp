@@ -33,15 +33,26 @@ namespace ft
 	{
 		int		ret;
 		int		len;
-		size_t	left;
-		size_t	size;
+		int		left;
+		int		size;
 		char	buffer[BUFFER_SIZE];
+		static std::fstream		logs("response_log", std::ios_base::out);
 
+		std::cout << "///////////////////////////////// Response ///////////////////////////////////////" << std::endl;
 		//header message still has bufferSize or more bytes to send
 		if (_sent + BUFFER_SIZE <= _msg.length())
+		{
+			// std::cout << "msgLength = " << _msg.length() << std::endl;
 			ret = ::send(fd, _msg.c_str() + _sent, BUFFER_SIZE, 0);
+			if (logs.is_open())
+				std::cout << "is open" << std::endl;
+			logs << _msg.c_str() + _sent;
+			std::cout << _msg.c_str() + _sent;
+		}
 		else
 		{
+			// std::cout << "++msgLength = " << _msg.length() << std::endl;
+			logs << "ooooo";
 			left = 0;
 			if (_sent < _msg.length())
 			{
@@ -52,6 +63,11 @@ namespace ft
 			len = _body.gcount();
 			size = left + len;
 			ret = ::send(fd, buffer, size, 0);
+			{
+				std::string s(buffer, size);
+				logs << s;
+				std::cout << s;
+			}
 			if (ret > 0 && ret < size)
 			{
 				if (ret > left)
@@ -87,8 +103,11 @@ namespace ft
 		host = _fetchTargetedHost(hosts, hostName->second);
 		_prepare(host, request);
 		//temporary
-		_bodyFileName = NGINY_INDEX_PATH + "/index.html";
+		_bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
 		_status = 200;
+		//end temporary
+		_contentLength = getFileSize(_bodyFileName);
+		_version = request._version;
 		_constructStatusLine();
 		_constructHeaders(request);
 		_constructBody(request);
@@ -101,8 +120,8 @@ namespace ft
 	void	Response::_constructStatusLine()
 	{
 		std::stringstream	line;
-
-		line << _status.code << " " << _status.msg << _version;
+		
+		line << _version << " " << _status.code << " " << _status.msg;
 		_msg = line.str();
 		_msg.append("\r\n");
 	}
@@ -111,7 +130,8 @@ namespace ft
 	{
 		std::stringstream	line;
 
-		line << "Content-Length: " << getFileSize(_bodyFileName) << request._version;
+		(void)request;
+		line << "Content-Length: " << _contentLength;
 		_msg.append(line.str());
 		_msg.append("\r\n\r\n");
 	}
@@ -134,19 +154,23 @@ namespace ft
 
 	void	Response::_prepare(const Host* host, const Request& request)
 	{
-
+		(void)host;
+		(void)request;
 	}
 	void	Response::_handleGetMethod(const Host* host, const Request& request)
 	{
-
+		(void)host;
+		(void)request;
 	}
 	void	Response::_handlePostMethod(const Host* host, const Request& request)
 	{
-
+		(void)host;
+		(void)request;
 	}
 	void	Response::_handleDeleteMethod(const Host* host, const Request& request)
 	{
-
+		(void)host;
+		(void)request;
 	}
 
 	void	Response::reset()
@@ -178,12 +202,12 @@ namespace ft
 		ostr << std::setw(fieldSize) << "version : " << response._version << std::endl;
 		ostr << std::setw(fieldSize) << "status : " << response._status.code << " : " << response._status.msg << std::endl;
 
-		ostr << getDisplaySubHeader("headers") << std::endl;
+		ostr << getDisplayHeader("headers", RESPONSE_SHSIZE) << std::endl;
 		for (std::map<std::string, std::string>::const_iterator it = response._headers.begin(); it != response._headers.end(); ++it)
 			ostr << std::setw(fieldSize) << it->first << " : " << it->second << std::endl;
-		ostr << getDisplaySubFooter("headers") << std::endl;
+		ostr << getDisplayFooter(RESPONSE_SHSIZE) << std::endl;
 
-		ostr << getDisplaySubHeader("body") << std::endl;
+		ostr << getDisplayHeader("body", RESPONSE_SHSIZE) << std::endl;
 		ostr << "name : " << response._bodyFileName << std::endl;
 		ostr << "=============================================================================" << std::endl;
 		bodyFile.open((response._bodyFileName.c_str()));
@@ -194,7 +218,7 @@ namespace ft
 		}
 		bodyFile.close();
 		ostr << "=============================================================================" << std::endl;
-		ostr << getDisplaySubFooter("body") << std::endl;
+		ostr << getDisplayFooter(RESPONSE_SHSIZE) << std::endl;
 		
 		ostr << getDisplayFooter(RESPONSE_HSIZE) << std::endl;
 		return ostr;
