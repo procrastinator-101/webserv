@@ -105,6 +105,23 @@ namespace ft
 			throw std::runtime_error("Host:: methods is not valid");
 	}
 
+	void	Host::fetchBodySize(std::stringstream& lineStream)
+	{
+		std::string	value;
+
+		lineStream >> value;
+		if (value != "#" && ft::isnumber(value))
+			_maxBodySize = atoi(value.c_str());
+		else
+			throw std::runtime_error("Host:: max_body_size is not valid");
+		if (lineStream.good())
+		{
+			lineStream >> value;
+			if (value != "#")
+				throw std::runtime_error("Host:: too many arguments for max_body_size");
+		}
+	}
+
 	void	Host::fetchIndexes(std::stringstream& lineStream)
 	{
 		size_t	size;
