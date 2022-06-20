@@ -62,7 +62,7 @@ namespace ft
 		if (_indexes.empty())
 		{
 			if (indexes.empty() && _autoIndex == false) 
-				throw std::runtime_error("Location:: erroneous indexing");//??
+				throw std::runtime_error("Location:: erroneous indexing");
 			else if (!indexes.empty())
 				_indexes = indexes;
 		}

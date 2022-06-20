@@ -6,9 +6,12 @@
 #include <string>
 #include <iomanip>
 #include <fstream>
+#include <sys/_types/_size_t.h>
 #include <utility>
 
 #include "../location/Location.hpp"
+
+# define DEFAULT_MAX_BODY_SIZE	1048576
 
 namespace ft
 {
@@ -22,6 +25,7 @@ namespace ft
 			std::set<std::string>				_names;
 			std::string							_root;
 			bool								_autoIndex;
+			size_t								_maxBodySize;
 			std::set<std::string>				_methods;
 			std::set<std::string>				_indexes;
 			std::map<int, std::string>			_errorPages;

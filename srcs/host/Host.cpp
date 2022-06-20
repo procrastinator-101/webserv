@@ -3,7 +3,7 @@
 namespace ft
 {
 			
-	Host::Host()
+	Host::Host() : _maxBodySize(DEFAULT_MAX_BODY_SIZE)
 	{
 	}
 

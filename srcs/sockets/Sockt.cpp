@@ -24,7 +24,7 @@ namespace ft
 		if (port.empty() || !isnumber(port))
 			throw std::invalid_argument("Sockt:: invalid port");
 		hPort = ::atoi(port.c_str());
-		if (hPort < 0 || hPort > 65535)
+		if (hPort < MIN_ALLOWED_PORT || hPort > 65535)
 			throw std::invalid_argument("Sockt:: invalid port number");
 		inPort = htons(hPort);
 		if (backlog < 0)

@@ -215,7 +215,7 @@ namespace ft
 				}
 				if (!lineStream.good())
 				{
-					std::cout << *host << std::endl;//??
+					std::cout << *host << std::endl;
 					throw std::runtime_error("Server:: invalid configuration!!");
 				}
 				else if (token == "listen")

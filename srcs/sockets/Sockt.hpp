@@ -26,6 +26,8 @@
 #define YELLOW "\x1B[33m"
 #define CYAN "\x1B[37m"
 
+#define MIN_ALLOWED_PORT	1024
+
 namespace ft
 {
 
