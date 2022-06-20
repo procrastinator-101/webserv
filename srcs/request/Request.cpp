@@ -2,6 +2,8 @@
 
 namespace ft
 {
+	const size_t Request::bufferSize = 1024;
+
 	Request::Request() : _keepAlive(false), _bodySize(0), _contentLength(0)
 	{
 	}
@@ -28,7 +30,39 @@ namespace ft
 		return *this;
 	}
 
-	bool	Request::parse(char *buffer, size_t size)
+	bool	Request::receive(int fd)
+	{
+		bool	ret;
+		int		received;
+		char	buffer[bufferSize + 1];
+
+		ret = true;
+		received = ::recv(fd, buffer, bufferSize, 0);
+		if (received < 0)
+			throw std::runtime_error("Client:: recv failed");
+		if (received)
+		{
+			buffer[received] = 0;
+			ret = _parseBuffer(buffer, received);
+		}
+		return ret;
+	}
+
+	void	Request::reset()
+	{
+		_keepAlive = false;
+		_bodySize = 0;
+		_contentLength = 0;
+		_msg.clear();
+		_method.clear();
+		_path.clear();
+		_version.clear();
+		_headers.clear();
+		_bodyFileName.clear();
+		_body.close();
+	}
+
+	bool	Request::_parseBuffer(char *buffer, size_t size)
 	{
 		int		end;
 		char	*ptr;
@@ -50,7 +84,6 @@ namespace ft
 				end = ptr - buffer;
 				_msg.append(buffer, end);
 				_parseMessage();
-				_msg.clear();
 				_bodyFileName = getRandomFileName();
 				_body.open(_bodyFileName.c_str(), std::ios_base::out);
 				_body << (buffer + end + 4);
@@ -62,14 +95,10 @@ namespace ft
 
 	bool	Request::_checkEndParse()
 	{
-		if (_bodySize == _contentLength)
-		{
-			_body.close();
-			_bodySize = 0;
+		if (_bodySize >= _contentLength)
 			return true;
-		}
-		else if (_bodySize > _contentLength)
-			throw std::runtime_error("Bad Request");
+		// else if (_bodySize > _contentLength)//handle here or until response
+		// 	throw std::runtime_error("Bad Request");
 		return false;
 	}
 

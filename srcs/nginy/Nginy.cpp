@@ -89,7 +89,7 @@ namespace ft
 					continue;
 				if (it->second & aRead)
 				{
-					isFinished = cit->second->handleRequest();
+					isFinished = cit->second->handleRequest(_servers[i]->_hosts);
 					if (isFinished)
 					{
 						_multiplexer.del(cit->first, aRead);
@@ -280,18 +280,13 @@ namespace ft
 				break ;
 		}
 		if (i < _servers.size())
-		{
-			// std::cout << "--fd : " << sockt.fd << std::endl;
-			// std::cout << host << std::endl;
 			_servers[i]->_hosts.push_back(&host);
-		}
 		else
 		{
 			target = new Server(sockt);
 			try
 			{
 				_servers.push_back(target);
-				// std::cout << "fd : " << sockt.fd << std::endl;
 			}
 			catch (std::exception& e)
 			{

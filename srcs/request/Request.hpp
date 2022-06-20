@@ -10,6 +10,9 @@
 #include <fstream>
 #include <iomanip>
 
+
+
+#include "../sockets/Sockt.hpp"
 #include "../stdlib/stdlib.hpp"
 #include "../header_field/HeaderField.hpp"
 
@@ -20,6 +23,7 @@ namespace ft
 	class Request
 	{
 		friend class Client;
+		friend class Response;
 		
 		//================================================================================================
 		//	attributes
@@ -39,6 +43,18 @@ namespace ft
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
+
+
+		//================================================================================================
+		//	static attributes
+		//================================================================================================
+		public:
+			static const size_t bufferSize;
+		//================================================================================================
+		//	static attributes End
+		//================================================================================================
+
+
 		//================================================================================================
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
@@ -60,11 +76,8 @@ namespace ft
 		//	Request operations
 		//================================================================================================
 		public:
-			bool	parse(char *buffer, size_t size);
-
-			void	_parseMessage();
-			void	_parseStartLine(std::vector<std::string>& msgLines);
-			void	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
+			void	reset();
+			bool	receive(int fd);
 		//================================================================================================
 		//	Request operations End
 		//================================================================================================
@@ -73,7 +86,12 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
+			void	_parseMessage();
 			bool	_checkEndParse();
+			bool	_parseBuffer(char *buffer, size_t size);
+			void	_parseStartLine(std::vector<std::string>& msgLines);
+			void	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
+
 			void	_deepCopy(const Request& src); // = delete
 		//================================================================================================
 		//	private methods End

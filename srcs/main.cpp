@@ -8,7 +8,6 @@
 #include <unistd.h>
 
 int debug = 1;
-#define NGINY_CONF_PATH_INC	""
 
 int main(int argc, char** argv)
 {
@@ -18,7 +17,7 @@ int main(int argc, char** argv)
 		if (argc != 2)
 			throw std::invalid_argument("use ./webser configuration_file");
 		
-		std::cout << NGINY_VAR_PATH_INC << std::endl;
+		std::cout << NGINY_CONF_PATH_INC << std::endl;
 		if (debug)
 		{
 			nginy.fetchConfiguration(argv[1]);

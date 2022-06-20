@@ -1,6 +1,4 @@
 #include "Response.hpp"
-#include <fstream>
-#include <ostream>
 #include <string>
 
 namespace ft
@@ -24,6 +22,24 @@ namespace ft
 			return *this;
 		_deepCopy(rop);
 		return *this;
+	}
+
+	void	Response::build(std::vector<Host *>& hosts, Request& request)
+	{
+		Host		*host;
+			hostName;
+
+		it = request._headers.find("Host");
+		host = _fetchTargetedHost(hosts);
+
+	}
+
+	Host	*Response::_fetchTargetedHost(std::vector<Host *>& hosts)
+	{
+		for (size_t i = 0; i < hosts.size(); i++)
+		{
+
+		}
 	}
 
 	void	Response::_deepCopy(const Response& src)

@@ -78,17 +78,34 @@ response:
 
 
 handle request:
-	-	read to a buffer
-	-	check if there is a blank line
-		-	yes:
-			-	add what is before it to msg
-			-	write what is after it to a tmp file to hold the body
-		-	no
-			-	add the buffer to the msg
-	-	parse request
-	-	use the body length to know when to stop reading
-	-	fetch the targeted host
-	-	prepare the response
+	*	receive request
+		-	read to a buffer
+		-	check if there is a blank line
+			-	yes:
+				-	add what is before it to msg
+				-	parse the msg (startLine + headers)
+				-	write what is after it to a tmp file to hold the body
+				-	update bodySize
+			-	no
+				-	add the buffer to the msg
+		-	use the bodySize to know when to stop reading
+	*	fetch the targeted host
+	*	prepare the response
+		-	if bodySize > maxBodySize
+			-	return bad request response
+		-	build statusLine
+			-	version
+			-	status code
+			-	status message
+		-	build headers
+			-	content-length
+	*	reset request
+	*	send response
+		-	send the msg (statusLine + headers)
+		-	update the sentBytes
+		-	send the body
+		-	update the sentBytes
+	*	reset response
 
 
 prepare the response:

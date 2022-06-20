@@ -125,7 +125,7 @@ STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 
 # includes
 #--------------------------------------------------------------------------------
-NGINY_CONF_PATH_INC = NGINY_CONF_PATH_INC=\"/goinfre/$$USER/etc/nginy\"
+NGINY_CONF_PATH_INC = NGINY_CONF_PATH_INC=\"$$PWD/confFiles/default.conf\"
 NGINY_VAR_PATH_INC = NGINY_VAR_PATH_INC=\"/goinfre/$$USER/var/nginy\"
 
 INCLUDE_PARAMS = $(NGINY_CONF_PATH_INC) $(NGINY_VAR_PATH_INC)

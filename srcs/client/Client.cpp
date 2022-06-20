@@ -2,8 +2,6 @@
 
 namespace ft
 {
-	const size_t Client::bufferSize = 1024;
-
 	Client::Client()
 	{
 	}
@@ -28,21 +26,13 @@ namespace ft
 	bool	Client::handleRequest()
 	{
 		bool	ret;
-		int		received;
-		char	buffer[bufferSize + 1];
-
-		received = ::recv(_sockt.fd, buffer, bufferSize, 0);
-		if (received < 0)
-			throw std::runtime_error("Client:: recv failed");
-		else if (received)
-		{
-			buffer[received] = 0;
-			ret = _request.parse(buffer, received);
-		}
-		else
-			ret = true;
-		if (ret)
-			_prepareResponse();
+		
+		ret = _request.receive(_sockt.fd);
+		if (!ret)
+			return ret;
+		host = _fetchTargetedHost();
+		_response.build(host);
+		_request.reset();
 		return ret;
 	}
 

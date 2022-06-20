@@ -6,13 +6,20 @@
 #include <iomanip>
 #include <fstream>
 
+
+#include "../sockets/Sockt.hpp"
 #include "../stdlib/stdlib.hpp"
+
+#include "../request/Request.hpp"
 
 #include "../http_status/HttpStatus.hpp"
 #include "../header_field/HeaderField.hpp"
 
 namespace ft
 {
+	class Host;
+	class Request;
+
 	class Response
 	{
 		friend class Client;
@@ -48,6 +55,7 @@ namespace ft
 		//	Response operations
 		//================================================================================================
 		public:
+			void	build(std::vector<Host *>& hosts, Request& request);
 		//================================================================================================
 		//	Response operations End
 		//================================================================================================
@@ -56,6 +64,7 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
+			Host	*_fetchTargetedHost(std::vector<Host *>& hosts);
 			void	_deepCopy(const Response& src);
 		//================================================================================================
 		//	private methods End
