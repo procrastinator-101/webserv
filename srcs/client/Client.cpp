@@ -34,8 +34,13 @@ namespace ft
 		received = ::recv(_sockt.fd, buffer, bufferSize, 0);
 		if (received < 0)
 			throw std::runtime_error("Client:: recv failed");
-		buffer[received] = 0;
-		ret = _request.parse(buffer, received);
+		else if (received)
+		{
+			buffer[received] = 0;
+			ret = _request.parse(buffer, received);
+		}
+		else
+			ret = true;
 		if (ret)
 			_prepareResponse();
 		return ret;

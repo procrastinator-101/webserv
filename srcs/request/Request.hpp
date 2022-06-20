@@ -13,6 +13,8 @@
 #include "../stdlib/stdlib.hpp"
 #include "../header_field/HeaderField.hpp"
 
+#define NGINY_VAR_PATH_INC	""
+
 namespace ft
 {
 	class Request

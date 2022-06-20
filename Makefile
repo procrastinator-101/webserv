@@ -123,6 +123,13 @@ STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 #================================================================================
 
 
+# includes
+#--------------------------------------------------------------------------------
+NGINY_CONF_PATH_INC = NGINY_CONF_PATH_INC=\"/goinfre/$$USER/etc/nginy\"
+NGINY_VAR_PATH_INC = NGINY_VAR_PATH_INC=\"/goinfre/$$USER/var/nginy\"
+
+INCLUDE_PARAMS = $(NGINY_CONF_PATH_INC) $(NGINY_VAR_PATH_INC)
+#--------------------------------------------------------------------------------
 
 
 SRC =	$(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HEADER_FIELD_SRC) $(HOST_SRC) \
@@ -134,15 +141,17 @@ HDR =	$(CLIENT_HDR) $(HEADER_FIELD_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATIO
 		$(SOCKT_HDR) $(STDLIB_HDR)
 
 
+INC = $(INCLUDE_PARAMS:%=-D%)
+
 OBJ = $(SRC:.cpp=.o)
 
 all : $(NAME)
 
 $(NAME) : $(SRC) $(HDR)
-	@$(CC) $(CFLAGS) -o $@ $(SRC)
+	@$(CC) $(CFLAGS) $(INC) -o $@ $(SRC)
 
 %.o: %.cpp
-	@$(CC) $(CFLAGS) -o $@ -c $<
+	@$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 clean:
 	@rm -rf $(OBJ)
