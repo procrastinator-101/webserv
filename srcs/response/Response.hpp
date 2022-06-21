@@ -74,10 +74,14 @@ namespace ft
 		private:
 
 			void	_prepare(const Host* host, const Request& request);
-			void	_handleGetMethod(const Host* host, const Request& request);
-			void	_handlePostMethod(const Host* host, const Request& request);
-			void	_handleDeleteMethod(const Host* host, const Request& request);
+			void	_handleGetMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location);
+			void	_handlePostMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location);
+			void	_handleDeleteMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location);
 
+			std::pair<std::string, Location *>	get_matched_location_for_request_uri(const std::string path, const std::map<std::string, Location *> locations);
+			std::string		prepare_path(const std::string& location_root, const std::string &uri);
+			bool			is_method_allowded_in_location(const std::string &method, const Location *location);
+			bool			IsPathExist(const std::string &s);
 
 			void	_constructStatusLine();
 			void	_constructHeaders(const Request& request);
@@ -101,6 +105,9 @@ namespace ft
 		//	overload << for Response End
 		//================================================================================================
 	};
+
+	//utils
+		bool	sort_pair_string(const std::pair<std::string, Location *>& lhs, const std::pair<std::string, Location *>& rhs);
 }
 
 #endif

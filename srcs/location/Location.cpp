@@ -28,6 +28,12 @@ namespace ft
 			if (token != "#")
 				throw std::runtime_error("Location:: invalid configuration");
 		}
+
+	//init some values
+		int		init_value = 0;
+		_redirection = std::make_pair(init_value, "");
+		_uploadPath = "";
+
 		//{ something is an error : handle it // I think done
 		while (configFile.good())
 		{
@@ -192,7 +198,7 @@ namespace ft
 		}
 	}
 
-	void	Location::_fetchRedirections(std::stringstream& streamLine)
+	void	Location::_fetchRedirections(std::stringstream& streamLine)//to check
 	{
 		std::string	token;
 		std::string	code_str;
@@ -201,6 +207,8 @@ namespace ft
 		if (streamLine.good() && isnumber(code_str))
 		{
 			int code = ::atoi(code_str.c_str());
+			if (code < 300 || code > 399)
+				throw std::runtime_error("Location:: return: invalid code");
 			try
 			{
 				HttpStatus::resolve(code);
