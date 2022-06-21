@@ -37,23 +37,19 @@ namespace ft
 		int		left;
 		int		size;
 		char	buffer[BUFFER_SIZE];
-		static std::fstream		logs("response_log", std::ios_base::out);
+		std::fstream	logs("response_log", std::ios_base::out | std::ios_base::app);
 
-		std::cout << "///////////////////////////////// Response ///////////////////////////////////////" << std::endl;
 		//header message still has bufferSize or more bytes to send
 		if (_sent + BUFFER_SIZE <= _msg.length())
 		{
-			// std::cout << "msgLength = " << _msg.length() << std::endl;
 			ret = ::send(fd, _msg.c_str() + _sent, BUFFER_SIZE, 0);
-			if (logs.is_open())
-				std::cout << "is open" << std::endl;
-			logs << _msg.c_str() + _sent;
-			std::cout << _msg.c_str() + _sent;
+			{
+				std::string s(_msg.c_str(), _sent, BUFFER_SIZE);
+				logs << s;
+			}
 		}
 		else
 		{
-			// std::cout << "++msgLength = " << _msg.length() << std::endl;
-			logs << "ooooo";
 			left = 0;
 			if (_sent < _msg.length())
 			{
@@ -107,6 +103,7 @@ namespace ft
 		_bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
 		_status = 200;
 		//end temporary
+		//check if body exists
 		_contentLength = getFileSize(_bodyFileName);
 		_version = request._version;
 		_constructStatusLine();

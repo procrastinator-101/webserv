@@ -67,6 +67,7 @@ namespace ft
 		//================================================================================================
 		public:
 			void	reset();
+			bool	isValid();
 			bool	receive(int fd);
 		//================================================================================================
 		//	Request operations End
@@ -81,6 +82,10 @@ namespace ft
 			bool	_parseBuffer(char *buffer, size_t size);
 			void	_parseStartLine(std::vector<std::string>& msgLines);
 			void	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
+
+			bool	_isStartLineValid() const;
+			bool	_areHeadersValid() const;
+			bool	_isBodyValid() const;
 
 			void	_deepCopy(const Request& src); // = delete
 		//================================================================================================
