@@ -32,7 +32,6 @@ namespace ft
 		ret = _request.receive(_sockt.fd);
 		if (!ret)
 			return ret;
-		_request.checkFormat();
 		_response.build(server._hosts, _request);
 		return ret;
 	}

@@ -1,8 +1,11 @@
 #include "stdlib.hpp"
+#include <_ctype.h>
+#include <string>
+#include <sys/_types/_size_t.h>
 
 namespace ft
 {
-	std::vector<std::string>	split(const std::string str, const std::string delimiter)
+	std::vector<std::string>	split(const std::string& str, const std::string& delimiter)
 	{
 		size_t	len;
 		size_t	end;
@@ -22,6 +25,50 @@ namespace ft
 			start = end + len;
 		}
 		return ret;
+	}
+
+	std::vector<std::string>	splitWhiteSpaces(const std::string& str)
+	{
+		std::string	token;
+		std::stringstream			tmp;
+		std::vector<std::string>	ret;
+
+		tmp << str;
+		while (tmp.good())
+		{
+			tmp >> token;
+			ret.push_back(token);
+		}
+		return ret;
+	}
+
+	std::vector<std::string>	split(const std::string& str, char delimiter)
+	{
+		std::string	token;
+		std::stringstream			tmp;
+		std::vector<std::string>	ret;
+
+		tmp << str;
+		while (tmp.good())
+		{
+			std::getline(tmp, token, delimiter);
+			ret.push_back(token);
+		}
+		return ret;
+	}
+
+	std::string	removeTrailingWhiteSpaces(const std::string& str)
+	{
+		size_t	i;
+
+		for (i = 0; i < str.length(); i++)
+		{
+			if (!::isspace(str[i]))
+				break ;
+		}
+		if (i == 0)
+			return str;
+		return str.substr(i);
 	}
 
 	bool isnumber(const std::string &str)

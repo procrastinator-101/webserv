@@ -1,5 +1,7 @@
 #include "Request.hpp"
 #include <string>
+#include <utility>
+#include <vector>
 
 namespace ft
 {
@@ -126,7 +128,7 @@ namespace ft
 
 		if (msgLines.empty())
 			return bad;
-		startLine = split(msgLines[0], " ");
+		startLine = splitWhiteSpaces(msgLines[0]);
 		if (startLine.size() != 3)
 			return bad;
 		_method = startLine[0];
@@ -138,16 +140,19 @@ namespace ft
 	Request::Status	Request::_parseHeaders(std::vector<std::string>& msgLines, size_t offset)
 	{
 		size_t	i;
+		Status	ret;
 		std::vector<std::string>	header;
 
 		for (i = offset; i < msgLines.size() && !msgLines[i].empty(); i++)
 		{
-			header = split(msgLines[i], ": ");
+			header = split(msgLines[i], ':');
 			if (header.size() != 2)
 				throw std::runtime_error("Bad Request");
-			_headers.insert(std::make_pair(header[0], header[1]));
+			ret = _setHeader(header[0], removeTrailingWhiteSpaces(header[1]));
+			if (ret == bad)
+				return ret;
 		}
-		return _formatSupportedHeaders();
+		return ret;
 	}
 	
 	bool	Request::isValid()
@@ -163,54 +168,62 @@ namespace ft
 		return _checkBody();
 	}
 
-	Request::Status	Request::_formatSupportedHeaders()
+	Request::Status	Request::_setHeader(const std::string& key, const std::string& value)
 	{
 		Status	ret;
+		std::vector<std::string>	tmp;
 		std::map<std::string, std::string>::const_iterator	it;
 
 		ret = good;
+
 		//connection
-		it = _headers.find("Connection");
-		if (it != _headers.end())
+		if (key == "Connection")
 		{
-			if (it->second == "keep-alive")
+			if (value == "keep-alive")
 				_keepAlive = true;
-			else if (it->second == "close")
+			else if (value == "close")
 				_keepAlive = false;
 			else
 				ret = bad;
 		}
 
 		//Content-Length
-		it = _headers.find("Content-Length");
-		if (it != _headers.end())
+		else if (key == "Content-Length")
 		{
-			if (isnumber(it->second) 0)
+			if (isnumber(it->second))
+				ret = bad;
 		}
-		it = _headers.find("Connection");
-		if (it != _headers.end())
+
+		//Content-Type : get the file extension to know wheter to send it o cgi or not
+
+		//Host
+		else if (key == "Host")
 		{
-			if (it->second != "keep-alive" && it->second != "close")
-				return false;
+			it = _headers.find("Host");
+			if (it != _headers.end())
+				ret = bad;
+			else
+			{
+				tmp = split(value, ':');
+				if (tmp.size() > 2)
+					ret = bad;
+			}
 		}
-		it = _headers.find("Connection");
-		if (it != _headers.end())
+		
+		//Transfer-Encoding
+		else if (key == "Transfer-Encoding")
 		{
-			if (it->second != "keep-alive" && it->second != "close")
-				return false;
+			tmp = split(value, ',');
+			if (tmp.size() != 1)
+				ret = bad;
+			else if (tmp[0] != "chunked")
+				ret = bad;
+			else
+				_isChunked = true;
 		}
-		it = _headers.find("Connection");
-		if (it != _headers.end())
-		{
-			if (it->second != "keep-alive" && it->second != "close")
-				return false;
-		}
-		it = _headers.find("Connection");
-		if (it != _headers.end())
-		{
-			if (it->second != "keep-alive" && it->second != "close")
-				return false;
-		}
+
+		_headers.insert(std::make_pair(key, value));
+		return ret;
 	}
 
 	Request::Status	Request::_checkStartLine() const
@@ -226,44 +239,6 @@ namespace ft
 
 	Request::Status	Request::_checkHeaders() const
 	{
-		std::map<std::string, std::string>::const_iterator	it;
-
-		it = _headers.find("Connection");
-		if (it != _headers.end())
-		{
-			if (it->second != "keep-alive" && it->second != "close")
-				return false;
-		}
-		it = _headers.find("Content-Length");
-		if (it != _headers.end())
-		{
-			if (isnumber(it->second))
-		}
-		it = _headers.find("Connection");
-		if (it != _headers.end())
-		{
-			if (it->second != "keep-alive" && it->second != "close")
-				return false;
-		}
-		it = _headers.find("Connection");
-		if (it != _headers.end())
-		{
-			if (it->second != "keep-alive" && it->second != "close")
-				return false;
-		}
-		it = _headers.find("Connection");
-		if (it != _headers.end())
-		{
-			if (it->second != "keep-alive" && it->second != "close")
-				return false;
-		}
-		it = _headers.find("Connection");
-		if (it != _headers.end())
-		{
-			if (it->second != "keep-alive" && it->second != "close")
-				return false;
-		}
-
 	}
 
 	Request::Status	Request::_checkBody() const
@@ -284,7 +259,7 @@ namespace ft
 	{
 	}
 
-	const char	*Request::badRequest::what() const
+	const char	*Request::badRequest::what() const throw()
 	{
 		return _str.c_str();
 	}

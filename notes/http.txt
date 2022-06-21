@@ -131,7 +131,13 @@ supported http headers
 		-	Content-Length
 		-	Content-Type
 		-	Host
+			-	syntax name[:port]
+			-	port defaults to service port.
+			-	duplicates : bad request
+			-	must be present
+			-	may be empty
 		-	Transfer-Encoding
+		-	Trailer
 =================================================================================================
 
 =================================================================================================

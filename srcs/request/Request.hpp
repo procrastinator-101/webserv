@@ -97,7 +97,7 @@ namespace ft
 			Status	_parseStartLine(std::vector<std::string>& msgLines);
 			Status	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
 
-			Status	_formatSupportedHeaders();
+			Status	_setHeader(const std::string& key, const std::string& value);
 
 			Status	_checkStartLine() const;
 			Status	_checkHeaders() const;
@@ -112,7 +112,7 @@ namespace ft
 		//	Request exceptions
 		//================================================================================================
 		public:
-			class badRequest : std::exception
+			class badRequest : public std::exception
 			{
 				private:
 					std::string	_str;
@@ -121,7 +121,7 @@ namespace ft
 					badRequest();
 					badRequest(const std::string& str);
 
-					const char	*what() const;
+					const char	*what() const throw();
 			};
 		//================================================================================================
 		//	Request exceptions End

@@ -269,7 +269,7 @@ namespace ft
 		if (lineStream.good())
 			throw std::runtime_error("Server:: too many arguments for listen");
 		
-		tmp = ft::split(value, ":");
+		tmp = ft::split(value, ':');
 		if (tmp.size() != 2)
 			throw std::runtime_error("Server:: listen: invalid add/port");
 		return ServerSockt(tmp[0], tmp[1]);
