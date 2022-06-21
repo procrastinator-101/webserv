@@ -8,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Tue Jun 21 13:10:04 2022
+# Make data base, printed on Tue Jun 21 21:03:19 2022
 
 # Variables
 
@@ -69,11 +69,11 @@ VSCODE_VERBOSE_LOGGING = true
 # makefile (from `Makefile', line 120)
 _NGINY_CONF_PATH = $$PWD/confFiles/default.conf
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-3df08692-275b-483e-b630-c5a7d1ee471d.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-30e7799f-9e4e-4bc7-8cef-aeb0f1afb004.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.LGF1kqzoSJ/Render
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.FIE1aLkP5j/Render
 # makefile (from `Makefile', line 111)
 STDLIB_PATH = $(SRCS_PATH)/stdlib
 # environment
@@ -97,7 +97,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from `Makefile', line 41)
 HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.rCtvwUivsk/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.cAbUdGKhY9/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -193,7 +193,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.microsoft.VSCode.1236
+XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000001.Electron
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
@@ -202,6 +202,8 @@ XPC_SERVICE_NAME = com.microsoft.VSCode.1236
 NGINY_INDEX_PATH_INC = NGINY_INDEX_PATH=\"$(_NGINY_INDEX_PATH)\"
 # environment
 __CF_USER_TEXT_ENCODING = 0x5D8:0x0:0x0
+# environment
+COMMAND_MODE = unix2003
 # makefile (from `Makefile', line 43)
 HTTP_STATUS_SRC = $(HTTP_STATUS_PATH)/HttpStatus.cpp
 # default
@@ -216,6 +218,8 @@ INCLUDE_PARAMS = $(NGINY_CONF_PATH_INC) $(NGINY_VAR_PATH_INC) $(NGINY_INDEX_PATH
 CLIENT_PATH = $(SRCS_PATH)/client
 # environment
 LC_ALL = C
+# environment
+SECURITYSESSIONID = 186aa
 # automatic
 ^F = $(notdir $^)
 # default
@@ -233,11 +237,11 @@ _NGINY_VAR_PATH = /goinfre/$$USER/var/nginy
 # environment
 LANG = C
 # environment
-VSCODE_PID = 1779
+VSCODE_PID = 1498
 # makefile (from `Makefile', line 52)
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 # variable set hash-table stats:
-# Load=112/1024=11%, Rehash=0, Collisions=10/220=5%
+# Load=114/1024=11%, Rehash=0, Collisions=10/222=5%
 
 # Pattern-specific Variable Values
 
@@ -267,9 +271,9 @@ srcs/server/Server.hpp:
 #  File has not been updated.
 
 # Not a target:
+ 
 srcs/location/Location.hpp:
 #  Implicit rule search has not been done.
- 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -284,7 +288,7 @@ all: webserv
 
 webserv: NGINX_PATHS srcs/main.cpp srcs/client/Client.cpp srcs/host/Host.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockets/ClientSockt.cpp srcs/sockets/ServerSockt.cpp srcs/sockets/Sockt.cpp srcs/stdlib/stdlib.cpp srcs/client/Client.hpp srcs/host/Host.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/multiplex/Action.hpp srcs/multiplex/Selecter.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockets/ClientSockt.hpp srcs/sockets/ServerSockt.hpp srcs/sockets/Sockt.hpp srcs/stdlib/stdlib.hpp
 #  Implicit rule search has not been done.
-#  Last modified 2022-06-20 19:41:34
+#  Last modified 2022-06-21 17:53:47
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
@@ -541,6 +545,6 @@ srcs/response/Response.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Tue Jun 21 13:10:04 2022
+# Finished Make data base on Tue Jun 21 21:03:19 2022
 
  

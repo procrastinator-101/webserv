@@ -42,6 +42,20 @@ namespace ft
 		return ret;
 	}
 
+	std::string	strtok(std::string& str, char delimiter)
+	{
+		std::string	token;
+		std::stringstream	tmp;
+
+		tmp << str;
+		if (tmp.good())
+		{
+			std::getline(tmp, token, delimiter);
+			str = tmp.str();
+		}
+		return token;
+	}
+
 	std::vector<std::string>	split(const std::string& str, char delimiter)
 	{
 		std::string	token;

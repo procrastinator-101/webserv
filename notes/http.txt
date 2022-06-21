@@ -129,6 +129,7 @@ supported http headers
 		-	Accept??
 		-	Connection
 		-	Content-Length
+			-	must not be present is Transfer-Encoding is present
 		-	Content-Type
 		-	Host
 			-	syntax name[:port]
