@@ -11,3 +11,6 @@ concepts :
 	-	set an error mechanism
 
 	-	check handle request
+		-	reparse the request
+		-	check request validity
+		-	handle chunked requests

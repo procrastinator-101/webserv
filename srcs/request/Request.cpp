@@ -141,6 +141,39 @@ namespace ft
 		}
 	}
 	
+	bool	Request::isValid()
+	{
+		bool	ret;
+
+		ret = _isStartLineValid();
+		if (!ret)
+			return ret;
+		ret = _areHeadersValid();
+		if (!ret)
+			return ret;
+		return _isBodyValid();
+	}
+
+	bool	Request::_isStartLineValid() const
+	{
+		if (_method != "GET" && _method != "POST" && _method != "DELETE")
+			return false;
+		if (_version != "HTTP/1.1")
+			return false;
+		//path empty !!!!!!!!!
+		return true;
+	}
+
+	bool	Request::_areHeadersValid() const
+	{
+
+	}
+
+	bool	Request::_isBodyValid() const
+	{
+
+	}
+
 	void	Request::_deepCopy(const Request& src)
 	{
 		(void)src;
