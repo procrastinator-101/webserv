@@ -222,16 +222,19 @@ namespace ft
 	{
 		(void)host;
 		(void)request;
+		(void)location;
 	}
 	void	Response::_handlePostMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
 	{
 		(void)host;
 		(void)request;
+		(void)location;
 	}
 	void	Response::_handleDeleteMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
 	{
 		(void)host;
 		(void)request;
+		(void)location;
 	}
 
 	void	Response::reset()
