@@ -1,4 +1,5 @@
 #include "Response.hpp"
+#include <cstddef>
 #include <cstring>
 #include <fstream>
 #include <sstream>
@@ -235,17 +236,52 @@ namespace ft
 		return path;
 	}
 
-	bool IsPathExist(const std::string &s)
+	std::string		Response::is_dir_has_index_files(const std::pair<std::string, Location *>& location)
 	{
-		struct stat buffer;
-		return (stat (s.c_str(), &buffer) == 0);
+		struct stat s;
+		std::string	nfound("");
+
+		for (std::set<std::string>::const_iterator it = location.second->_indexes.begin(); it != location.second->_indexes.end(); ++it)
+		{
+			if (stat((*it).c_str(), &s) == 0)
+			{
+				return *it;
+			}
+		}
+		return nfound;
+	}
+
+	void	Response::_handleDirInGet(const Request& request, const std::pair<std::string, Location *>& location, std::string& path)
+	{
+		if (path[path.length() - 1] != '/')
+		{
+			_status = 301;
+			_headers["Location"] = path.append("/");
+			// _bodyFileName = ;
+			return ;
+		}
+		
 	}
 
 	void	Response::_handleGetMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
 	{
 		(void)host;
-		std::string	path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
-		if (!IsPathExist(path))
+		struct stat s;
+		std::string	path;
+
+		path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
+		if(stat(path.c_str(), &s) == 0)
+		{
+			if(s.st_mode & S_IFDIR)		//it's a directory
+			{
+				_handleDirInGet(request, location, path);
+			}
+			else
+			{
+				//something else
+			}
+		}
+		else
 		{
 			_status = 404;
 			// _bodyFileName = ;

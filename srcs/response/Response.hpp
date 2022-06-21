@@ -81,7 +81,8 @@ namespace ft
 			std::pair<std::string, Location *>	get_matched_location_for_request_uri(const std::string path, const std::map<std::string, Location *> locations);
 			std::string		prepare_path(const std::string& location_root, const std::string &uri);
 			bool			is_method_allowded_in_location(const std::string &method, const Location *location);
-			bool			IsPathExist(const std::string &s);
+			void			_handleDirInGet(const Request& request, const std::pair<std::string, Location *>& location, std::string& path);
+			std::string		is_dir_has_index_files(const std::pair<std::string, Location *>& location);
 
 			void	_constructStatusLine();
 			void	_constructHeaders(const Request& request);
