@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <string>
 #include <sys/_types/_size_t.h>
+#include <vector>
 
 namespace ft
 {
@@ -152,22 +153,85 @@ namespace ft
 		return hosts[0];
 	}
 
+	bool	sort_pair_string(const std::pair<std::string, Location *>& lhs, const std::pair<std::string, Location *>& rhs)
+	{
+		return lhs.first.length() > rhs.first.length(); // biggest first
+	}
+
+	std::pair<std::string, Location *>	Response::get_matched_location_for_request_uri(const std::string path, const std::map<std::string, Location *> locations)
+	{
+		std::vector<std::pair<std::string, Location *> >	tmp;
+		size_t												res;
+
+		for (std::map<std::string, Location *>::const_iterator it = locations.begin(); it != locations.end(); ++it)
+			tmp.push_back(std::make_pair(it->first, it->second));
+		sort(tmp.begin(), tmp.end(), sort_pair_string);
+		for (size_t i = 0; i < tmp.size(); i++)
+		{
+			res = path.find(tmp[i].first);
+			if (res != std::string::npos && res == 0) {
+				return std::make_pair(tmp[i].first, tmp[i].second);
+			}
+		}
+		std::string a("");
+		Location	*k = NULL;			
+		return std::make_pair(a, k);
+	}
+
+	bool	Response::is_method_allowded_in_location(const std::string &method, const Location *location)
+	{
+		for (std::set<std::string>::const_iterator it = location->_methods.begin(); it != location->_methods.end(); ++it)
+		{
+			if (*it == method)
+				return true;
+		}
+		return false;
+	}
+
+
 	void	Response::_prepare(const Host* host, const Request& request)
 	{
-		(void)host;
-		(void)request;
+		std::pair<std::string, Location *>	location;
+
+		location = get_matched_location_for_request_uri(request._path, host->_locations);
+		if (location.second == NULL)
+		{
+			_status = 404;
+			// _bodyFileName = ;
+			return ;
+		}
+		if (location.second->_redirection.first != 0)
+		{
+			_status = location.second->_redirection.first;
+			_headers["Location"] = location.second->_redirection.second;
+			// _bodyFileName = ;
+			return ;
+		}
+		if (!is_method_allowded_in_location(request._method, location.second))
+		{
+			_status = 405;
+			// _bodyFileName = ;
+			return ;
+		}
+		if (request._method == "GET")
+			_handleGetMethod(host, request, location);
+		else if (request._method == "POST")
+			_handlePostMethod(host, request, location);
+		else if (request._method == "DELETE")
+			_handleDeleteMethod(host, request, location);
 	}
-	void	Response::_handleGetMethod(const Host* host, const Request& request)
+
+	void	Response::_handleGetMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
 	{
 		(void)host;
 		(void)request;
 	}
-	void	Response::_handlePostMethod(const Host* host, const Request& request)
+	void	Response::_handlePostMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
 	{
 		(void)host;
 		(void)request;
 	}
-	void	Response::_handleDeleteMethod(const Host* host, const Request& request)
+	void	Response::_handleDeleteMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
 	{
 		(void)host;
 		(void)request;
