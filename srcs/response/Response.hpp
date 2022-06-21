@@ -79,8 +79,9 @@ namespace ft
 			void	_handleDeleteMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location);
 
 			std::pair<std::string, Location *>	get_matched_location_for_request_uri(const std::string path, const std::map<std::string, Location *> locations);
-			bool	is_method_allowded_in_location(const std::string &method, const Location *location);
-
+			std::string		prepare_path(const std::string& location_root, const std::string &uri);
+			bool			is_method_allowded_in_location(const std::string &method, const Location *location);
+			bool			IsPathExist(const std::string &s);
 
 			void	_constructStatusLine();
 			void	_constructHeaders(const Request& request);

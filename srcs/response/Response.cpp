@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <string>
 #include <sys/_types/_size_t.h>
+#include <sys/stat.h>
 #include <vector>
 
 namespace ft
@@ -218,12 +219,41 @@ namespace ft
 			_handleDeleteMethod(host, request, location);
 	}
 
+	std::string	Response::prepare_path(const std::string& location_root, const std::string &uri)
+	{
+		std::string	path = location_root;
+
+		if (path[path.length() - 1] != '/' && uri[0] != '/')
+		{
+			path.append("/");
+			path.append(uri);
+		}
+		else if (path[path.length() - 1] == '/' && uri[0] == '/')
+			path.append(uri, 1, std::string::npos);
+		else
+			path.append(uri);
+		return path;
+	}
+
+	bool IsPathExist(const std::string &s)
+	{
+		struct stat buffer;
+		return (stat (s.c_str(), &buffer) == 0);
+	}
+
 	void	Response::_handleGetMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
 	{
 		(void)host;
-		(void)request;
-		(void)location;
+		std::string	path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
+		if (!IsPathExist(path))
+		{
+			_status = 404;
+			// _bodyFileName = ;
+			return ;
+		}
+		
 	}
+
 	void	Response::_handlePostMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
 	{
 		(void)host;
