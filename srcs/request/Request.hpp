@@ -37,7 +37,7 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			bool								_isBad;
+			Status								_status;
 			size_t								_bodySize;
 			std::string							_msg;
 
@@ -89,9 +89,9 @@ namespace ft
 		//================================================================================================
 		private:
 
+			bool	_endParse();
 			bool	_parse(char *buffer, size_t size);
 			void	_fillBody(char *buffer, size_t size);
-			bool	_endParse();
 
 			Status	_parseMessage();//returns true if message is fataly bad
 			Status	_parseStartLine(std::vector<std::string>& msgLines);
@@ -119,6 +119,7 @@ namespace ft
 				
 				public:
 					badRequest();
+					~badRequest() throw();
 					badRequest(const std::string& str);
 
 					const char	*what() const throw();

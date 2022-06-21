@@ -235,7 +235,7 @@ namespace ft
 		return path;
 	}
 
-	bool IsPathExist(const std::string &s)
+	bool Response::IsPathExist(const std::string &s)
 	{
 		struct stat buffer;
 		return (stat (s.c_str(), &buffer) == 0);

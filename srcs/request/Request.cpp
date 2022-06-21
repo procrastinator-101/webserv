@@ -5,7 +5,7 @@
 
 namespace ft
 {
-	Request::Request() : _keepAlive(false), _bodySize(0), _contentLength(0)
+	Request::Request() : _status(good), _bodySize(0), _msg(), _isChunked(false), _keepAlive(true), _contentLength(0)
 	{
 	}
 
@@ -13,7 +13,7 @@ namespace ft
 	{
 	}
 
-	Request::Request(std::string& msg) :  _keepAlive(false), _bodySize(0), _contentLength(0), _msg(msg)
+	Request::Request(std::string& msg) :  _status(good), _bodySize(0), _msg(msg), _isChunked(false), _keepAlive(true), _contentLength(0)
 	{
 		_parseMessage();
 	}
@@ -51,10 +51,14 @@ namespace ft
 
 	void	Request::reset()
 	{
-		_keepAlive = false;
+		_status = good;
 		_bodySize = 0;
-		_contentLength = 0;
 		_msg.clear();
+
+		_isChunked = false;
+		_keepAlive = true;
+		_contentLength = 0;
+
 		_method.clear();
 		_path.clear();
 		_version.clear();
@@ -66,7 +70,6 @@ namespace ft
 	bool	Request::_parse(char *buffer, size_t size)
 	{
 		int		end;
-		bool	ret;
 		char	*ptr;
 
 		if (_bodySize)
@@ -80,8 +83,8 @@ namespace ft
 			{
 				end = ptr - buffer;
 				_msg.append(buffer, end);
-				ret = _parseMessage();
-				if (ret)
+				_status = _parseMessage();
+				if (_status == fatal)
 					return true;
 				_fillBody(buffer + end + 4, size - end - 4);
 			}
@@ -91,7 +94,6 @@ namespace ft
 
 	void	Request::_fillBody(char *buffer, size_t size)
 	{
-		//body still empty
 		if (!_bodySize)
 		{
 			_bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
@@ -112,14 +114,18 @@ namespace ft
 
 	Request::Status	Request::_parseMessage()
 	{
+		Status	ret;
+		Status	tmp;
 		std::vector<std::string>	msgLines;
 
-		//split message by \n
-		msgLines = split(_msg, "\r\n");//!!
-
-		//parse the message
-		_parseStartLine(msgLines);
-		_parseHeaders(msgLines, 1);
+		msgLines = split(_msg, "\r\n");
+		ret = _parseStartLine(msgLines);
+		if (ret == fatal)
+			return ret;
+		tmp = _parseHeaders(msgLines, 1);
+		if (tmp == good)
+			return ret;
+		return tmp;
 	}
 
 	Request::Status	Request::_parseStartLine(std::vector<std::string>& msgLines)
@@ -139,20 +145,24 @@ namespace ft
 
 	Request::Status	Request::_parseHeaders(std::vector<std::string>& msgLines, size_t offset)
 	{
-		size_t	i;
-		Status	ret;
-		std::vector<std::string>	header;
+		size_t		i;
+		Status		ret;
+		Status		tmp;
+		std::string	key;
 
+		ret = good;
 		for (i = offset; i < msgLines.size() && !msgLines[i].empty(); i++)
 		{
-			header = split(msgLines[i], ':');
-			if (header.size() != 2)
-				throw std::runtime_error("Bad Request");
-			ret = _setHeader(header[0], removeTrailingWhiteSpaces(header[1]));
-			if (ret == bad)
-				return ret;
+			key = strtok(msgLines[i], ':');
+			tmp = _setHeader(key, removeTrailingWhiteSpaces(msgLines[i]));
+			if (tmp == fatal)
+				return fatal;
+			else if (ret == good)
+				ret = tmp;
 		}
-		return ret;
+		if (ret != good)
+			return ret;
+		return _checkHeaders();
 	}
 	
 	bool	Request::isValid()
@@ -239,11 +249,17 @@ namespace ft
 
 	Request::Status	Request::_checkHeaders() const
 	{
+		std::map<std::string, std::string>::const_iterator	it;
+
+		it = _headers.find("Host");
+		if (it == _headers.end())
+			return bad;
+		return good;
 	}
 
 	Request::Status	Request::_checkBody() const
 	{
-
+		return good;
 	}
 
 	void	Request::_deepCopy(const Request& src)
@@ -252,6 +268,10 @@ namespace ft
 	}
 
 	Request::badRequest::badRequest() : _str("Bad Request")
+	{
+	}
+
+	Request::badRequest::~badRequest() throw()
 	{
 	}
 
