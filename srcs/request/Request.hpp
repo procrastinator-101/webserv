@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstring>
+#include <exception>
 #include <string>
 #include <vector>
 
@@ -24,15 +25,25 @@ namespace ft
 	{
 		friend class Client;
 		friend class Response;
+
+		enum Status
+		{
+			good,
+			bad,
+			fatal
+		};
 		
 		//================================================================================================
 		//	attributes
 		//================================================================================================
 		private:
-			bool								_keepAlive;
+			bool								_isBad;
 			size_t								_bodySize;
-			size_t								_contentLength;		
 			std::string							_msg;
+
+			bool								_isChunked;
+			bool								_keepAlive;
+			size_t								_contentLength;		
 
 			std::string							_method;
 			std::string							_path;
@@ -77,15 +88,20 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
-			void	_parseMessage();
-			bool	_checkEndParse();
-			bool	_parseBuffer(char *buffer, size_t size);
-			void	_parseStartLine(std::vector<std::string>& msgLines);
-			void	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
 
-			bool	_isStartLineValid() const;
-			bool	_areHeadersValid() const;
-			bool	_isBodyValid() const;
+			bool	_parse(char *buffer, size_t size);
+			void	_fillBody(char *buffer, size_t size);
+			bool	_endParse();
+
+			Status	_parseMessage();//returns true if message is fataly bad
+			Status	_parseStartLine(std::vector<std::string>& msgLines);
+			Status	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
+
+			Status	_formatSupportedHeaders();
+
+			Status	_checkStartLine() const;
+			Status	_checkHeaders() const;
+			Status	_checkBody() const;
 
 			void	_deepCopy(const Request& src); // = delete
 		//================================================================================================
@@ -93,12 +109,32 @@ namespace ft
 		//================================================================================================
 
 		//================================================================================================
-		//	overload << for Sockt
+		//	Request exceptions
+		//================================================================================================
+		public:
+			class badRequest : std::exception
+			{
+				private:
+					std::string	_str;
+				
+				public:
+					badRequest();
+					badRequest(const std::string& str);
+
+					const char	*what() const;
+			};
+		//================================================================================================
+		//	Request exceptions End
+		//================================================================================================
+
+
+		//================================================================================================
+		//	overload << for Request
 		//================================================================================================
 		public:
 			friend std::ostream	&operator<<(std::ostream& ostr, const Request& request);
 		//================================================================================================
-		//	overload << for Sockt End
+		//	overload << for Request End
 		//================================================================================================
 	};
 }

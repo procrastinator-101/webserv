@@ -42,7 +42,7 @@ namespace ft
 		if (received)
 		{
 			buffer[received] = 0;
-			ret = _parseBuffer(buffer, received);
+			ret = _parse(buffer, received);
 		}
 		return ret;
 	}
@@ -61,18 +61,14 @@ namespace ft
 		_body.close();
 	}
 
-	bool	Request::_parseBuffer(char *buffer, size_t size)
+	bool	Request::_parse(char *buffer, size_t size)
 	{
 		int		end;
+		bool	ret;
 		char	*ptr;
 
-		//if the header is completely received
 		if (_bodySize)
-		{
-			_body << buffer;
-			_bodySize += size;
-		}
-		//the header is still not completely received
+			_fillBody(buffer, size);
 		else
 		{
 			ptr = ::strstr(buffer, "\r\n\r\n");
@@ -82,52 +78,64 @@ namespace ft
 			{
 				end = ptr - buffer;
 				_msg.append(buffer, end);
-				_parseMessage();
-				_bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
-				_body.open(_bodyFileName.c_str(), std::ios_base::out);
-				_body << (buffer + end + 4);
-				_bodySize += size - end - 4;
+				ret = _parseMessage();
+				if (ret)
+					return true;
+				_fillBody(buffer + end + 4, size - end - 4);
 			}
 		}
-		return _checkEndParse();
+		return _endParse();;
 	}
 
-	bool	Request::_checkEndParse()
+	void	Request::_fillBody(char *buffer, size_t size)
 	{
-		if (_bodySize >= _contentLength)
-			return true;
-		// else if (_bodySize > _contentLength)//handle here or until response
-		// 	throw std::runtime_error("Bad Request");
-		return false;
+		//body still empty
+		if (!_bodySize)
+		{
+			_bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
+			_body.open(_bodyFileName.c_str(), std::ios_base::out);
+		}
+		_body << buffer;
+		_bodySize += size;
 	}
 
-	void	Request::_parseMessage()
+	bool	Request::_endParse()
+	{
+		if (_bodySize < _contentLength)
+			return false;
+		if (_body.is_open())
+			_body.close();
+		return true;
+	}
+
+	Request::Status	Request::_parseMessage()
 	{
 		std::vector<std::string>	msgLines;
 
 		//split message by \n
-		msgLines = split(_msg, "\n");
+		msgLines = split(_msg, "\r\n");//!!
 
 		//parse the message
 		_parseStartLine(msgLines);
 		_parseHeaders(msgLines, 1);
 	}
 
-	void	Request::_parseStartLine(std::vector<std::string>& msgLines)
+	Request::Status	Request::_parseStartLine(std::vector<std::string>& msgLines)
 	{
 		std::vector<std::string>	startLine;
 
 		if (msgLines.empty())
-			throw std::runtime_error("Bad Request");
+			return bad;
 		startLine = split(msgLines[0], " ");
 		if (startLine.size() != 3)
-			throw std::runtime_error("Bad Request");
+			return bad;
 		_method = startLine[0];
 		_path = startLine[1];
 		_version = startLine[2];
+		return _checkStartLine();
 	}
 
-	void	Request::_parseHeaders(std::vector<std::string>& msgLines, size_t offset)
+	Request::Status	Request::_parseHeaders(std::vector<std::string>& msgLines, size_t offset)
 	{
 		size_t	i;
 		std::vector<std::string>	header;
@@ -139,37 +147,126 @@ namespace ft
 				throw std::runtime_error("Bad Request");
 			_headers.insert(std::make_pair(header[0], header[1]));
 		}
+		return _formatSupportedHeaders();
 	}
 	
 	bool	Request::isValid()
 	{
 		bool	ret;
 
-		ret = _isStartLineValid();
+		ret = _checkStartLine();
 		if (!ret)
 			return ret;
-		ret = _areHeadersValid();
+		ret = _checkHeaders();
 		if (!ret)
 			return ret;
-		return _isBodyValid();
+		return _checkBody();
 	}
 
-	bool	Request::_isStartLineValid() const
+	Request::Status	Request::_formatSupportedHeaders()
+	{
+		Status	ret;
+		std::map<std::string, std::string>::const_iterator	it;
+
+		ret = good;
+		//connection
+		it = _headers.find("Connection");
+		if (it != _headers.end())
+		{
+			if (it->second == "keep-alive")
+				_keepAlive = true;
+			else if (it->second == "close")
+				_keepAlive = false;
+			else
+				ret = bad;
+		}
+
+		//Content-Length
+		it = _headers.find("Content-Length");
+		if (it != _headers.end())
+		{
+			if (isnumber(it->second) 0)
+		}
+		it = _headers.find("Connection");
+		if (it != _headers.end())
+		{
+			if (it->second != "keep-alive" && it->second != "close")
+				return false;
+		}
+		it = _headers.find("Connection");
+		if (it != _headers.end())
+		{
+			if (it->second != "keep-alive" && it->second != "close")
+				return false;
+		}
+		it = _headers.find("Connection");
+		if (it != _headers.end())
+		{
+			if (it->second != "keep-alive" && it->second != "close")
+				return false;
+		}
+		it = _headers.find("Connection");
+		if (it != _headers.end())
+		{
+			if (it->second != "keep-alive" && it->second != "close")
+				return false;
+		}
+	}
+
+	Request::Status	Request::_checkStartLine() const
 	{
 		if (_method != "GET" && _method != "POST" && _method != "DELETE")
-			return false;
+			return bad;
+		if (_path.empty())
+			return bad;
 		if (_version != "HTTP/1.1")
-			return false;
-		//path empty !!!!!!!!!
-		return true;
+			return bad;
+		return good;
 	}
 
-	bool	Request::_areHeadersValid() const
+	Request::Status	Request::_checkHeaders() const
 	{
+		std::map<std::string, std::string>::const_iterator	it;
+
+		it = _headers.find("Connection");
+		if (it != _headers.end())
+		{
+			if (it->second != "keep-alive" && it->second != "close")
+				return false;
+		}
+		it = _headers.find("Content-Length");
+		if (it != _headers.end())
+		{
+			if (isnumber(it->second))
+		}
+		it = _headers.find("Connection");
+		if (it != _headers.end())
+		{
+			if (it->second != "keep-alive" && it->second != "close")
+				return false;
+		}
+		it = _headers.find("Connection");
+		if (it != _headers.end())
+		{
+			if (it->second != "keep-alive" && it->second != "close")
+				return false;
+		}
+		it = _headers.find("Connection");
+		if (it != _headers.end())
+		{
+			if (it->second != "keep-alive" && it->second != "close")
+				return false;
+		}
+		it = _headers.find("Connection");
+		if (it != _headers.end())
+		{
+			if (it->second != "keep-alive" && it->second != "close")
+				return false;
+		}
 
 	}
 
-	bool	Request::_isBodyValid() const
+	Request::Status	Request::_checkBody() const
 	{
 
 	}
@@ -177,6 +274,19 @@ namespace ft
 	void	Request::_deepCopy(const Request& src)
 	{
 		(void)src;
+	}
+
+	Request::badRequest::badRequest() : _str("Bad Request")
+	{
+	}
+
+	Request::badRequest::badRequest(const std::string& str) : _str("Bad Request:: " + str)
+	{
+	}
+
+	const char	*Request::badRequest::what() const
+	{
+		return _str.c_str();
 	}
 
 	std::ostream	&operator<<(std::ostream& ostr, const ft::Request& request)

@@ -74,20 +74,7 @@ http response format
 =================================================================================================
 
 =================================================================================================
-headers:
-	connection :
-		-	forbidden header name : true
-		-	values:
-			-	keep-alive :  default http/1.1
-			-	close :  default http/1.0
-	Content-Type :
-		-	media-type
-		-	charset
-		-	boundary
-	
-	Content-length??
 
-	encoding ??
 =================================================================================================
 
 =================================================================================================
@@ -113,4 +100,46 @@ responses:
 	-	200 : status code if the action has been enacted and the response message includes a 
 			  representation describing the status (like an html index saying that the resource is 
 			  deleted).
+=================================================================================================
+
+
+=================================================================================================
+headers:
+	connection :
+		-	forbidden header name : true
+		-	values:
+			-	keep-alive :  default http/1.1
+			-	close :  default http/1.0
+	Content-Type :
+		-	media-type
+		-	charset
+		-	boundary
+
+
+header syntax:
+	-	key: <whitespace> value
+
+supported http headers
+	*	response headers
+		-	Content-Type
+		-	Content-Length
+		-	Connection
+		-	Transfer-Encoding
+	*	request headers
+		-	Accept??
+		-	Connection
+		-	Content-Length
+		-	Content-Type
+		-	Host
+		-	Transfer-Encoding
+=================================================================================================
+
+=================================================================================================
+request format state
+	-	fataly bad :
+		-	content-length : negative or exceeds the size of the size_t
+		*	stop reading and send badRequest response then close the connection
+	-	bad
+		*	read all the request then send badRequest response
+	-	good
 =================================================================================================

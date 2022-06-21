@@ -14,3 +14,6 @@ concepts :
 		-	reparse the request
 		-	check request validity
 		-	handle chunked requests
+
+
+-	get : path is symbolic link ??
