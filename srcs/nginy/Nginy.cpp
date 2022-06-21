@@ -254,6 +254,8 @@ namespace ft
 			host.fetchErrorPages(lineStream);
 		else if (key == "location")
 			host.fetchLocation(configFile, lineStream);
+		else if (key == "body_size")
+			host.fetchBodySize(lineStream);
 		else
 			throw std::runtime_error("Server:: invalid key {" + key + "}");
 	}

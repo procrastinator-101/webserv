@@ -61,6 +61,7 @@ namespace ft
 			void	fetchMethods(std::stringstream& lineStream);
 			void	fetchIndexes(std::stringstream& lineStream);
 			void	fetchErrorPages(std::stringstream& lineStream);
+			void	fetchBodySize(std::stringstream& lineStream);
 			void	fetchLocation(std::ifstream& configFile, std::stringstream& lineStream);
 		//================================================================================================
 		//	Host operations End
