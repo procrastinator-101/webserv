@@ -1,12 +1,11 @@
-#include "http_status/HttpStatus.hpp"
-#include "nginy/Nginy.hpp"
-#include "request/Request.hpp"
-#include "stdlib/stdlib.hpp"
 #include <fcntl.h>
-#include <iostream>
-#include <istream>
-#include <string>
 #include <unistd.h>
+
+#include <string>
+#include <istream>
+#include <iostream>
+
+#include "nginy/Nginy.hpp"
 
 int debug = 1;
 

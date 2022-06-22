@@ -2,8 +2,8 @@
 # define RESPONSE_HPP
 
 #include <string>
-#include <sys/_types/_size_t.h>
 #include <vector>
+
 #include <iomanip>
 #include <fstream>
 

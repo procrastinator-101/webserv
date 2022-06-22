@@ -1,4 +1,5 @@
 #include "Request.hpp"
+#include <cstddef>
 #include <string>
 #include <utility>
 #include <vector>
@@ -69,25 +70,23 @@ namespace ft
 
 	bool	Request::_parse(char *buffer, size_t size)
 	{
-		int		end;
-		char	*ptr;
+		size_t	end;
+		size_t	start;
 
 		if (_bodySize)
 			_fillBody(buffer, size);
 		else
 		{
-			ptr = ::strstr(buffer, "\r\n\r\n");
-			if (!ptr)
-				_msg.append(buffer);
-			else
+			_msg.append(buffer);
+			end = _msg.find("\r\n\r\n");
+			if (end != std::string::npos)
 			{
-				end = ptr - buffer;
-				_msg.append(buffer, end);
+				start = size - (_msg.size() - (end + 4));
 				_status = _parseMessage();
 				_msg.clear();
 				if (_status == fatal)
 					return true;
-				_fillBody(buffer + end + 4, size - end - 4);
+				_fillBody(buffer + start, size - start);
 			}
 		}
 		return _endParse();
@@ -129,33 +128,52 @@ namespace ft
 
 	bool	Request::_fillChunkedBody(char* &buffer, size_t size)
 	{
-		char	*ptr;
+		size_t		end;
+		std::string	line;
 		std::string	token;
 		
+		_msg.append(buffer);
 		while (1)
 		{
-			
-			if (_chunkLen == _chunkSize)
+			end = _msg.find(HTTP_NEWLINE);
+			if (end != std::string::npos)
 			{
-				_chunkLen = 0;
-				token = strtok(lines[i]);//check empty token
-				_chunkSize = ::atoi(token.c_str());
-				if (!_chunkSize)
-					return true;//++trailers
+				line = strtok(_msg, HTTP_NEWLINE);//no multiple traversal
+				if (_chunkLen == _chunkSize)
+				{
+					_chunkLen = 0;
+					token = strtok(line);
+					if (token.empty())
+					{
+						//set fatal
+						return true;
+					}
+					_chunkSize = ::atoi(token.c_str());
+					if (!_chunkSize)
+					{
+						_isTrailerReached = true;
+						return true;
+					}
+				}
+				else
+				{
+					_body << line;
+					_bodySize += line.size();
+					_chunkLen += line.size();
+				}
+			}
+			else if (_chunkLen != _chunkSize)
+			{
+				token.clear();
+				token.push_back(*_msg.rbegin());
+				_msg.resize(_msg.size() - 1);
+				_body << _msg;
+				_bodySize += _msg.size();
+				_chunkLen += _msg.size();
 			}
 			else
-			{
-				_body << lines[i];
-				_bodySize += lines[i].size();
-			}
+				break;
 		}
-		if (!lines.empty())
-		{
-			if (lines.back() == "\r\n")
-				return true;
-			else if ()
-		}
-		
 	}
 
 	bool	Request::_endParse()

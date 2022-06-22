@@ -14,11 +14,15 @@
 #include <iomanip>
 
 
-
 #include "../sockets/Sockt.hpp"
 #include "../stdlib/stdlib.hpp"
 
 # define BUFFER_SIZE 1024
+
+
+# define HTTP_NEWLINE	"\r\n"
+# define HTTP_BLANKlINE	"\r\n\r\n"
+
 
 namespace ft
 {

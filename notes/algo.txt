@@ -1,17 +1,14 @@
 
 =====================================================================================================
 nginy:
-	*	servers
-	*	multiplexer
-	*	configFileName
-
-
 -	initiate servers:
-	for each server
+
+-	for each server
 		-	create a socket
 		-	bind it to an address
 		-	listen on that socket
 -	add all the servers the read monitored fds
+
 -	select on the monitored fds
 	*	if ready to read
 		-	fd is server socket
@@ -26,96 +23,63 @@ nginy:
 			-	send
 =====================================================================================================
 
-
 =====================================================================================================
-server:
-	-	sockt
-	-	host
-	-	clients
-
-host :
-	-	servernames
-	-	body_size
-	-	root
-	-	allowed methods
-	-	indexes
-	-	error pages
-	-	served locations
-
-
-location:
-	-	root
-	-	auto index
-	-	allowed methods
-	-	indexes
-	-	redirections
-	-	uploadPath
-	-	default served file??
-=====================================================================================================
-
-
-=====================================================================================================
-client:
-	-	socket
-	-	request
-	-	response
-	-	keep alive
-
-request:
-	-	msg
-	-	method
-	-	path
-	-	version
-	-	headers
-	-	body -> file
-
-response:
-	-	msg
-	-	version
-	-	HttpStatus
-	-	headers : from the request or/and cgi
-	-	body
-
-
 handle request:
 	*	receive request
-		-	read to a buffer
-		-	check if there is a blank line
-			-	yes:
-				-	add what is before it to msg
-				-	parse the msg (startLine + headers)
-				-	write what is after it to a tmp file to hold the body
-				-	update bodySize
-			-	no
-				-	add the buffer to the msg
-		-	use the bodySize to know when to stop reading
-	*	fetch the targeted host
+	*	if request is well formated
+		-	fetch the targeted host
 	*	prepare the response
-		-	if bodySize > maxBodySize
-			-	return bad request response
-		-	build statusLine
-			-	version
-			-	status code
-			-	status message
-		-	build headers
-			-	content-length
 	*	reset request
 	*	send response
-		-	send the msg (statusLine + headers)
-		-	update the sentBytes
-		-	send the body
-		-	update the sentBytes
 	*	reset response
+=====================================================================================================
+
+=====================================================================================================
+*	receive request
+	-	read to a buffer
+	-	check if there is a blank line
+		-	yes:
+			-	add what is before it to msg
+			-	parse the msg (startLine + headers)
+			-	write what is after it to a tmp file to hold the body
+			-	update bodySize
+		-	no
+			-	add the buffer to the msg
+	-	use the bodySize to know when to stop reading
+=====================================================================================================
 
 
-prepare the response:
-	-	status line
-	-	headers:
+=====================================================================================================
+prepare the response
+	-	build statusLine
+		-	version
+		-	status code
+		-	status message
+	-	build headers
 		-	content-length
-		-	keepAlive
-	-	body
+=====================================================================================================
 
 
+=====================================================================================================
+send response
+	-	send the msg (statusLine + headers)
+	-	update the sentBytes
+	-	send the body
+	-	update the sentBytes
+
+
+*	send response:
+	-	!isHeaderSent
+		-	buffer + (msg + sent)
+		-	if header is sent 
+			-	isHeaderSent = 1
+	-	isHeaderSent
+		-	fill str from body
+		-	buffer + str
+=====================================================================================================
+
+
+=====================================================================================================
 chunked:
 	-	get chunk (until \r\n)
 	-	parse it to :
@@ -132,65 +96,27 @@ chunked:
     -	Remove Trailer from existing header fields
 
 
-
-*	send response:
-	-	!isHeaderSent
-		-	buffer + (msg + sent)
-		-	if header is sent 
-			-	isHeaderSent = 1
-	-	isHeaderSent
-		-	fill str from body
-		-	buffer + str
+*	append buffer to msg
+*	is newline found
+	-	true:
+		-	if new chunk
+			-	true: -> initiate the new chunk
+				-	fetch chunk size
+				-	ignore the rest of the line
+			-	false: -> end the chunk
+				-	send the line to the body file
+				-	update the body size
+				-	update the chunk length
+		-	slice the line from the msg
+	-	false:
+		-	if new chunk
+			-	true:
+				-	do nothing
+			-	false:
+				-	send the msg except the last character to the body file
+				-	msg should contain the last character of it only
 =====================================================================================================
 
-
-=====================================================================================================
-header :
-	-	key
-	-	value
-	+	checkValidity
-
-HttpStatus:
-	code
-	msg
-=====================================================================================================
-
-
-=====================================================================================================
-sockt:
-	-	create
-	-	bind
-	-	listen
-	-	connect
-	-	accept
-	-	send
-	-	receive
-
-serverSockt:
-	-	setup
-	-	wakeup
-
-clientSockt
-	-	setup
-	-	wakeup
-=====================================================================================================
-
-
-=====================================================================================================
-multiplex:
-	*	_readfds
-	*	_writefds
-	*	_exceptfds
-	*	_readMonitered
-	*	_writeMonitered
-	*	_exceptMonitered
-	-	add fd
-	-	delete fd
-	-	multiplexFunction -> fetch
-=====================================================================================================
-
-
-=====================================================================================================
 
 =====================================================================================================
 server
@@ -206,3 +132,4 @@ server
 		if target == end
 			target = create new server
 		target.hosts.push_back(host)
+=====================================================================================================
