@@ -1,9 +1,11 @@
 #include "Response.hpp"
+#include <cstddef>
 #include <cstring>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <sys/_types/_size_t.h>
 #include <sys/stat.h>
 #include <vector>
@@ -212,7 +214,7 @@ namespace ft
 			return ;
 		}
 		if (request._method == "GET")
-			_handleGetMethod(host, request, location);
+			_handleGetMethod(request, location);
 		else if (request._method == "POST")
 			_handlePostMethod(host, request, location);
 		else if (request._method == "DELETE")
@@ -235,17 +237,81 @@ namespace ft
 		return path;
 	}
 
-	bool Response::IsPathExist(const std::string &s)
+	// first file found is taked (I feel somthing wrong, to check later)
+	std::string		Response::IsDirHasIndexFiles(const std::pair<std::string, Location *>& location, std::string& path)
 	{
-		struct stat buffer;
-		return (stat (s.c_str(), &buffer) == 0);
+		struct stat s;
+		std::string	nfound("");
+
+		if (location.second->_indexes.size())
+		{
+			for (std::set<std::string>::const_iterator it = location.second->_indexes.begin(); it != location.second->_indexes.end(); ++it)
+			{
+				if (stat(path.append(*it).c_str(), &s) == 0)
+					return *it;
+			}
+		}
+		return nfound;
 	}
 
-	void	Response::_handleGetMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
+	void	Response::_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path)
 	{
-		(void)host;
-		std::string	path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
-		if (!IsPathExist(path))
+		// if (if_location_has_cgi())
+		// {}
+		// else
+		{
+			_status = 200;
+			_bodyFileName = path;
+			return ;
+		}
+	}
+
+	void	Response::_handleDirInGet(const std::pair<std::string, Location *>& location, std::string& path)
+	{
+		std::string		index_file;
+
+		if (path[path.length() - 1] != '/')
+		{
+			_status = 301;
+			_headers["Location"] = path.append("/");
+			// _bodyFileName = ;
+			return ;
+		}
+		index_file = IsDirHasIndexFiles(location, path);
+		if (index_file.length())
+		{
+			_handleFileInGet(location, index_file);
+		}
+		else if (location.second->_autoIndex == true)
+		{
+			_status = 200;
+			// _bodyFileName = ;
+			return ;
+		}
+		else
+		{
+			_status = 403;
+			// _bodyFileName = ;
+			return ;
+		}
+	}
+
+	void	Response::_handleGetMethod(const Request& request, const std::pair<std::string, Location *>& location)
+	{
+		struct stat s;
+		std::string	path;
+
+		path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
+		if(stat(path.c_str(), &s) == 0)
+		{
+			if(s.st_mode & S_IFDIR)		//it's a directory
+				_handleDirInGet(location, path);
+			else
+			{
+				_handleFileInGet(location, path);
+			}
+		}
+		else
 		{
 			_status = 404;
 			// _bodyFileName = ;
