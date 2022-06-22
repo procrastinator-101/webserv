@@ -84,23 +84,78 @@ namespace ft
 				end = ptr - buffer;
 				_msg.append(buffer, end);
 				_status = _parseMessage();
+				_msg.clear();
 				if (_status == fatal)
 					return true;
 				_fillBody(buffer + end + 4, size - end - 4);
 			}
 		}
-		return _endParse();;
+		return _endParse();
 	}
 
-	void	Request::_fillBody(char *buffer, size_t size)
+	bool	Request::_fillBody(char *buffer, size_t size)
 	{
+		bool	ret;
+		char	*ptr;
+
 		if (!_bodySize)
 		{
 			_bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
 			_body.open(_bodyFileName.c_str(), std::ios_base::out);
 		}
-		_body << buffer;
-		_bodySize += size;
+		if (!_isChunked)
+		{
+			_body << buffer;
+			_bodySize += size;
+		}
+		else
+		{
+			if (!_isTrailerReached)
+				ret = _fillChunkedBody(buffer, size);
+			if (_isTrailerReached)
+			{
+				ptr = ::strstr(buffer, "\r\n\r\n");
+				if (!ptr)
+					_msg.append(buffer);
+				else
+				{
+					_msg.append(buffer, ptr - buffer);
+					return true;
+				}
+			}
+		}
+		return ret;
+	}
+
+	bool	Request::_fillChunkedBody(char* &buffer, size_t size)
+	{
+		char	*ptr;
+		std::string	token;
+		
+		while (1)
+		{
+			
+			if (_chunkLen == _chunkSize)
+			{
+				_chunkLen = 0;
+				token = strtok(lines[i]);//check empty token
+				_chunkSize = ::atoi(token.c_str());
+				if (!_chunkSize)
+					return true;//++trailers
+			}
+			else
+			{
+				_body << lines[i];
+				_bodySize += lines[i].size();
+			}
+		}
+		if (!lines.empty())
+		{
+			if (lines.back() == "\r\n")
+				return true;
+			else if ()
+		}
+		
 	}
 
 	bool	Request::_endParse()
@@ -260,6 +315,54 @@ namespace ft
 	Request::Status	Request::_checkBody() const
 	{
 		return good;
+	}
+
+	bool	Request::_isTrailerAllowedHeader(std::string& header) const
+	{
+		static std::set<std::string>	disallowedHeaders;
+
+		if (disallowedHeaders.empty())
+			_fillTrailerDisallowedHeaders(disallowedHeaders);
+		return disallowedHeaders.find(header) == disallowedHeaders.end();
+	}
+
+	void	Request::_fillTrailerDisallowedHeaders(std::set<std::string>& disallowedHeaders) const
+	{
+		//message framing headers
+		disallowedHeaders.insert("Transfer-Encoding");
+		disallowedHeaders.insert("Content-Length");
+
+		//routing
+		disallowedHeaders.insert("Host");
+
+		//request modifiers
+			//controls
+		disallowedHeaders.insert("Cache-Control");
+		disallowedHeaders.insert("Expect");
+		disallowedHeaders.insert("Max-Forwards");
+		disallowedHeaders.insert("Pragma");
+		disallowedHeaders.insert("Range");
+		disallowedHeaders.insert("TE");
+
+		//authentication headers
+		disallowedHeaders.insert("Authorization");
+		disallowedHeaders.insert("Set-Cookie");
+
+		//response control data
+		disallowedHeaders.insert("Age");
+		disallowedHeaders.insert("Cache-Control");
+		disallowedHeaders.insert("Expires");
+		disallowedHeaders.insert("Date");
+		disallowedHeaders.insert("Location");
+		disallowedHeaders.insert("Retry-After");
+		disallowedHeaders.insert("Vary");
+		disallowedHeaders.insert("Warning");
+
+		//headers determining how to process the payload
+		disallowedHeaders.insert("Content-Encoding");
+		disallowedHeaders.insert("Content-Type");
+		disallowedHeaders.insert("Content-Range");
+		disallowedHeaders.insert("Trailer");
 	}
 
 	void	Request::_deepCopy(const Request& src)

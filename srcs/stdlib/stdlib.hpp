@@ -65,7 +65,7 @@ namespace ft
 	std::vector<std::string>	splitWhiteSpaces(const std::string& str);
 	std::vector<std::string>	split(const std::string& str, char delimiter);
 	std::vector<std::string>	split(const std::string& str, const std::string& delimiter);
-	std::string	strtok(std::string& str, char delimiter);
+	std::string	strtok(std::string& str, int delimiter = -1);
 
 	std::string	removeTrailingWhiteSpaces(const std::string& str);
 

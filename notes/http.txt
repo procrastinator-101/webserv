@@ -139,6 +139,56 @@ supported http headers
 			-	may be empty
 		-	Transfer-Encoding
 		-	Trailer
+
+
+-	Transfer-Encoding:
+	-	other than chunked :
+		-	apply chunked as a final Transfer coding
+		or
+		-	terminate the message by closing the connection
+	-	may not be sent on response of status code 1xx or 204.
+	-	A server MUST NOT send a Transfer-Encoding header field in any 2xx (Successful) response 
+		to a CONNECT request.
+	-	A server that receives a request message with a transfer coding it does not understand 
+		SHOULD respond with 501 (Not Implemented).
+	-	A server ought to limit the total length of chunk extensions received in a request to
+		an amount reasonable for the services provided. Then return a 4xx client error response.
+
+
+-	Trailer:
+	-	must not include :
+		-	message framing headers: (?)
+			-	Transfer-Encoding
+			-	Content-Length
+		-	routing: (?)
+			-	Host
+		-	request modifiers (?)
+			-	controls
+				-	Cache-Control
+				-	Expect
+				-	Host
+				-	Max-Forwards
+				-	Pragma
+				-	Range
+				-	TE
+		-	authentication headers: (?)
+			-	Authorization
+			-	Set-Cookie
+		-	response control data
+			-	Age
+			-	Cache-Control
+			-	Expires
+			-	Date
+			-	Location
+			-	Retry-After
+			-	Vary
+			-	Warning
+		-	headers determining how to process the payload
+			-	Content-Encoding
+			-	Content-Type
+			-	Content-Range
+			-	Trailer
+	-	these headers may be ignored or considered an error by the recepient
 =================================================================================================
 
 =================================================================================================

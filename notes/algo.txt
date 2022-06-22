@@ -115,8 +115,22 @@ prepare the response:
 		-	keepAlive
 	-	body
 
-handle response:
-	-	
+
+chunked:
+	-	get chunk (until \r\n)
+	-	parse it to :
+		-	chunk size (hex)
+		-	extension : ignore it
+	-	chunk size != 0
+		-	get chunked data (until \r\n)
+	-	else
+		-	get Trailer headers
+		-	if a header is not present in the trailer header list : error
+		-	stop until blank line is reached
+	-	update content-Length
+	-	Remove "chunked" from Transfer-Encoding
+    -	Remove Trailer from existing header fields
+
 
 
 *	send response:

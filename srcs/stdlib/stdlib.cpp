@@ -42,7 +42,7 @@ namespace ft
 		return ret;
 	}
 
-	std::string	strtok(std::string& str, char delimiter)
+	std::string	strtok(std::string& str, int delimiter)
 	{
 		std::string	token;
 		std::stringstream	tmp;
@@ -50,7 +50,10 @@ namespace ft
 		tmp << str;
 		if (tmp.good())
 		{
-			std::getline(tmp, token, delimiter);
+			if (delimiter == -1)
+				tmp >> token;
+			else
+				std::getline(tmp, token, static_cast<char>(delimiter));
 			str = tmp.str();
 		}
 		return token;
