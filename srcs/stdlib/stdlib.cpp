@@ -1,5 +1,8 @@
 #include "stdlib.hpp"
 #include <_ctype.h>
+#include <ios>
+#include <sstream>
+#include <stdexcept>
 #include <string>
 #include <sys/_types/_size_t.h>
 
@@ -93,6 +96,29 @@ namespace ft
 				i++;
 		}
 		str.swap(ret);
+		return ret;
+	}
+
+	size_t	stoz(const std::string& str)
+	{
+		size_t	ret;
+		std::stringstream	sstream(str);
+
+		sstream >> ret;
+		if (sstream.fail())
+			throw std::overflow_error("stoz overflow");
+		return ret;
+	}
+
+	size_t	hstoz(const std::string& str)
+	{
+		size_t	ret;
+		std::stringstream	sstream(str);
+
+		sstream >> std::hex;
+		sstream >> ret;
+		if (sstream.fail())
+			throw std::overflow_error("hstoz overflow");
 		return ret;
 	}
 	

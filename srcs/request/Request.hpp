@@ -45,6 +45,7 @@ namespace ft
 		//================================================================================================
 		private:
 			bool								_isInChunk;
+			bool								_isTrailerSet;
 			bool								_isTrailerReached;
 			size_t								_chunkLen;
 			size_t								_chunkSize;
@@ -105,11 +106,16 @@ namespace ft
 			bool	_parse(char *buffer, size_t size);
 
 
+			bool	_setStatus(Status status);
 			//return true if receiving has ended
 			bool	_parseHead();
 			bool	_fetchTrailerPart();
 			bool	_fetchChunkedBody();
 			bool	_fetchBody(char *buffer, size_t size);
+
+			bool	_fillChunk();
+			bool	_endChunkData(std::string& line);
+			bool	_initialiseNewChunk(std::string& line);
 
 			Status	_parseStartLine(std::vector<std::string>& msgLines);
 			Status	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);

@@ -1,4 +1,5 @@
 #include "Request.hpp"
+#include <exception>
 #include <string>
 #include <sys/_types/_size_t.h>
 
@@ -117,6 +118,7 @@ namespace ft
 
 	bool	Request::_fetchChunkedBody()
 	{
+		bool		ret;
 		size_t		end;
 		std::string	line;
 		std::string	token;
@@ -142,48 +144,16 @@ namespace ft
 					return true;
 				}
 
-				//new Chunk initialisation
 				if (!_isInChunk)
-				{
-					_isInChunk = true;
-					token = strtok(line, WHITE_SPACES);
-					if (token.empty())
-					{
-						_status = fatal;
-						return true;
-					}
-					_chunkSize = ::atoi(token.c_str());//hex!!!!!!!!!! + check reasonnable chunsize
-					if (!_chunkSize)
-					{
-						_isTrailerReached = true;
-						return _fetchTrailerPart();
-					}
-				}
-				//end of chunk data
+					ret = _initialiseNewChunk(line);
 				else
-				{
-					_body << line;
-					_bodySize += line.size();
-					_chunkLen += line.size();
-					if (_chunkLen != _chunkSize)
-					{
-						_status = fatal;
-						return true;
-					}
-					_chunkSize = 0;
-					_chunkLen = 0;
-					_isInChunk = false;
-				}
+					ret = _endChunkData(line);
+				if (ret)
+						return ret;
 			}
 			else if (_isInChunk)
 			{
-				token.clear();
-				token.push_back(*_buffer.rbegin());
-				_buffer.resize(_buffer.size() - 1);
-				_buffer.swap(token);
-				_body << token;
-				_bodySize += token.size();
-				_chunkLen += token.size();
+				
 			}
 			else
 				break;
@@ -192,7 +162,7 @@ namespace ft
 
 	bool	Request::_fetchTrailerPart()
 	{
-		Status		ret;
+		bool		ret;
 		size_t		pos;
 		std::string	line;
 
@@ -207,15 +177,70 @@ namespace ft
 				line = strdtok(line, HTTP_NEWLINE);
 				if (line.empty())
 					return true;
-				ret = _setTrailerHeaders(line);
-				if (ret != good)
-				{
-					_status = ret;
-					if (ret == fatal)
-						return true;
-				}
+				ret = _setStatus(_setTrailerHeaders(line));
+				if (ret)
+					return true;
 			}
 		}
+		return false;
+	}
+
+	bool	Request::_initialiseNewChunk(std::string& line)
+	{
+		std::string	token;
+
+		_isInChunk = true;
+
+		//fetch chunksize field
+		token = strtok(line, WHITE_SPACES);
+		if (token.empty())
+			return _setStatus(fatal);
+		//fetch chunk size
+		try
+		{
+			_chunkSize = hstoz(token);
+		}
+		catch (std::exception& e)
+		{
+			return _setStatus(fatal);
+		}
+		if (!_chunkSize && _isTrailerSet)
+		{
+			_isTrailerReached = true;
+			return _fetchTrailerPart();
+		}
+		return false;
+	}
+
+	bool	Request::_endChunkData(std::string& line)
+	{
+		_body << line;
+		_bodySize += line.size();
+		_chunkLen += line.size();
+		if (_chunkLen != _chunkSize)
+			return _setStatus(fatal);
+		_chunkSize = 0;
+		_chunkLen = 0;
+		_isInChunk = false;
+	}
+
+	bool	Request::_fillChunk()
+	{
+		token.clear();
+		token.push_back(*_buffer.rbegin());
+		_buffer.resize(_buffer.size() - 1);
+		_buffer.swap(token);
+		_body << token;
+		_bodySize += token.size();
+		_chunkLen += token.size();
+	}
+
+	bool	Request::_setStatus(Status status)
+	{
+		if (status != good)
+			_status = status;
+		if (status == fatal)
+			return true;
 		return false;
 	}
 
@@ -243,7 +268,7 @@ namespace ft
 		return true;
 	}
 
-	Request::Status	Request::_parseHead()
+	bool	Request::_parseHead()
 	{
 		Status	ret;
 		Status	tmp;
@@ -251,8 +276,12 @@ namespace ft
 
 		msgLines = split(_buffer, "\r\n");
 		ret = _parseStartLine(msgLines);
-		if (ret == fatal)
-			return ret;
+		if (ret != good)
+		{
+			_status = fatal;
+			if (ret == fatal)
+				return true;
+		}
 		tmp = _parseHeaders(msgLines, 1);
 		if (tmp == good)
 			return ret;
@@ -331,8 +360,16 @@ namespace ft
 		//Content-Length
 		else if (key == "Content-Length")
 		{
-			if (isnumber(it->second))
-				ret = bad;
+			if (!isnumber(it->second))
+				return fatal;
+			try
+			{
+				_contentLength = stoz(it->second);
+			}
+			catch (std::exception& e)
+			{
+				return fatal;
+			}
 		}
 
 		//Content-Type : get the file extension to know wheter to send it o cgi or not

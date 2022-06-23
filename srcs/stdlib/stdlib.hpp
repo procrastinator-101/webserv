@@ -61,6 +61,8 @@
 namespace ft
 {
 	bool	isnumber(const std::string &str);
+	size_t	stoz(const std::string& str);
+	size_t	hstoz(const std::string& str);
 	
 	std::vector<std::string>	split(const std::string& str, const std::string& delimiter);
 	std::vector<std::string>	mtsplit(const std::string& str, const std::string& delimiters);
