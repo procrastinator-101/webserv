@@ -31,8 +31,10 @@ namespace ft
 		//================================================================================================
 		private:
 			size_t								_sent;
-			size_t								_contentLength;
 			std::string							_msg;
+
+			bool								_keepAlive;
+			size_t								_contentLength;
 
 			std::string							_version;
 			HttpStatus							_status;

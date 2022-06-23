@@ -40,7 +40,7 @@ namespace ft
 		int		left;
 		int		size;
 		char	buffer[BUFFER_SIZE];
-		std::fstream	logs("response_log", std::ios_base::out | std::ios_base::app);
+		static std::fstream	logs("response_log", std::ios_base::out | std::ios_base::trunc);
 
 		//header message still has bufferSize or more bytes to send
 		if (_sent + BUFFER_SIZE <= _msg.length())
@@ -66,7 +66,7 @@ namespace ft
 			{
 				std::string s(buffer, size);
 				logs << s;
-				std::cout << s;
+				// std::cout << s;
 			}
 			if (ret > 0 && ret < size)
 			{
@@ -78,7 +78,7 @@ namespace ft
 		if (ret < 0)
 			throw std::runtime_error("Response:: send failed");
 		else if (!ret)
-			return true;
+			return true;//should close connection
 		else
 			_sent += ret;
 		return _sent == _contentLength + _msg.length();
@@ -89,24 +89,26 @@ namespace ft
 		const Host											*host;
 		std::map<std::string, std::string>::const_iterator	hostName;
 
-		if (request._bodySize > request._contentLength)
-		{
-			_buildBadRequestResponse();
-			return ;
-		}
+		std::cout << "build response" << std::endl;
+		// if (request._bodySize > request._contentLength)
+		// {
+		// 	_buildBadRequestResponse();
+		// 	return ;
+		// }
 		hostName = request._headers.find("Host");
-		if (hostName == request._headers.end())
-		{
-			_buildBadRequestResponse();
-			return ;
-		}
+		// if (hostName == request._headers.end())
+		// {
+		// 	_buildBadRequestResponse();
+		// 	return ;
+		// }
 		host = _fetchTargetedHost(hosts, hostName->second);
-		_prepare(host, request);
+		// _prepare(host, request);
 		//temporary
 		_bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
 		_status = 200;
 		//end temporary
 		//check if body exists
+		_keepAlive = request._keepAlive;
 		_contentLength = getFileSize(_bodyFileName);
 		_version = request._version;
 		_constructStatusLine();
@@ -256,6 +258,7 @@ namespace ft
 
 	void	Response::_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path)
 	{
+		(void)location;
 		// if (if_location_has_cgi())
 		// {}
 		// else
@@ -370,13 +373,13 @@ namespace ft
 		ostr << getDisplayHeader("body", RESPONSE_SHSIZE) << std::endl;
 		ostr << "name : " << response._bodyFileName << std::endl;
 		ostr << "=============================================================================" << std::endl;
-		bodyFile.open((response._bodyFileName.c_str()));
-		while (bodyFile.good())
-		{
-			std::getline(bodyFile, line);
-			ostr << line << std::endl;
-		}
-		bodyFile.close();
+		// bodyFile.open((response._bodyFileName.c_str()));
+		// while (bodyFile.good())
+		// {
+		// 	std::getline(bodyFile, line);
+		// 	ostr << line << std::endl;
+		// }
+		// bodyFile.close();
 		ostr << "=============================================================================" << std::endl;
 		ostr << getDisplayFooter(RESPONSE_SHSIZE) << std::endl;
 		

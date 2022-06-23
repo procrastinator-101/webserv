@@ -1,4 +1,6 @@
-HTTP/1.1 200 OK
+GET / HTTP/1.1
+Host: localhost:80
+Connection: keep-alive
 Content-Type: text/plain
 Transfer-Encoding: chunked
 

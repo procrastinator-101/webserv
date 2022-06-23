@@ -47,7 +47,7 @@ namespace ft
 
 	bool	Client::keepAlive() const
 	{
-		return _request._keepAlive;
+		return _response._keepAlive;
 	}
 
 	void	Client::_deepCopy(const Client& src)

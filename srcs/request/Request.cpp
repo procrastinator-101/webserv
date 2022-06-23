@@ -1,21 +1,17 @@
 #include "Request.hpp"
-#include <exception>
+#include <iostream>
 #include <string>
-#include <sys/_types/_size_t.h>
 
 namespace ft
 {
-	Request::Request() : _status(good), _bodySize(0), _buffer(), _isChunked(false), _keepAlive(true), _contentLength(0)
+	Request::Request() :	_isInChunk(false), _chunkLen(0), _chunkSize(0), _isTrailerSet(false), _isTrailerReached(false),
+							_status(good), _bodySize(0), _buffer(), _isChunked(false), _keepAlive(true), _contentLength(0),
+							_trailerHeaders(), _method(), _path(), _version(), _headers(), _bodyFileName(), _body()
 	{
 	}
 
 	Request::~Request()
 	{
-	}
-
-	Request::Request(std::string& msg) :  _status(good), _bodySize(0), _buffer(msg), _isChunked(false), _keepAlive(true), _contentLength(0)
-	{
-		_parseHead();
 	}
 
 	Request::Request(const Request& src)
@@ -35,7 +31,7 @@ namespace ft
 	{
 		bool	ret;
 		int		received;
-		char	str[BUFFER_SIZE + 1];
+		char	str[BUFFER_SIZE] = {0};
 
 		ret = true;
 		received = ::recv(fd, str, BUFFER_SIZE, 0);
@@ -43,29 +39,16 @@ namespace ft
 			throw std::runtime_error("Request:: recv failed");
 		if (received)
 		{
-			str[received] = 0;
+			// str[received] = 0;
 			ret = _parse(str, received);
 		}
+		else
+			_keepAlive = false;//should close the connection
+		std::cout << "received : " << received << std::endl;
 		return ret;
 	}
 
-	void	Request::reset()
-	{
-		_status = good;
-		_bodySize = 0;
-		_buffer.clear();
-
-		_isChunked = false;
-		_keepAlive = true;
-		_contentLength = 0;
-
-		_method.clear();
-		_path.clear();
-		_version.clear();
-		_headers.clear();
-		_bodyFileName.clear();
-		_body.close();
-	}
+	
 
 	bool	Request::_parse(char *str, size_t size)
 	{
@@ -73,32 +56,35 @@ namespace ft
 		size_t	end;
 		size_t	start;
 
+		ret = false;
+		std::cout << "--parse--" << std::endl;
 		if (_bodySize)
 			ret = _fetchBody(str, size);
 		else
 		{
-			_buffer.append(str);
+			_buffer.append(str, size);
+			// std::cout << "_parse : ->[" << _buffer << "]<-" << std::endl;
 			end = _buffer.find(HTTP_BLANKlINE);
 			if (end != std::string::npos)
 			{
 				start = size - (_buffer.size() - (end + 4));
 				ret = _parseHead();
+				std::cout << "ret(parseHead) : " << ret << std::endl;
 				if (ret)
 					return ret;
 				_buffer.clear();
+				std::cout << "start body" << std::endl;
 				ret = _fetchBody(str + start, size - start);
+				std::cout << "ret : " << ret << std::endl;
 			}
+			else
+				std::cout << "no blank line yet" << std::endl;
 		}
 		return ret;
 	}
 
 	bool	Request::_fetchBody(char *str, size_t size)
 	{
-		bool	ret;
-		char	*ptr;
-
-		if (!size)
-			return false;
 		if (!_bodySize)
 		{
 			_bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
@@ -106,10 +92,14 @@ namespace ft
 		}
 		if (!_isChunked)
 		{
-			_body << str;
+			std::cout << "not chunked" << std::endl;
+			_body << str;//error !!!!!!!!!!!
 			_bodySize += size;
 			return _endBody();
 		}
+		// std::cout << "chunked {" << str << "}" << std::endl;
+		if (!size)
+			return false;
 		_buffer.append(str, size);
 		if (_isTrailerReached)
 			return _fetchTrailerPart();
@@ -119,45 +109,44 @@ namespace ft
 	bool	Request::_fetchChunkedBody()
 	{
 		bool		ret;
-		size_t		end;
 		std::string	line;
-		std::string	token;
 		
-		while (1)
+		while (true)
 		{
-			end = _buffer.find(HTTP_NEWLINE);
-			if (end != std::string::npos)
+			// std::cout << "_fetchChunkedBody : [" << _buffer << "]" << std::endl;
+			if (_buffer.find(HTTP_NEWLINE) != std::string::npos)
 			{
 				line = strdtok(_buffer, HTTP_NEWLINE);
-
 				//end of transmission or end data chunk
 				if (line.empty())
 				{
-					if (_isInChunk && _chunkLen == _chunkSize)
+					if (_isInChunk && !_chunkSize)
 					{
-						_chunkSize = 0;
-						_chunkLen = 0;
-						_isInChunk = false;
-						continue ;
+						std::cout << "end of transmission" << std::endl;
+						_resetChunk();
+						return true;
 					}
-					_status = fatal;
-					return true;
+					return _setStatus(fatal);
 				}
-
 				if (!_isInChunk)
+				{
 					ret = _initialiseNewChunk(line);
+					std::cout << "ret(_initialiseNewChunk) : " << ret << std::endl;
+				}
 				else
+				{
 					ret = _endChunkData(line);
+					std::cout << "ret(_endChunkData) : " << ret << std::endl;
+				}
 				if (ret)
-						return ret;
+					return ret;
 			}
 			else if (_isInChunk)
-			{
-				
-			}
+				return _fillChunk();
 			else
-				break;
+				return false;
 		}
+		return false;
 	}
 
 	bool	Request::_fetchTrailerPart()
@@ -209,30 +198,46 @@ namespace ft
 			_isTrailerReached = true;
 			return _fetchTrailerPart();
 		}
+		std::cout << "chunkSize :                 " << _chunkSize << std::endl;
 		return false;
 	}
 
 	bool	Request::_endChunkData(std::string& line)
 	{
+		// std::cout << "_endChunkData : |{" << line << "}|" << std::endl;
 		_body << line;
 		_bodySize += line.size();
 		_chunkLen += line.size();
 		if (_chunkLen != _chunkSize)
+		{
+			std::cout << "chunlen : " << _chunkLen << " | chunksize : " << _chunkSize << std::endl;
 			return _setStatus(fatal);
-		_chunkSize = 0;
-		_chunkLen = 0;
-		_isInChunk = false;
+		}
+		_resetChunk();
+		return false;
 	}
 
 	bool	Request::_fillChunk()
 	{
-		token.clear();
+		std::string	token;
+		
+		if (_buffer.empty())
+			return false;
+		// std::cout << "_fillCunk : (" << _buffer << ")" << std::endl;
 		token.push_back(*_buffer.rbegin());
 		_buffer.resize(_buffer.size() - 1);
 		_buffer.swap(token);
 		_body << token;
 		_bodySize += token.size();
 		_chunkLen += token.size();
+		return false;
+	}
+
+	void	Request::_resetChunk()
+	{
+		_chunkLen = 0;
+		_chunkSize = 0;
+		_isInChunk = false;
 	}
 
 	bool	Request::_setStatus(Status status)
@@ -270,22 +275,17 @@ namespace ft
 
 	bool	Request::_parseHead()
 	{
-		Status	ret;
-		Status	tmp;
+		bool	ret;
 		std::vector<std::string>	msgLines;
 
 		msgLines = split(_buffer, "\r\n");
-		ret = _parseStartLine(msgLines);
-		if (ret != good)
-		{
-			_status = fatal;
-			if (ret == fatal)
-				return true;
-		}
-		tmp = _parseHeaders(msgLines, 1);
-		if (tmp == good)
+		ret = _setStatus(_parseStartLine(msgLines));
+		std::cout << "ret(_parseStartLine) : " << ret << std::endl;
+		if (ret)
 			return ret;
-		return tmp;
+		ret = _setStatus(_parseHeaders(msgLines, 1));
+		std::cout << "ret(_parseHeaders) : " << ret << std::endl;
+		return ret;
 	}
 
 	Request::Status	Request::_parseStartLine(std::vector<std::string>& msgLines)
@@ -314,7 +314,9 @@ namespace ft
 		for (i = offset; i < msgLines.size() && !msgLines[i].empty(); i++)
 		{
 			key = strdtok(msgLines[i], ":");
+			// std::cout << "key : " << key << " " << msgLines[i] << std::endl;
 			tmp = _setHeader(key, removeTrailingWhiteSpaces(msgLines[i]));
+			// std::cout << "tmp : " << tmp << std::endl;
 			if (tmp == fatal)
 				return fatal;
 			else if (ret == good)
@@ -360,11 +362,11 @@ namespace ft
 		//Content-Length
 		else if (key == "Content-Length")
 		{
-			if (!isnumber(it->second))
+			if (!isnumber(value))
 				return fatal;
 			try
 			{
-				_contentLength = stoz(it->second);
+				_contentLength = stoz(value);
 			}
 			catch (std::exception& e)
 			{
@@ -478,6 +480,30 @@ namespace ft
 		disallowedHeaders.insert("Trailer");
 	}
 
+	void	Request::reset()
+	{
+		_resetChunk();
+
+		_isTrailerSet = false;
+		_isTrailerReached = false;
+
+		_status = good;
+		_bodySize = 0;
+		_buffer.clear();
+
+		_isChunked = false;
+		_keepAlive = true;
+		_contentLength = 0;
+		_trailerHeaders.clear();
+
+		_method.clear();
+		_path.clear();
+		_version.clear();
+		_headers.clear();
+		_bodyFileName.clear();
+		_body.close();
+	}
+
 	void	Request::_deepCopy(const Request& src)
 	{
 		(void)src;
@@ -509,7 +535,10 @@ namespace ft
 		ostr << std::left;
 		ostr << getDisplayHeader("Request", REQUEST_HSIZE) << std::endl;
 
+		ostr << std::setw(fieldSize) << "_isTrailerSet : " << request._isTrailerSet << std::endl;
+		ostr << std::setw(fieldSize) << "_isChunked : " << request._isChunked << std::endl;
 		ostr << std::setw(fieldSize) << "keepAlive : " << request._keepAlive << std::endl;
+
 		ostr << std::setw(fieldSize) << "method : " << request._method << std::endl;
 		ostr << std::setw(fieldSize) << "path : " << request._path << std::endl;
 		ostr << std::setw(fieldSize) << "version : " << request._version << std::endl;
@@ -522,13 +551,13 @@ namespace ft
 		ostr << getDisplayHeader("body", REQUEST_SHSIZE) << std::endl;
 		ostr << "name : " << request._bodyFileName << std::endl;
 		ostr << "=============================================================================" << std::endl;
-		bodyFile.open((request._bodyFileName.c_str()));
-		while (bodyFile.good())
-		{
-			std::getline(bodyFile, line);
-			ostr << line << std::endl;
-		}
-		bodyFile.close();
+		// bodyFile.open((request._bodyFileName.c_str()));
+		// while (bodyFile.good())
+		// {
+		// 	std::getline(bodyFile, line);
+		// 	ostr << line << std::endl;
+		// }
+		// bodyFile.close();
 		ostr << "=============================================================================" << std::endl;
 		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
 		

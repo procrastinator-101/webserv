@@ -153,6 +153,7 @@ $(NAME) : NGINX_PATHS $(SRC) $(HDR)
 
 NGINX_PATHS :
 	@mkdir -p $(_NGINY_VAR_PATH)
+# @rm -r $(_NGINY_VAR_PATH)/*
 
 clean:
 	@rm -rf $(OBJ)

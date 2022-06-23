@@ -8,11 +8,10 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Thu Jun 23 08:48:25 2022
+# Make data base, printed on Thu Jun 23 16:57:23 2022
 
 # Variables
 
- 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
@@ -24,6 +23,7 @@ OBJ = $(SRC:.cpp=.o)
 # makefile (from `Makefile', line 68)
 NGINY_SRC = $(NGINY_PATH)/Nginy.cpp
 # makefile (from `Makefile', line 133)
+ 
 SRC = $(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HOST_SRC) $(HTTP_STATUS_SRC) $(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) $(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
 # environment
 VSCODE_LOG_NATIVE = false
@@ -250,9 +250,9 @@ LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 
 # Directories
 
-# . (device 16777227, inode 395979): 23 files, no impossibilities.
+# . (device 16777227, inode 395979): 19 files, no impossibilities.
 
-# 23 files, no impossibilities in 1 directories.
+# 19 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -273,7 +273,6 @@ srcs/server/Server.hpp:
 
 # Not a target:
 srcs/location/Location.hpp:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -287,9 +286,10 @@ all: webserv
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/3=0%
 
+ 
 webserv: NGINX_PATHS srcs/main.cpp srcs/client/Client.cpp srcs/host/Host.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockets/ClientSockt.cpp srcs/sockets/ServerSockt.cpp srcs/sockets/Sockt.cpp srcs/stdlib/stdlib.cpp srcs/client/Client.hpp srcs/host/Host.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/multiplex/Action.hpp srcs/multiplex/Selecter.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockets/ClientSockt.hpp srcs/sockets/ServerSockt.hpp srcs/sockets/Sockt.hpp srcs/stdlib/stdlib.hpp
 #  Implicit rule search has not been done.
-#  Last modified 2022-06-21 21:44:59
+#  Last modified 2022-06-23 16:56:45
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
@@ -330,7 +330,7 @@ srcs/request/Request.cpp:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-20 17:41:24
+#  Last modified 2022-06-23 16:57:19
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -377,7 +377,7 @@ fclean: clean
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 161):
+#  commands to execute (from `Makefile', line 162):
 	@rm -rf $(NAME)
 	
 
@@ -463,7 +463,7 @@ clean:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 158):
+#  commands to execute (from `Makefile', line 159):
 	@rm -rf $(OBJ)
 	
 
@@ -546,6 +546,6 @@ srcs/response/Response.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Thu Jun 23 08:48:25 2022
+# Finished Make data base on Thu Jun 23 16:57:23 2022
 
  

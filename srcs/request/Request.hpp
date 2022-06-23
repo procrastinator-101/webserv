@@ -45,18 +45,22 @@ namespace ft
 		//================================================================================================
 		private:
 			bool								_isInChunk;
-			bool								_isTrailerSet;
-			bool								_isTrailerReached;
 			size_t								_chunkLen;
 			size_t								_chunkSize;
+
+			bool								_isTrailerSet;
+			bool								_isTrailerReached;
+
 			Status								_status;
 			size_t								_bodySize;
 			std::string							_buffer;
+
 
 			bool								_isChunked;
 			bool								_keepAlive;
 			size_t								_contentLength;
 			std::set<std::string>				_trailerHeaders;
+
 
 			std::string							_method;
 			std::string							_path;
@@ -75,8 +79,6 @@ namespace ft
 		public:
 			Request();
 			~Request();
-
-			Request(std::string& msg);
 		
 		private:
 			Request(const Request& src); // = delete
@@ -112,6 +114,8 @@ namespace ft
 			bool	_fetchTrailerPart();
 			bool	_fetchChunkedBody();
 			bool	_fetchBody(char *buffer, size_t size);
+
+			void	_resetChunk();
 
 			bool	_fillChunk();
 			bool	_endChunkData(std::string& line);

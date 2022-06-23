@@ -1,4 +1,5 @@
 #include "Nginy.hpp"
+#include <algorithm>
 
 namespace ft
 {
@@ -21,8 +22,9 @@ namespace ft
 		_parseConfigFile();
 	}
 
-	Nginy::Nginy(const Nginy& src) : _configFileName(src._configFileName), _multiplexer(src._multiplexer), _servers(src._servers)
+	Nginy::Nginy(const Nginy& src)
 	{
+		(void)src;
 	}
 
 	Nginy	&Nginy::operator=(const Nginy& rop)
@@ -36,22 +38,14 @@ namespace ft
 	void	Nginy::up()
 	{
 		std::map<int, int>	candidates;
-
+		
 		_initiateServers();
 		while (1)
 		{
-			// std::cout << *this << std::endl;
 			// std::cout << _multiplexer << std::endl;
-			// std::cout << "fetching started" << std::endl;
 			candidates = _multiplexer.fetch();
-			// std::cout << "fetching ended" << std::endl;
 			if (candidates.empty())
 				continue ;
-			// std::cout << "candidates" << std::endl;
-			// for (std::map<int, int>::const_iterator it = candidates.begin(); it != candidates.end(); ++it)
-				// std::cout << it->first << " ";
-			// std::cout << "candidatesEnd" << std::endl;
-			// std::cout << std::endl;
 			_acceptNewClients(candidates);
 			_serveClients(candidates);
 		}
@@ -90,6 +84,7 @@ namespace ft
 				if (it->second & aRead)
 				{
 					isFinished = cit->second->handleRequest(*_servers[i]);
+					std::cout << "isRequestFinished : " << isFinished << std::endl;
 					if (isFinished)
 					{
 						std::cout << cit->second->_request << std::endl;
@@ -100,20 +95,23 @@ namespace ft
 				}
 				else if (it->second & aWrite)
 				{
-					// std::cout << "handle response" << std::endl;
 					isFinished = cit->second->handleResponse();
+					std::cout << "isResponseFinished : " << isFinished << std::endl;
 					if (isFinished)
 					{
 						// std::cout << cit->second->_response << std::endl;
-						cit->second->_response.reset();
 						_multiplexer.del(cit->first, aWrite);
 						if (cit->second->keepAlive())
+						{
+							cit->second->_response.reset();
 							_multiplexer.add(cit->first, aRead);
+						}
 						else
 						{
 							delete cit->second;
 							_servers[i]->_clients.erase(it->second);
 						}
+						return;//!!!!!!!
 					}
 				}
 				else
@@ -205,11 +203,7 @@ namespace ft
 					continue ;
 				std::stringstream	lineStream(line);
 				
-				// std::cout << "////////////////////////////////////////////////////" << std::endl;
-				// std::cout << lineStream.str() << std::endl;
-				// std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 				lineStream >> token;
-				// std::cout << token << std::endl;
 				if (token == "#")
 					continue ;
 				if (token == "}")
@@ -305,9 +299,7 @@ namespace ft
 
 	void	Nginy::_deepCopy(const Nginy& src)
 	{
-		_configFileName = src._configFileName;
-		_multiplexer = src._multiplexer;
-		_servers = src._servers;
+		(void)src;
 	}
 
 	std::ostream	&operator<<(std::ostream& ostr, const Nginy& nginy)
