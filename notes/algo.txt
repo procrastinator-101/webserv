@@ -115,6 +115,24 @@ chunked:
 			-	false:
 				-	send the msg except the last character to the body file
 				-	msg should contain the last character of it only
+
+newLine at the beginning of buffer
+	-	isInChunk:
+		-	chunklen == chunkSize
+			-	true : 
+				-	continue;
+			-	false :
+				-	fatal
+				-	end transmission
+	-	isNotInChunk:
+		-	fatal
+		-	end transmission
+
+
+*	\r\n
+*	-	\r
+	-	\n
+
 =====================================================================================================
 
 

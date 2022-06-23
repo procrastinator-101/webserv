@@ -18,3 +18,4 @@ concepts :
 
 -	get : path is symbolic link ??
 -	default host port = 8080
+-	http version should not excedd 1.1

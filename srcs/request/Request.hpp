@@ -44,12 +44,13 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
+			bool								_isInChunk;
 			bool								_isTrailerReached;
 			size_t								_chunkLen;
 			size_t								_chunkSize;
 			Status								_status;
 			size_t								_bodySize;
-			std::string							_msg;
+			std::string							_buffer;
 
 			bool								_isChunked;
 			bool								_keepAlive;
@@ -100,20 +101,25 @@ namespace ft
 		//================================================================================================
 		private:
 
-			bool	_endParse();
+			bool	_endBody();
 			bool	_parse(char *buffer, size_t size);
-			bool	_fillBody(char *buffer, size_t size);
-			bool	_fillChunkedBody(char* &buffer, size_t size);
 
-			Status	_parseMessage();//returns true if message is fataly bad
+
+			//return true if receiving has ended
+			bool	_parseHead();
+			bool	_fetchTrailerPart();
+			bool	_fetchChunkedBody();
+			bool	_fetchBody(char *buffer, size_t size);
+
 			Status	_parseStartLine(std::vector<std::string>& msgLines);
 			Status	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
 
 			Status	_setHeader(const std::string& key, const std::string& value);
+			Status	_setTrailerHeaders(std::string& line);
 
-			Status	_checkStartLine() const;
-			Status	_checkHeaders() const;
 			Status	_checkBody() const;
+			Status	_checkHeaders() const;
+			Status	_checkStartLine() const;
 
 			bool	_isTrailerAllowedHeader(std::string& header) const;
 			void	_fillTrailerDisallowedHeaders(std::set<std::string>& disallowedHeaders) const;

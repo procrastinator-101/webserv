@@ -1,8 +1,10 @@
 #include "Request.hpp"
+#include <string>
+#include <sys/_types/_size_t.h>
 
 namespace ft
 {
-	Request::Request() : _status(good), _bodySize(0), _msg(), _isChunked(false), _keepAlive(true), _contentLength(0)
+	Request::Request() : _status(good), _bodySize(0), _buffer(), _isChunked(false), _keepAlive(true), _contentLength(0)
 	{
 	}
 
@@ -10,9 +12,9 @@ namespace ft
 	{
 	}
 
-	Request::Request(std::string& msg) :  _status(good), _bodySize(0), _msg(msg), _isChunked(false), _keepAlive(true), _contentLength(0)
+	Request::Request(std::string& msg) :  _status(good), _bodySize(0), _buffer(msg), _isChunked(false), _keepAlive(true), _contentLength(0)
 	{
-		_parseMessage();
+		_parseHead();
 	}
 
 	Request::Request(const Request& src)
@@ -32,16 +34,16 @@ namespace ft
 	{
 		bool	ret;
 		int		received;
-		char	buffer[BUFFER_SIZE + 1];
+		char	str[BUFFER_SIZE + 1];
 
 		ret = true;
-		received = ::recv(fd, buffer, BUFFER_SIZE, 0);
+		received = ::recv(fd, str, BUFFER_SIZE, 0);
 		if (received < 0)
 			throw std::runtime_error("Request:: recv failed");
 		if (received)
 		{
-			buffer[received] = 0;
-			ret = _parse(buffer, received);
+			str[received] = 0;
+			ret = _parse(str, received);
 		}
 		return ret;
 	}
@@ -50,7 +52,7 @@ namespace ft
 	{
 		_status = good;
 		_bodySize = 0;
-		_msg.clear();
+		_buffer.clear();
 
 		_isChunked = false;
 		_keepAlive = true;
@@ -64,35 +66,38 @@ namespace ft
 		_body.close();
 	}
 
-	bool	Request::_parse(char *buffer, size_t size)
+	bool	Request::_parse(char *str, size_t size)
 	{
+		bool	ret;
 		size_t	end;
 		size_t	start;
 
 		if (_bodySize)
-			_fillBody(buffer, size);
+			ret = _fetchBody(str, size);
 		else
 		{
-			_msg.append(buffer);
-			end = _msg.find("\r\n\r\n");
+			_buffer.append(str);
+			end = _buffer.find(HTTP_BLANKlINE);
 			if (end != std::string::npos)
 			{
-				start = size - (_msg.size() - (end + 4));
-				_status = _parseMessage();
-				_msg.clear();
-				if (_status == fatal)
-					return true;
-				_fillBody(buffer + start, size - start);
+				start = size - (_buffer.size() - (end + 4));
+				ret = _parseHead();
+				if (ret)
+					return ret;
+				_buffer.clear();
+				ret = _fetchBody(str + start, size - start);
 			}
 		}
-		return _endParse();
+		return ret;
 	}
 
-	bool	Request::_fillBody(char *buffer, size_t size)
+	bool	Request::_fetchBody(char *str, size_t size)
 	{
 		bool	ret;
 		char	*ptr;
 
+		if (!size)
+			return false;
 		if (!_bodySize)
 		{
 			_bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
@@ -100,79 +105,136 @@ namespace ft
 		}
 		if (!_isChunked)
 		{
-			_body << buffer;
+			_body << str;
 			_bodySize += size;
+			return _endBody();
 		}
-		else
-		{
-			if (!_isTrailerReached)
-				ret = _fillChunkedBody(buffer, size);
-			if (_isTrailerReached)
-			{
-				ptr = ::strstr(buffer, "\r\n\r\n");
-				if (!ptr)
-					_msg.append(buffer);
-				else
-				{
-					_msg.append(buffer, ptr - buffer);
-					return true;
-				}
-			}
-		}
-		return ret;
+		_buffer.append(str, size);
+		if (_isTrailerReached)
+			return _fetchTrailerPart();
+		return _fetchChunkedBody();	
 	}
 
-	bool	Request::_fillChunkedBody(char* &buffer, size_t size)
+	bool	Request::_fetchChunkedBody()
 	{
 		size_t		end;
 		std::string	line;
 		std::string	token;
 		
-		_msg.append(buffer);
 		while (1)
 		{
-			end = _msg.find(HTTP_NEWLINE);
+			end = _buffer.find(HTTP_NEWLINE);
 			if (end != std::string::npos)
 			{
-				line = strdtok(_msg, HTTP_NEWLINE);
-				if (_chunkLen == _chunkSize)
+				line = strdtok(_buffer, HTTP_NEWLINE);
+
+				//end of transmission or end data chunk
+				if (line.empty())
 				{
-					_chunkLen = 0;
+					if (_isInChunk && _chunkLen == _chunkSize)
+					{
+						_chunkSize = 0;
+						_chunkLen = 0;
+						_isInChunk = false;
+						continue ;
+					}
+					_status = fatal;
+					return true;
+				}
+
+				//new Chunk initialisation
+				if (!_isInChunk)
+				{
+					_isInChunk = true;
 					token = strtok(line, WHITE_SPACES);
 					if (token.empty())
 					{
-						//set fatal
+						_status = fatal;
 						return true;
 					}
-					_chunkSize = ::atoi(token.c_str());
+					_chunkSize = ::atoi(token.c_str());//hex!!!!!!!!!! + check reasonnable chunsize
 					if (!_chunkSize)
 					{
 						_isTrailerReached = true;
-						return true;
+						return _fetchTrailerPart();
 					}
 				}
+				//end of chunk data
 				else
 				{
 					_body << line;
 					_bodySize += line.size();
 					_chunkLen += line.size();
+					if (_chunkLen != _chunkSize)
+					{
+						_status = fatal;
+						return true;
+					}
+					_chunkSize = 0;
+					_chunkLen = 0;
+					_isInChunk = false;
 				}
 			}
-			else if (_chunkLen != _chunkSize)
+			else if (_isInChunk)
 			{
 				token.clear();
-				token.push_back(*_msg.rbegin());
-				_msg.resize(_msg.size() - 1);
-				_body << _msg;
-				_bodySize += _msg.size();
-				_chunkLen += _msg.size();
+				token.push_back(*_buffer.rbegin());
+				_buffer.resize(_buffer.size() - 1);
+				_buffer.swap(token);
+				_body << token;
+				_bodySize += token.size();
+				_chunkLen += token.size();
 			}
 			else
 				break;
 		}
 	}
 
-	bool	Request::_endParse()
+	bool	Request::_fetchTrailerPart()
+	{
+		Status		ret;
+		size_t		pos;
+		std::string	line;
+
+		if (!_buffer.empty())
+			return false;
+		pos = 0;
+		while (pos != std::string::npos)
+		{
+			pos = _buffer.find(HTTP_NEWLINE);
+			if (pos != std::string::npos)
+			{
+				line = strdtok(line, HTTP_NEWLINE);
+				if (line.empty())
+					return true;
+				ret = _setTrailerHeaders(line);
+				if (ret != good)
+				{
+					_status = ret;
+					if (ret == fatal)
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	Request::Status	Request::_setTrailerHeaders(std::string& line)
+	{
+		Status		ret;
+		std::string	token;
+
+		token = strdtok(line, ":");
+		if (_trailerHeaders.find(token) == _trailerHeaders.end())
+		{
+			ret = _setHeader(token, line);
+			if (ret != fatal)
+				return bad;
+		}
+		return good;
+	}
+
+	bool	Request::_endBody()
 	{
 		if (_bodySize < _contentLength)
 			return false;
@@ -181,13 +243,13 @@ namespace ft
 		return true;
 	}
 
-	Request::Status	Request::_parseMessage()
+	Request::Status	Request::_parseHead()
 	{
 		Status	ret;
 		Status	tmp;
 		std::vector<std::string>	msgLines;
 
-		msgLines = split(_msg, "\r\n");
+		msgLines = split(_buffer, "\r\n");
 		ret = _parseStartLine(msgLines);
 		if (ret == fatal)
 			return ret;
