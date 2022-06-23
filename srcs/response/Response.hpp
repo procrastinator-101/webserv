@@ -75,7 +75,7 @@ namespace ft
 
 			void	_prepare(const Host* host, const Request& request);
 			void	_handleGetMethod(const Request& request, const std::pair<std::string, Location *>& location);
-			void	_handlePostMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location);
+			void	_handlePostMethod(const Request& request, const std::pair<std::string, Location *>& location);
 			void	_handleDeleteMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location);
 
 			std::pair<std::string, Location *>	get_matched_location_for_request_uri(const std::string path, const std::map<std::string, Location *> locations);
@@ -84,6 +84,11 @@ namespace ft
 			void			_handleDirInGet(const std::pair<std::string, Location *>& location, std::string& path);
 			void			_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path);
 			std::string		IsDirHasIndexFiles(const std::pair<std::string, Location *>& location, std::string& path);
+			void			_handleDirIn_POST(const std::pair<std::string, Location *>& location, std::string& path);
+			void			_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path);
+			void			_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path);
+			void			_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path);
+			void			DeleteFolderContent(std::string& path);
 
 			void	_constructStatusLine();
 			void	_constructHeaders(const Request& request);

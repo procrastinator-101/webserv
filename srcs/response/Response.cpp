@@ -193,6 +193,7 @@ namespace ft
 	{
 		std::pair<std::string, Location *>	location;
 
+		_headers = request._headers;
 		location = get_matched_location_for_request_uri(request._path, host->_locations);
 		if (location.second == NULL)
 		{
@@ -216,7 +217,7 @@ namespace ft
 		if (request._method == "GET")
 			_handleGetMethod(request, location);
 		else if (request._method == "POST")
-			_handlePostMethod(host, request, location);
+			_handlePostMethod(request, location);
 		else if (request._method == "DELETE")
 			_handleDeleteMethod(host, request, location);
 	}
@@ -286,13 +287,11 @@ namespace ft
 		{
 			_status = 200;
 			// _bodyFileName = ;
-			return ;
 		}
 		else
 		{
 			_status = 403;
 			// _bodyFileName = ;
-			return ;
 		}
 	}
 
@@ -307,30 +306,135 @@ namespace ft
 			if(s.st_mode & S_IFDIR)		//it's a directory
 				_handleDirInGet(location, path);
 			else
-			{
 				_handleFileInGet(location, path);
-			}
 		}
 		else
 		{
 			_status = 404;
 			// _bodyFileName = ;
+		}
+	}
+
+	void	Response::_handleDirIn_POST(const std::pair<std::string, Location *>& location, std::string& path)
+	{
+		std::string		index_file;
+
+		if (path[path.length() - 1] != '/')
+		{
+			_status = 301;
+			_headers["Location"] = path.append("/");
+			// _bodyFileName = ;
 			return ;
 		}
+		index_file = IsDirHasIndexFiles(location, path);
+		if (index_file.length())
+		{
+			_handleFileIn_POST(location, index_file);
+		}
+		else
+		{
+			_status = 403;
+			// _bodyFileName = ;
+		}
+	}
+
+	void	Response::_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path)
+	{
+		// if (if_location_has_cgi())
+		// {}
+		// else
+		{
+			_status = 403;
+			// _bodyFileName = ;
+			return ;
+		}
+	}
+
+	void	Response::_handlePostMethod(const Request& request, const std::pair<std::string, Location *>& location)
+	{
+		struct stat s;
+		std::string	path;
+
+		if (location.second->_uploadPath.length() != 0)
+		{
+			// uplaod the Post Request Body
+			_status = 201;
+			// _bodyFileName = ;
+			return ;
+		}
+		path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
+		if(stat(path.c_str(), &s) == 0)
+		{
+			if(s.st_mode & S_IFDIR)		//it's a directory
+				_handleDirIn_POST(location, path);
+			else
+				_handleFileIn_POST(location, path);
+		}
+		else
+		{
+			_status = 404;
+			// _bodyFileName = ;
+		}
+	}
+
+	void	Response::DeleteFolderContent(std::string& path)
+	{
 		
 	}
 
-	void	Response::_handlePostMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
+	void	Response::_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path)
 	{
-		(void)host;
-		(void)request;
-		(void)location;
+		std::string		index_file;
+
+		if (path[path.length() - 1] != '/')
+		{
+			_status = 409;
+			// _bodyFileName = ;
+			return ;
+		}
+							//			CGI
+		// if (if_location_has_cgi())
+		// {
+		// 	index_file = IsDirHasIndexFiles(location, path);
+		// 	if (index_file.length())
+		// 	{
+		// 		// run cgi  on requested file with DELTE REQUEST_METHOD
+		// 	}
+		// 	else
+		// 	{
+		// 		_status = 403;
+		// 		// _bodyFileName = ;
+		// 	}
+		// }
+		// else
+		{
+			DeleteFolderContent(path);
+		}
+
+
 	}
+
 	void	Response::_handleDeleteMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
 	{
 		(void)host;
-		(void)request;
-		(void)location;
+
+		struct stat s;
+		std::string	path;
+
+		path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
+		if(stat(path.c_str(), &s) == 0)
+		{
+			if(s.st_mode & S_IFDIR)		//it's a directory
+				_handleDirIn_DELETE(location, path);
+			else
+				// _handleFileIn_DELETE(location, path);
+				;
+		}
+		else
+		{
+			_status = 404;
+			// _bodyFileName = ;
+		}
 	}
 
 	void	Response::reset()
