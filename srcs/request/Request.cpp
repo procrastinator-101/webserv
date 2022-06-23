@@ -1,8 +1,4 @@
 #include "Request.hpp"
-#include <cstddef>
-#include <string>
-#include <utility>
-#include <vector>
 
 namespace ft
 {
@@ -138,11 +134,11 @@ namespace ft
 			end = _msg.find(HTTP_NEWLINE);
 			if (end != std::string::npos)
 			{
-				line = strtok(_msg, HTTP_NEWLINE);//no multiple traversal
+				line = strdtok(_msg, HTTP_NEWLINE);
 				if (_chunkLen == _chunkSize)
 				{
 					_chunkLen = 0;
-					token = strtok(line);
+					token = strtok(line, WHITE_SPACES);
 					if (token.empty())
 					{
 						//set fatal
@@ -207,7 +203,7 @@ namespace ft
 
 		if (msgLines.empty())
 			return bad;
-		startLine = splitWhiteSpaces(msgLines[0]);
+		startLine = mtsplit(msgLines[0], WHITE_SPACES);
 		if (startLine.size() != 3)
 			return bad;
 		_method = startLine[0];
@@ -226,7 +222,7 @@ namespace ft
 		ret = good;
 		for (i = offset; i < msgLines.size() && !msgLines[i].empty(); i++)
 		{
-			key = strtok(msgLines[i], ':');
+			key = strdtok(msgLines[i], ":");
 			tmp = _setHeader(key, removeTrailingWhiteSpaces(msgLines[i]));
 			if (tmp == fatal)
 				return fatal;
@@ -287,7 +283,7 @@ namespace ft
 				ret = bad;
 			else
 			{
-				tmp = split(value, ':');
+				tmp = split(value, ":");
 				if (tmp.size() > 2)
 					ret = bad;
 			}
@@ -296,10 +292,10 @@ namespace ft
 		//Transfer-Encoding
 		else if (key == "Transfer-Encoding")
 		{
-			tmp = split(value, ',');
+			tmp = split(value, ",");
 			if (tmp.size() != 1)
 				ret = bad;
-			else if (tmp[0] != "chunked")
+			else if (tmp[0] != "chunked")//!!!!!!!!!
 				ret = bad;
 			else
 				_isChunked = true;

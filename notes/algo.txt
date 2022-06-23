@@ -133,3 +133,13 @@ server
 			target = create new server
 		target.hosts.push_back(host)
 =====================================================================================================
+
+=====================================================================================================
+split :
+	-	string delimiter, no multiple traversal
+	-	string of delimiters, multiple traversal
+
+strtok :
+	-	string of delimiters, multiple traversal
+	-	string delimiter, no multiple traversal
+=====================================================================================================

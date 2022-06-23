@@ -5,12 +5,12 @@
 
 namespace ft
 {
+	//split by a string delimiter, no multiple traversal
 	std::vector<std::string>	split(const std::string& str, const std::string& delimiter)
 	{
 		size_t	len;
 		size_t	end;
 		size_t	start;
-		std::string	token;
 		std::vector<std::string>	ret;
 
 		start = 0;
@@ -18,8 +18,7 @@ namespace ft
 		while (start < str.length())
 		{
 			end = str.find(delimiter, start);
-			token = str.substr(start, end - start);
-			ret.push_back(token);
+			ret.push_back(str.substr(start, end - start));
 			if (end == std::string::npos)
 				break ;
 			start = end + len;
@@ -27,53 +26,76 @@ namespace ft
 		return ret;
 	}
 
-	std::vector<std::string>	splitWhiteSpaces(const std::string& str)
+	//split by a string of delimiters, multiple traversal
+	std::vector<std::string>	mtsplit(const std::string& str, const std::string& delimiters)
 	{
-		std::string	token;
-		std::stringstream			tmp;
+		size_t	i;
+		size_t	pos;
+		size_t	start;
 		std::vector<std::string>	ret;
 
-		tmp << str;
-		while (tmp.good())
+		i = 0;
+		start = 0;
+		while (i < str.length())
 		{
-			tmp >> token;
-			ret.push_back(token);
-		}
-		return ret;
-	}
-
-	std::string	strtok(std::string& str, int delimiter)
-	{
-		std::string	token;
-		std::stringstream	tmp;
-
-		tmp << str;
-		if (tmp.good())
-		{
-			if (delimiter == -1)
-				tmp >> token;
+			pos = delimiters.find(str[i]);
+			if (pos != std::string::npos)
+			{
+				ret.push_back(str.substr(start, i - start));
+				for (; i < str.length() && delimiters.find(str[i]) != std::string::npos; i++);
+				start = i;
+			}
 			else
-				std::getline(tmp, token, static_cast<char>(delimiter));
-			str = tmp.str();
+				i++;
 		}
-		return token;
-	}
-
-	std::vector<std::string>	split(const std::string& str, char delimiter)
-	{
-		std::string	token;
-		std::stringstream			tmp;
-		std::vector<std::string>	ret;
-
-		tmp << str;
-		while (tmp.good())
-		{
-			std::getline(tmp, token, delimiter);
-			ret.push_back(token);
-		}
+		if (start < str.length())
+			ret.push_back(str.substr(start));
 		return ret;
 	}
 
+	//split by a string delimiter, no multiple traversal
+	std::string	strdtok(std::string& str, const std::string& delimiter)
+	{
+		size_t	pos;
+		std::string	ret;
+
+		pos = str.find(delimiter);
+		if (pos != std::string::npos)
+		{
+			ret = str.substr(0, pos);
+			str.erase(0, pos + delimiter.length());
+		}
+		else
+			ret.swap(str);
+		return ret;
+	}
+
+	//split by a string of delimiters, multiple traversal
+	std::string	strtok(std::string& str, const std::string& delimiters)
+	{
+		size_t	i;
+		size_t	pos;
+		std::string	ret;
+
+		i = 0;
+		while (i < str.length())
+		{
+			pos = delimiters.find(str[i]);
+			if (pos != std::string::npos)
+			{
+				ret = str.substr(0, i);
+				while (i < str.length() && delimiters.find(str[i]) != std::string::npos)
+					i++;
+				str.erase(0, i);
+				return ret;
+			}
+			else
+				i++;
+		}
+		str.swap(ret);
+		return ret;
+	}
+	
 	std::string	removeTrailingWhiteSpaces(const std::string& str)
 	{
 		size_t	i;
