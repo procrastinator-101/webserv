@@ -1,5 +1,6 @@
 #include "Sockt.hpp"
 #include <sys/_types/_socklen_t.h>
+#include <sys/_types/_timeval.h>
 #include <sys/socket.h>
 
 namespace ft
@@ -123,9 +124,20 @@ namespace ft
 		int			ret;
 		socklen_t	len;
 
-		len = 0;
-		if (optionName == SO_REUSEADDR)
+		if (optionName == SO_DEBUG || optionName == SO_BROADCAST || optionName == SO_REUSEADDR || optionName == SO_KEEPALIVE)
 			len = sizeof(int);
+		else if (optionName == SO_LINGER)
+			len = sizeof(linger);
+		else if (optionName == SO_OOBINLINE || optionName == SO_SNDBUF || optionName == SO_RCVBUF || optionName == SO_DONTROUTE)
+			len = sizeof(int);
+		else if (optionName == SO_RCVLOWAT)
+			len = sizeof(int);
+		else if (optionName == SO_RCVTIMEO)
+			len = sizeof(timeval);
+		else if (optionName == SO_SNDLOWAT)
+			len = sizeof(int);
+		else if (optionName == SO_SNDTIMEO)
+			len = sizeof(timeval);
 		else
 			throw std::runtime_error("socket:: unsupported option");
 		ret = setsockopt(fd, level, optionName, optionValue, len);

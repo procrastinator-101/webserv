@@ -108,7 +108,9 @@ namespace ft
 			bool	_parse(char *buffer, size_t size);
 
 
+			//return true if status is fatal, false otehrwise
 			bool	_setStatus(Status status);
+
 			//return true if receiving has ended
 			bool	_parseHead();
 			bool	_fetchTrailerPart();
@@ -116,10 +118,7 @@ namespace ft
 			bool	_fetchBody(char *buffer, size_t size);
 
 			void	_resetChunk();
-
-			bool	_fillChunk();
-			bool	_endChunkData(std::string& line);
-			bool	_initialiseNewChunk(std::string& line);
+			bool	_beginChunk();
 
 			Status	_parseStartLine(std::vector<std::string>& msgLines);
 			Status	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);

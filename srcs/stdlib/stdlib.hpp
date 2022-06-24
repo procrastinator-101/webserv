@@ -9,6 +9,9 @@
 // #define NGINY_VAR_PATH		""
 // #define NGINY_INDEX_PATH	""
 
+#include <grp.h>
+#include <pwd.h>
+#include <unistd.h>
 #include <sys/stat.h>
 
 //level 1
@@ -63,7 +66,9 @@ namespace ft
 	bool	isnumber(const std::string &str);
 	size_t	stoz(const std::string& str);
 	size_t	hstoz(const std::string& str);
+	std::string	ft_itoa(int n);
 	
+
 	std::vector<std::string>	split(const std::string& str, const std::string& delimiter);
 	std::vector<std::string>	mtsplit(const std::string& str, const std::string& delimiters);
 
@@ -71,6 +76,7 @@ namespace ft
 	std::string	strdtok(std::string& str, const std::string& delimiter);
 
 	std::string	removeTrailingWhiteSpaces(const std::string& str);
+
 
 	std::string	centerString(int width, const std::string& str, char c);
 	
@@ -80,10 +86,12 @@ namespace ft
 	std::string	getDisplaySubHeader(std::string str);
 	std::string	getDisplaySubFooter(std::string str);
 
-	std::string	getRandomFileName();
-	std::string	ft_itoa(int n);
 
-	size_t	getFileSize(const std::string& fileName);
+	bool	isFileWritable(std::string& name);
+	bool	isUserInGroup(gid_t gid, uid_t uid);
+	size_t	getFileSize(const std::string& name);
+
+	std::string	getRandomFileName();
 }
 
 #endif

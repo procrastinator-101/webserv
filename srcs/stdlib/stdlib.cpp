@@ -1,10 +1,8 @@
 #include "stdlib.hpp"
-#include <_ctype.h>
-#include <ios>
-#include <sstream>
 #include <stdexcept>
-#include <string>
-#include <sys/_types/_size_t.h>
+#include <sys/_types/_gid_t.h>
+#include <sys/_types/_uid_t.h>
+#include <unistd.h>
 
 namespace ft
 {
@@ -192,11 +190,60 @@ namespace ft
 	}
 
 	//returns the file size in bytes
-	size_t	getFileSize(const std::string& fileName)
+	size_t	getFileSize(const std::string& name)
 	{
 		struct stat	fileStat;
 
-		lstat(fileName.c_str(), &fileStat);
+		lstat(name.c_str(), &fileStat);
 		return fileStat.st_size;
+	}
+
+	bool	isUserInGroup(gid_t gid, uid_t uid)
+	{
+		int				ngroup;
+		int				*groups;
+		struct passwd	*userInfo;
+		
+		userInfo = getpwuid(uid);
+		if (!userInfo)
+			return false;
+		getgrouplist(userInfo->pw_name, userInfo->pw_gid, 0, &ngroup);
+		groups = new int[ngroup];
+		getgrouplist(userInfo->pw_name, userInfo->pw_gid, groups, &ngroup);
+		for (int i = 0; i < ngroup; i++)
+		{
+			if (groups[i] == gid)
+				return true;
+		}
+		delete [] groups;
+		return false;
+	}
+
+	bool	isFileWritable(std::string& name)
+	{
+		int		ret;
+		uid_t	uid;
+		struct stat	fileStat;
+
+		uid = getuid();
+		ret = lstat(name.c_str(), &fileStat);
+		if (ret < 0)
+			return false;
+		//write other
+		if (fileStat.st_mode & S_IWOTH)
+			return true;
+		//write group
+		if (fileStat.st_mode & S_IWGRP)
+		{
+			if (isUserInGroup(fileStat.st_gid, uid))
+				return true;
+		}
+		//write user
+		if (fileStat.st_mode & S_IWUSR)
+		{
+			if (uid == fileStat.st_uid)
+				return true;
+		}
+		return false;
 	}
 }

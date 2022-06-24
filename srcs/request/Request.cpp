@@ -37,13 +37,13 @@ namespace ft
 
 		ret = true;
 		received = ::recv(fd, str, BUFFER_SIZE, 0);
+		std::cout << "received : " << received << std::endl;
 		if (received < 0)
 			throw std::runtime_error("Request:: recv failed");
 		if (received)
 			ret = _parse(str, received);
 		else
 			_keepAlive = false;//should close the connection
-		std::cout << "received : " << received << std::endl;
 		return ret;
 	}
 
@@ -57,20 +57,15 @@ namespace ft
 
 		ret = false;
 		if (_bodySize)
-		{
 			ret = _fetchBody(str, size);
-			std::cout << "ret(fetchBody) : " << ret << std::endl;
-		}
 		else
 		{
 			_buffer.append(str, size);
-			// std::cout << "{" << _buffer << "}" << std::endl;
 			end = _buffer.find(HTTP_BLANKlINE);
 			if (end != std::string::npos)
 			{
 				start = size - (_buffer.size() - (end + ::strlen(HTTP_BLANKlINE)));
 				ret = _parseHead();
-				// std::cout << "ret(parseHead) : " << ret << std::endl;
 				if (ret)
 					return ret;
 				_buffer.clear();
@@ -103,33 +98,33 @@ namespace ft
 
 	bool	Request::_fetchChunkedBody()
 	{
-		size_t		len;
 		bool		ret;
-		std::string	line;
+		size_t		len;
 		
-		while (true)
+		ret = false;
+		while (!ret)
 		{
-			if (_chunkLen == _chunkSize)
+			if (!_isInChunk)
 			{
 				if (_buffer.find(HTTP_NEWLINE) != std::string::npos)
-				{
-					line = strdtok(_buffer, HTTP_NEWLINE);
-					//end of transmission
-					std::cout << "chunkLen : " << _chunkLen << std::endl;
-					if (line.empty() && !_chunkSize)//
-						return true;
-					_resetChunk();
-					ret = _initialiseNewChunk(line);
-					std::cout << "chunkSize : " << _chunkSize << std::endl;
-					if (ret)
-						return ret;
-				}
+					ret = _beginChunk();
 				else
 					return false;
 			}
 			else
 			{
-				if (_chunkLen + _buffer.size() < _chunkSize)
+				if (_chunkLen == _chunkSize)
+				{
+					if (_buffer.size() < 2)
+						return false;
+					if (_buffer.substr(0, ::strlen(HTTP_NEWLINE)) != HTTP_NEWLINE)
+						return _setStatus(fatal);
+					_buffer.erase(0, ::strlen(HTTP_NEWLINE));
+					if (!_chunkSize)
+						return true;
+					_resetChunk();
+				}
+				else if (_chunkLen + _buffer.size() < _chunkSize)
 				{
 					_body << _buffer;
 					_bodySize += _buffer.size();
@@ -143,16 +138,11 @@ namespace ft
 					_chunkLen += len;
 					_bodySize += len;
 					_body.write(_buffer.c_str(), len);
-					//
-					line.assign(_buffer, len, 2);
-					if (line != HTTP_NEWLINE)
-						std::cout << "diff newLine" << std::endl;
-					//
-					_buffer.erase(0, len + ::strlen(HTTP_NEWLINE));
+					_buffer.erase(0, len);
 				}
 			}
 		}
-		return false;
+		return ret;
 	}
 
 	bool	Request::_fetchTrailerPart()
@@ -180,16 +170,23 @@ namespace ft
 		return false;
 	}
 
-	bool	Request::_initialiseNewChunk(std::string& line)
+	bool	Request::_beginChunk()
 	{
+		std::string	line;
 		std::string	token;
 
 		_isInChunk = true;
+
+		//fetch chunk line
+		line = strdtok(_buffer, HTTP_NEWLINE);
+		if (line.empty())
+			return _setStatus(fatal);
 
 		//fetch chunksize field
 		token = strtok(line, HTTP_WHITE_SPACES);
 		if (token.empty())
 			return _setStatus(fatal);
+		
 		//fetch chunk size
 		try
 		{
@@ -204,37 +201,6 @@ namespace ft
 			_isTrailerReached = true;
 			return _fetchTrailerPart();
 		}
-		return false;
-	}
-
-	bool	Request::_endChunkData(std::string& line)
-	{
-		_body << line;
-		_bodySize += line.size();
-		_chunkLen += line.size();
-		if (_chunkLen != _chunkSize)
-		{
-			std::cout << "chunlen : " << _chunkLen << " | chunksize : " << _chunkSize << std::endl;
-			return _setStatus(fatal);
-		}
-		_resetChunk();
-		return false;
-	}
-
-	bool	Request::_fillChunk()
-	{
-		std::string	token;
-		
-		if (_buffer.empty())
-			return false;
-		// std::cout << "_fillCunk : (" << _buffer << ")" << std::endl;
-		token.push_back(*_buffer.rbegin());
-		std::cout << "tokenSize : " << token.size() << std::endl;
-		_buffer.resize(_buffer.size() - 1);
-		_buffer.swap(token);
-		_body << token;
-		_bodySize += token.size();
-		_chunkLen += token.size();
 		return false;
 	}
 
