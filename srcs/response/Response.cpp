@@ -420,6 +420,8 @@ namespace ft
 
 	void	Response::_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path)
 	{
+		(void)location;//mathayedhach bash ytcompila
+		(void)path;//mathayedhach bash ytcompila
 		// if (if_location_has_cgi())
 		// {
 		// 	// run cgi  on requested file with DELTE REQUEST_METHOD

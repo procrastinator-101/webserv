@@ -95,9 +95,13 @@ namespace ft
 			_bodySize += size;
 			return _endBody();
 		}
-		// std::cout << "chunked {" << str << "}" << std::endl;
 		if (!size)
 			return false;
+		if (_bodySize > 262144)
+		{
+			std::cout << "chunked {";
+			std::cout.write(str, size) << "}" << std::endl;
+		}
 		_buffer.append(str, size);
 		if (_isTrailerReached)
 			return _fetchTrailerPart();
@@ -179,7 +183,7 @@ namespace ft
 		_isInChunk = true;
 
 		//fetch chunksize field
-		token = strtok(line, WHITE_SPACES);
+		token = strtok(line, HTTP_WHITE_SPACES);
 		if (token.empty())
 			return _setStatus(fatal);
 		//fetch chunk size
@@ -292,7 +296,7 @@ namespace ft
 
 		if (msgLines.empty())
 			return bad;
-		startLine = mtsplit(msgLines[0], WHITE_SPACES);
+		startLine = mtsplit(msgLines[0], HTTP_WHITE_SPACES);
 		if (startLine.size() != 3)
 			return bad;
 		_method = startLine[0];

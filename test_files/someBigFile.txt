@@ -51067,4 +51067,5 @@ tmp = map[littem].push_back(dfsd);
 
 map[class] = "fdfs";
 map[class] = "sdfsdf";
-map[class1] = "fsdfs";
+map[class1] = "fsdfs";     
+     ppppppppppp

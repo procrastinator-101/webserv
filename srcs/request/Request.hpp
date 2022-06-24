@@ -23,7 +23,7 @@
 # define HTTP_NEWLINE	"\r\n"
 # define HTTP_BLANKlINE	"\r\n\r\n"
 
-# define WHITE_SPACES	"\t\n\v\f\r "
+# define HTTP_WHITE_SPACES	"\t\v\f "
 
 
 namespace ft
