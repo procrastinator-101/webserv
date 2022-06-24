@@ -59,10 +59,17 @@ namespace ft
 	
 	void	Nginy::_initiateServers()
 	{
+		int	optionValue;
+
+		optionValue = 1;
 		//stop or retrying waking it up ????
 		for (size_t i = 0; i < _servers.size(); i++)
 		{
-			_servers[i]->_sockt.wakeUp();
+			// _servers[i]->_sockt.wakeUp();
+			_servers[i]->_sockt.open();
+			_servers[i]->_sockt.setOption(SOL_SOCKET, SO_REUSEADDR, &optionValue);
+			_servers[i]->_sockt.bind();
+			_servers[i]->_sockt.listen();
 			_multiplexer.add(_servers[i]->_sockt.fd, aRead);
 			// std::cout << "servers[" << i << "].fd : " << _servers[i]->_sockt.fd << std::endl;
 		}
@@ -88,6 +95,7 @@ namespace ft
 					if (isFinished)
 					{
 						std::cout << cit->second->_request << std::endl;
+						// exit(1);//!!!!!!!
 						cit->second->_request.reset();
 						_multiplexer.del(cit->first, aRead);
 						_multiplexer.add(cit->first, aWrite);

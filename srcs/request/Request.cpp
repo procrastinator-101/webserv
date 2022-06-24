@@ -2,6 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include <sys/_types/_size_t.h>
 
 namespace ft
 {
@@ -55,13 +56,15 @@ namespace ft
 		size_t	start;
 
 		ret = false;
-		// std::cout << "--parse--" << std::endl;
 		if (_bodySize)
+		{
 			ret = _fetchBody(str, size);
+			std::cout << "ret(fetchBody) : " << ret << std::endl;
+		}
 		else
 		{
 			_buffer.append(str, size);
-			// std::cout << "_parse : ->[" << _buffer << "]<-" << std::endl;
+			// std::cout << "{" << _buffer << "}" << std::endl;
 			end = _buffer.find(HTTP_BLANKlINE);
 			if (end != std::string::npos)
 			{
@@ -71,12 +74,8 @@ namespace ft
 				if (ret)
 					return ret;
 				_buffer.clear();
-				std::cout << "start body" << std::endl;
 				ret = _fetchBody(str + start, size - start);
-				std::cout << "ret : " << ret << std::endl;
 			}
-			else
-				std::cout << "no blank line yet" << std::endl;
 		}
 		return ret;
 	}
@@ -90,18 +89,12 @@ namespace ft
 		}
 		if (!_isChunked)
 		{
-			std::cout << "not chunked" << std::endl;
 			_body.write(str, size);
 			_bodySize += size;
 			return _endBody();
 		}
 		if (!size)
 			return false;
-		if (_bodySize > 262144)
-		{
-			std::cout << "chunked {";
-			std::cout.write(str, size) << "}" << std::endl;
-		}
 		_buffer.append(str, size);
 		if (_isTrailerReached)
 			return _fetchTrailerPart();
@@ -110,43 +103,54 @@ namespace ft
 
 	bool	Request::_fetchChunkedBody()
 	{
+		size_t		len;
 		bool		ret;
 		std::string	line;
 		
 		while (true)
 		{
-			// std::cout << "_fetchChunkedBody : [" << _buffer << "]" << std::endl;
-			if (_buffer.find(HTTP_NEWLINE) != std::string::npos)
+			if (_chunkLen == _chunkSize)
 			{
-				line = strdtok(_buffer, HTTP_NEWLINE);
-				//end of transmission or end data chunk
-				if (line.empty())
+				if (_buffer.find(HTTP_NEWLINE) != std::string::npos)
 				{
-					if (_isInChunk && !_chunkSize)
-					{
-						std::cout << "end of transmission" << std::endl;
-						_resetChunk();
+					line = strdtok(_buffer, HTTP_NEWLINE);
+					//end of transmission
+					std::cout << "chunkLen : " << _chunkLen << std::endl;
+					if (line.empty() && !_chunkSize)//
 						return true;
-					}
-					return _setStatus(fatal);
-				}
-				if (!_isInChunk)
-				{
+					_resetChunk();
 					ret = _initialiseNewChunk(line);
-					std::cout << "ret(_initialiseNewChunk) : " << ret << std::endl;
+					std::cout << "chunkSize : " << _chunkSize << std::endl;
+					if (ret)
+						return ret;
+				}
+				else
+					return false;
+			}
+			else
+			{
+				if (_chunkLen + _buffer.size() < _chunkSize)
+				{
+					_body << _buffer;
+					_bodySize += _buffer.size();
+					_chunkLen += _buffer.size();
+					_buffer.clear();
+					return false;
 				}
 				else
 				{
-					ret = _endChunkData(line);
-					std::cout << "ret(_endChunkData) : " << ret << std::endl;
+					len = _chunkSize - _chunkLen;
+					_chunkLen += len;
+					_bodySize += len;
+					_body.write(_buffer.c_str(), len);
+					//
+					line.assign(_buffer, len, 2);
+					if (line != HTTP_NEWLINE)
+						std::cout << "diff newLine" << std::endl;
+					//
+					_buffer.erase(0, len + ::strlen(HTTP_NEWLINE));
 				}
-				if (ret)
-					return ret;
 			}
-			else if (_isInChunk)
-				return _fillChunk();
-			else
-				return false;
 		}
 		return false;
 	}
@@ -200,13 +204,11 @@ namespace ft
 			_isTrailerReached = true;
 			return _fetchTrailerPart();
 		}
-		std::cout << "chunkSize :                 " << _chunkSize << std::endl;
 		return false;
 	}
 
 	bool	Request::_endChunkData(std::string& line)
 	{
-		// std::cout << "_endChunkData : |{" << line << "}|" << std::endl;
 		_body << line;
 		_bodySize += line.size();
 		_chunkLen += line.size();
@@ -227,6 +229,7 @@ namespace ft
 			return false;
 		// std::cout << "_fillCunk : (" << _buffer << ")" << std::endl;
 		token.push_back(*_buffer.rbegin());
+		std::cout << "tokenSize : " << token.size() << std::endl;
 		_buffer.resize(_buffer.size() - 1);
 		_buffer.swap(token);
 		_body << token;

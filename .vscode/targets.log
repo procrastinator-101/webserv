@@ -8,13 +8,12 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Fri Jun 24 07:44:02 2022
+# Make data base, printed on Fri Jun 24 10:27:20 2022
 
 # Variables
 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
- 
 # automatic
 ?F = $(notdir $?)
 # makefile (from `Makefile', line 104)
@@ -70,11 +69,11 @@ VSCODE_VERBOSE_LOGGING = true
 # makefile (from `Makefile', line 120)
 _NGINY_CONF_PATH = $$PWD/confFiles/default.conf
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-4dff7711-d98b-43a5-85f2-bc782d760416.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-baf3c329-c208-481f-a690-5ac5a720668d.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.gTxmLKASD8/Render
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.QJX6ZKrL98/Render
 # makefile (from `Makefile', line 111)
 STDLIB_PATH = $(SRCS_PATH)/stdlib
 # environment
@@ -98,7 +97,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from `Makefile', line 41)
 HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.YpiCIxvEy5/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.A6cEftPOmq/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -126,7 +125,7 @@ VSCODE_CODE_CACHE_PATH = /Users/yarroubi/Library/Application Support/Code/Cached
 # environment
 LOGNAME = yarroubi
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # makefile (from `Makefile', line 60)
 MULTIPLEX_HDR = $(MULTIPLEX_PATH)/Action.hpp $(MULTIPLEX_PATH)/Selecter.hpp
 # makefile (from `Makefile', line 100)
@@ -194,7 +193,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000001.Electron
+XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x1000000b.Electron
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
@@ -220,11 +219,10 @@ CLIENT_PATH = $(SRCS_PATH)/client
 # environment
 LC_ALL = C
 # environment
-SECURITYSESSIONID = 186a9
+SECURITYSESSIONID = 1883e
 # automatic
 ^F = $(notdir $^)
 # default
- 
 SUFFIXES := 
 # default
 .INCLUDE_DIRS = /usr/local/include
@@ -239,7 +237,7 @@ _NGINY_VAR_PATH = /goinfre/$$USER/var/nginy
 # environment
 LANG = C
 # environment
-VSCODE_PID = 89842
+VSCODE_PID = 25216
 # makefile (from `Makefile', line 52)
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 # variable set hash-table stats:
@@ -270,6 +268,7 @@ LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 srcs/server/Server.hpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 
 # Not a target:
@@ -289,7 +288,7 @@ all: webserv
 
 webserv: NGINX_PATHS srcs/main.cpp srcs/client/Client.cpp srcs/host/Host.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockets/ClientSockt.cpp srcs/sockets/ServerSockt.cpp srcs/sockets/Sockt.cpp srcs/stdlib/stdlib.cpp srcs/client/Client.hpp srcs/host/Host.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/multiplex/Action.hpp srcs/multiplex/Selecter.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockets/ClientSockt.hpp srcs/sockets/ServerSockt.hpp srcs/sockets/Sockt.hpp srcs/stdlib/stdlib.hpp
 #  Implicit rule search has not been done.
-#  Last modified 2022-06-23 20:19:12
+#  Last modified 2022-06-24 08:46:14
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
@@ -524,7 +523,6 @@ srcs/location/Location.cpp:
 # Not a target:
 srcs/sockets/ServerSockt.hpp:
 #  Implicit rule search has not been done.
- 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -547,6 +545,6 @@ srcs/response/Response.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Fri Jun 24 07:44:02 2022
+# Finished Make data base on Fri Jun 24 10:27:20 2022
 
  

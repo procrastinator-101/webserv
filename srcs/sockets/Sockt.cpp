@@ -1,4 +1,6 @@
 #include "Sockt.hpp"
+#include <sys/_types/_socklen_t.h>
+#include <sys/socket.h>
 
 namespace ft
 {
@@ -89,7 +91,7 @@ namespace ft
 			throw std::runtime_error("socket:: connect failed");
 	}
 
-	void	Sockt::connect(const Sockt dst)
+	void	Sockt::connect(const Sockt& dst)
 	{
 		int	ret;
 		
@@ -114,6 +116,21 @@ namespace ft
 		if (fd >= 0)
 			::close(fd);
 		fd = -1;
+	}
+
+	void	Sockt::setOption(const int& level, const int& optionName, const void* optionValue)
+	{
+		int			ret;
+		socklen_t	len;
+
+		len = 0;
+		if (optionName == SO_REUSEADDR)
+			len = sizeof(int);
+		else
+			throw std::runtime_error("socket:: unsupported option");
+		ret = setsockopt(fd, level, optionName, optionValue, len);
+		if (ret < 0)
+			throw std::runtime_error("socket:: setsockopt failed");
 	}
 
 	void	Sockt::_deepCopy(const Sockt& src)

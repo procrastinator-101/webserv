@@ -2,6 +2,7 @@
 # define SOCKT_HPP
 
 #include <netdb.h>
+#include <sys/_types/_socklen_t.h>
 #include <unistd.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -100,8 +101,10 @@ namespace ft
 
 			Sockt	accept();//might throw
 
-			void	connect(const Sockt dst);//might throw
+			void	connect(const Sockt& dst);//might throw
 			void	connect(const in_addr_t& ipAddress, const in_port_t& port);//might throw
+
+			void	setOption(const int& level, const int& optionName, const void* optionValue);//might throw
 		//================================================================================================
 		//	Socket operations End
 		//================================================================================================
