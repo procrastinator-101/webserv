@@ -68,7 +68,10 @@ namespace ft
 	size_t	hstoz(const std::string& str);
 	std::string	ft_itoa(int n);
 	
-
+	std::string	trim(const std::string& str, const std::string& delimiters);
+	std::string	ltrim(const std::string& str, const std::string& delimiters);
+	std::string	rtrim(const std::string& str, const std::string& delimiters);
+	
 	std::vector<std::string>	split(const std::string& str, const std::string& delimiter);
 	std::vector<std::string>	mtsplit(const std::string& str, const std::string& delimiters);
 

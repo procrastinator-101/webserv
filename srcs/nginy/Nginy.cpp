@@ -95,7 +95,7 @@ namespace ft
 					if (isFinished)
 					{
 						std::cout << cit->second->_request << std::endl;
-						// exit(1);//!!!!!!!
+						// std::cout << cit->second->_request.
 						cit->second->_request.reset();
 						_multiplexer.del(cit->first, aRead);
 						_multiplexer.add(cit->first, aWrite);

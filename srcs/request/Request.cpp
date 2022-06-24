@@ -151,7 +151,8 @@ namespace ft
 		size_t		pos;
 		std::string	line;
 
-		if (!_buffer.empty())
+		std::cout << "buffer : {" << _buffer << "}" << std::endl;
+		if (_buffer.empty())
 			return false;
 		pos = 0;
 		while (pos != std::string::npos)
@@ -159,10 +160,12 @@ namespace ft
 			pos = _buffer.find(HTTP_NEWLINE);
 			if (pos != std::string::npos)
 			{
-				line = strdtok(line, HTTP_NEWLINE);
+				line = strdtok(_buffer, HTTP_NEWLINE);
+				std::cout << "line : [" << line << "]" << std::endl;
 				if (line.empty())
 					return true;
 				ret = _setStatus(_setTrailerHeaders(line));
+				std::cout << "ret : " << ret << std::endl;
 				if (ret)
 					return true;
 			}
@@ -222,17 +225,12 @@ namespace ft
 
 	Request::Status	Request::_setTrailerHeaders(std::string& line)
 	{
-		Status		ret;
 		std::string	token;
-
+		
 		token = strdtok(line, ":");
-		if (_trailerHeaders.find(token) == _trailerHeaders.end())
-		{
-			ret = _setHeader(token, line);
-			if (ret != fatal)
-				return bad;
-		}
-		return good;
+		if (_trailerHeaders.find(token) != _trailerHeaders.end())
+			return _setHeader(token, trim(line, HTTP_WHITE_SPACES));
+		return bad;
 	}
 
 	bool	Request::_endBody()
@@ -286,7 +284,7 @@ namespace ft
 		{
 			key = strdtok(msgLines[i], ":");
 			// std::cout << "key : " << key << " " << msgLines[i] << std::endl;
-			tmp = _setHeader(key, removeTrailingWhiteSpaces(msgLines[i]));
+			tmp = _setHeader(key, trim(msgLines[i], HTTP_WHITE_SPACES));
 			// std::cout << "tmp : " << tmp << std::endl;
 			if (tmp == fatal)
 				return fatal;
@@ -314,6 +312,7 @@ namespace ft
 	Request::Status	Request::_setHeader(const std::string& key, const std::string& value)
 	{
 		Status	ret;
+		std::string	token;
 		std::vector<std::string>	tmp;
 		std::map<std::string, std::string>::const_iterator	it;
 
@@ -371,6 +370,23 @@ namespace ft
 				ret = bad;
 			else
 				_isChunked = true;
+		}
+
+		//Trailer
+		else if (key == "Trailer")//!!!!!!!
+		{
+			_isTrailerSet = true;
+			tmp = split(value, ",");
+			if (tmp.empty())
+				ret = bad;
+			for (size_t i = 0; i < tmp.size(); i++)
+			{
+				token = trim(tmp[i], HTTP_WHITE_SPACES);
+				if (!token.empty())
+					_trailerHeaders.insert(token);
+				else
+					ret = bad;
+			}
 		}
 
 		_headers.insert(std::make_pair(key, value));
@@ -509,10 +525,17 @@ namespace ft
 		ostr << std::setw(fieldSize) << "_isTrailerSet : " << request._isTrailerSet << std::endl;
 		ostr << std::setw(fieldSize) << "_isChunked : " << request._isChunked << std::endl;
 		ostr << std::setw(fieldSize) << "keepAlive : " << request._keepAlive << std::endl;
+		ostr << std::setw(fieldSize) << "state : " << request._status << std::endl;
 
 		ostr << std::setw(fieldSize) << "method : " << request._method << std::endl;
 		ostr << std::setw(fieldSize) << "path : " << request._path << std::endl;
 		ostr << std::setw(fieldSize) << "version : " << request._version << std::endl;
+
+		ostr << getDisplayHeader("TrailerHeaders", REQUEST_SHSIZE) << std::endl;
+		for (std::set<std::string>::const_iterator it = request._trailerHeaders.begin(); it != request._trailerHeaders.end(); ++it)
+			ostr << *it << " ";
+		ostr << std::endl;
+		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
 
 		ostr << getDisplayHeader("headers", REQUEST_SHSIZE) << std::endl;
 		for (std::map<std::string, std::string>::const_iterator it = request._headers.begin(); it != request._headers.end(); ++it)

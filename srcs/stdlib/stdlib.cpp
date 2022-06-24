@@ -1,11 +1,37 @@
 #include "stdlib.hpp"
-#include <stdexcept>
-#include <sys/_types/_gid_t.h>
-#include <sys/_types/_uid_t.h>
-#include <unistd.h>
+#include <string>
+#include <iostream>
 
 namespace ft
 {
+	//left trim by delimiters
+	std::string	ltrim(const std::string& str, const std::string& delimiters)
+	{
+		size_t	pos;
+
+		pos = str.find_first_not_of(delimiters);
+		if (pos == std::string::npos)
+			return std::string();
+		return str.substr(pos);
+	}
+
+	//right trim by delimiters
+	std::string	rtrim(const std::string& str, const std::string& delimiters)
+	{
+		size_t	pos;
+
+		pos = str.find_last_not_of(delimiters);
+		if (pos == std::string::npos)
+			return std::string();
+		return str.substr(0, pos + 1);
+	}
+
+	//trim by delimiters
+	std::string	trim(const std::string& str, const std::string& delimiters)
+	{
+		return ltrim(rtrim(str, delimiters), delimiters);
+	}
+
 	//split by a string delimiter, no multiple traversal
 	std::vector<std::string>	split(const std::string& str, const std::string& delimiter)
 	{
@@ -200,6 +226,7 @@ namespace ft
 
 	bool	isUserInGroup(gid_t gid, uid_t uid)
 	{
+		int				ret;
 		int				ngroup;
 		int				*groups;
 		struct passwd	*userInfo;
@@ -210,13 +237,17 @@ namespace ft
 		getgrouplist(userInfo->pw_name, userInfo->pw_gid, 0, &ngroup);
 		groups = new int[ngroup];
 		getgrouplist(userInfo->pw_name, userInfo->pw_gid, groups, &ngroup);
+		ret = false;
 		for (int i = 0; i < ngroup; i++)
 		{
-			if (groups[i] == gid)
-				return true;
+			if (groups[i] == static_cast<int>(gid))
+			{
+				ret = true;
+				break;
+			}
 		}
 		delete [] groups;
-		return false;
+		return ret;
 	}
 
 	bool	isFileWritable(std::string& name)
