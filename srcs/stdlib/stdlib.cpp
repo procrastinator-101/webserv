@@ -87,8 +87,7 @@ namespace ft
 			if (pos != std::string::npos)
 			{
 				ret = str.substr(0, i);
-				while (i < str.length() && delimiters.find(str[i]) != std::string::npos)
-					i++;
+				for (i = i + 1; i < str.length() && delimiters.find(str[i]) != std::string::npos; i++);
 				str.erase(0, i);
 				return ret;
 			}

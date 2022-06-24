@@ -343,6 +343,8 @@ namespace ft
 
 	void	Response::_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path)
 	{
+		(void)location;//mathayedhach bash ytcompila
+		(void)path;//mathayedhach bash ytcompila
 		// if (if_location_has_cgi())
 		// {}
 		// else
@@ -382,13 +384,14 @@ namespace ft
 
 	void	Response::DeleteFolderContent(std::string& path)
 	{
-		
+		(void)path;//mathayedhach bash ytcompila
 	}
 
 	void	Response::_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path)
 	{
 		std::string		index_file;
 
+		(void)location;//mathayedhach bash ytcompila
 		if (path[path.length() - 1] != '/')
 		{
 			_status = 409;

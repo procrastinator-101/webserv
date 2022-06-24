@@ -1,4 +1,5 @@
 #include "Request.hpp"
+#include <cstring>
 #include <iostream>
 #include <string>
 
@@ -31,17 +32,14 @@ namespace ft
 	{
 		bool	ret;
 		int		received;
-		char	str[BUFFER_SIZE] = {0};
+		char	str[BUFFER_SIZE];
 
 		ret = true;
 		received = ::recv(fd, str, BUFFER_SIZE, 0);
 		if (received < 0)
 			throw std::runtime_error("Request:: recv failed");
 		if (received)
-		{
-			// str[received] = 0;
 			ret = _parse(str, received);
-		}
 		else
 			_keepAlive = false;//should close the connection
 		std::cout << "received : " << received << std::endl;
@@ -57,7 +55,7 @@ namespace ft
 		size_t	start;
 
 		ret = false;
-		std::cout << "--parse--" << std::endl;
+		// std::cout << "--parse--" << std::endl;
 		if (_bodySize)
 			ret = _fetchBody(str, size);
 		else
@@ -67,9 +65,9 @@ namespace ft
 			end = _buffer.find(HTTP_BLANKlINE);
 			if (end != std::string::npos)
 			{
-				start = size - (_buffer.size() - (end + 4));
+				start = size - (_buffer.size() - (end + ::strlen(HTTP_BLANKlINE)));
 				ret = _parseHead();
-				std::cout << "ret(parseHead) : " << ret << std::endl;
+				// std::cout << "ret(parseHead) : " << ret << std::endl;
 				if (ret)
 					return ret;
 				_buffer.clear();
@@ -93,7 +91,7 @@ namespace ft
 		if (!_isChunked)
 		{
 			std::cout << "not chunked" << std::endl;
-			_body << str;//error !!!!!!!!!!!
+			_body.write(str, size);
 			_bodySize += size;
 			return _endBody();
 		}
