@@ -416,8 +416,18 @@ namespace ft
 		{
 			DeleteFolderContent(path);
 		}
+	}
 
-
+	void	Response::_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path)
+	{
+		// if (if_location_has_cgi())
+		// {
+		// 	// run cgi  on requested file with DELTE REQUEST_METHOD
+		// }
+		// else
+		// {
+		// 	// delete the file
+		// }
 	}
 
 	void	Response::_handleDeleteMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
@@ -433,8 +443,7 @@ namespace ft
 			if(s.st_mode & S_IFDIR)		//it's a directory
 				_handleDirIn_DELETE(location, path);
 			else
-				// _handleFileIn_DELETE(location, path);
-				;
+				_handleFileIn_DELETE(location, path);
 		}
 		else
 		{
