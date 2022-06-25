@@ -133,6 +133,17 @@ namespace ft
 		return ret;
 	}
 
+	int	stoi(const std::string& str)
+	{
+		int	ret;
+		std::stringstream	sstream(str);
+
+		sstream >> ret;
+		if (sstream.fail())
+			throw std::overflow_error("stoi overflow");
+		return ret;
+	}
+
 	size_t	hstoz(const std::string& str)
 	{
 		size_t	ret;

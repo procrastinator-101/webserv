@@ -1,0 +1,24 @@
+environmental variables :
+	-	CONTENT_TYPE
+	-	CONTENT_LENGTH
+	-	HTTP_COOKIE
+	-	HTTP_USER_AGENT
+	-	PATH_INFO
+	-	
+
+
+nph- prefix: cgi sends a complete reponse (headers included)
+no prefix : web server must set the reponse headers itself, and send the cgi response as the body.
+
+
+set the cgi
+	-	set querry in env variables if the method is get
+	-	set env variables
+	-	create a pipe
+	-	fork
+
+web server:
+	-	method == post
+		-	write the request.body to the pipe
+	-	read the response from the cgi
+	-	send it to the client

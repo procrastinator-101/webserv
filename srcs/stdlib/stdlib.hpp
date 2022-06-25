@@ -63,6 +63,7 @@
 
 namespace ft
 {
+	int	stoi(const std::string& str);
 	bool	isnumber(const std::string &str);
 	size_t	stoz(const std::string& str);
 	size_t	hstoz(const std::string& str);

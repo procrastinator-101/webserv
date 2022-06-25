@@ -71,8 +71,17 @@ header-field	= field-name ":" OWS field-value OWS
 
 -	No whitespace is allowed between the header field-name and colon.
 
+field-name     = token
+field-value    = *( field-content / obs-fold )
+field-content  = field-vchar [ 1*( SP / HTAB ) field-vchar ]
+field-vchar    = VCHAR / obs-text
 
+obs-fold       = CRLF 1*( SP / HTAB )
+
+-	obs-fold : return bad request
 -	A sender MUST NOT generate multiple header fields with the same field name.
+-	if the same header field appears more than once in a a message, the recipient must append
+	the recent value to the value-field separated by comma.
 	-	Exeptions:
 		-	Set-Cookie : it should be processed specially
 =================================================================================================
