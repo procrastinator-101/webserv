@@ -96,6 +96,15 @@ namespace ft
 	size_t	getFileSize(const std::string& name);
 
 	std::string	getRandomFileName();
+
+	namespace http
+	{
+		bool	isTchar(int c);
+		bool	isCtext(int c);
+		bool	isQdtext(int c);
+		bool	isObstext(int c);
+		bool	isDelimiter(int c);
+	}
 }
 
 #endif
