@@ -96,46 +96,46 @@ namespace ft
 	{
 		_library.insert(std::make_pair(300, "Multiple Choices"));
 		_library.insert(std::make_pair(301, "Moved Permanently"));
-		_library.insert(std::make_pair(302, "Found "));
-		_library.insert(std::make_pair(303, "See Other "));
-		_library.insert(std::make_pair(304, "Not Modified "));
-		_library.insert(std::make_pair(305, "Use Proxy "));
+		_library.insert(std::make_pair(302, "Found"));
+		_library.insert(std::make_pair(303, "See Other"));
+		_library.insert(std::make_pair(304, "Not Modified"));
+		_library.insert(std::make_pair(305, "Use Proxy"));
 		_library.insert(std::make_pair(306, "Switch Proxy"));
-		_library.insert(std::make_pair(307, "Temporary Redirect "));
-		_library.insert(std::make_pair(308, "Permanent Redirect "));
+		_library.insert(std::make_pair(307, "Temporary Redirect"));
+		_library.insert(std::make_pair(308, "Permanent Redirect"));
 	}
 
 	void	HttpStatus::_setClientErrorCodes()
 	{
 		_library.insert(std::make_pair(400, "Bad Request"));
-		_library.insert(std::make_pair(401, "Unauthorized "));
+		_library.insert(std::make_pair(401, "Unauthorized"));
 		_library.insert(std::make_pair(402, "Payment Required"));
 		_library.insert(std::make_pair(403, "Forbidden"));
 		_library.insert(std::make_pair(404, "Not Found"));
 		_library.insert(std::make_pair(405, "Method Not Allowed"));
 		_library.insert(std::make_pair(406, "Not Acceptable"));
-		_library.insert(std::make_pair(407, "Proxy Authentication Required "));
+		_library.insert(std::make_pair(407, "Proxy Authentication Required"));
 		_library.insert(std::make_pair(408, "Request Timeout"));
 		_library.insert(std::make_pair(409, "Conflict"));
 		_library.insert(std::make_pair(410, "Gone"));
 		_library.insert(std::make_pair(411, "Length Required"));
-		_library.insert(std::make_pair(412, "Precondition Failed "));
-		_library.insert(std::make_pair(413, "Payload Too Large "));
-		_library.insert(std::make_pair(414, "URI Too Long "));
-		_library.insert(std::make_pair(415, "Unsupported Media Type "));
-		_library.insert(std::make_pair(416, "Range Not Satisfiable "));
+		_library.insert(std::make_pair(412, "Precondition Failed"));
+		_library.insert(std::make_pair(413, "Payload Too Large"));
+		_library.insert(std::make_pair(414, "URI Too Long"));
+		_library.insert(std::make_pair(415, "Unsupported Media Type"));
+		_library.insert(std::make_pair(416, "Range Not Satisfiable"));
 		_library.insert(std::make_pair(417, "Expectation Failed"));
-		_library.insert(std::make_pair(418, "I'm a teapot "));
-		_library.insert(std::make_pair(421, "Misdirected Request "));
-		_library.insert(std::make_pair(422, "Unprocessable Entity "));
-		_library.insert(std::make_pair(423, "Locked "));
-		_library.insert(std::make_pair(424, "Failed Dependency "));
-		_library.insert(std::make_pair(425, "Too Early "));
+		_library.insert(std::make_pair(418, "I'm a teapot"));
+		_library.insert(std::make_pair(421, "Misdirected Request"));
+		_library.insert(std::make_pair(422, "Unprocessable Entity"));
+		_library.insert(std::make_pair(423, "Locked"));
+		_library.insert(std::make_pair(424, "Failed Dependency"));
+		_library.insert(std::make_pair(425, "Too Early"));
 		_library.insert(std::make_pair(426, "Upgrade Required"));
-		_library.insert(std::make_pair(428, "Precondition Required "));
-		_library.insert(std::make_pair(429, "Too Many Requests "));
-		_library.insert(std::make_pair(431, "Request Header Fields Too Large "));
-		_library.insert(std::make_pair(451, "Unavailable For Legal Reasons "));
+		_library.insert(std::make_pair(428, "Precondition Required"));
+		_library.insert(std::make_pair(429, "Too Many Requests"));
+		_library.insert(std::make_pair(431, "Request Header Fields Too Large"));
+		_library.insert(std::make_pair(451, "Unavailable For Legal Reasons"));
 	}
 
 	void	HttpStatus::_setServerErrorCodes()
@@ -146,11 +146,11 @@ namespace ft
 		_library.insert(std::make_pair(503, "Service Unavailable"));
 		_library.insert(std::make_pair(504, "Gateway Timeout"));
 		_library.insert(std::make_pair(505, "HTTP Version Not Supported"));
-		_library.insert(std::make_pair(506, "Variant Also Negotiates "));
-		_library.insert(std::make_pair(507, "Insufficient Storage "));
-		_library.insert(std::make_pair(508, "Loop Detected "));
-		_library.insert(std::make_pair(510, "Not Extended "));
-		_library.insert(std::make_pair(511, "Network Authentication Required "));
+		_library.insert(std::make_pair(506, "Variant Also Negotiates"));
+		_library.insert(std::make_pair(507, "Insufficient Storage"));
+		_library.insert(std::make_pair(508, "Loop Detected"));
+		_library.insert(std::make_pair(510, "Not Extended"));
+		_library.insert(std::make_pair(511, "Network Authentication Required"));
 	}
 
 	void	HttpStatus::_deepCopy(const HttpStatus& src)
