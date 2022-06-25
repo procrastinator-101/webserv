@@ -107,7 +107,6 @@ namespace ft
 
 	void	HttpStatus::_setClientErrorCodes()
 	{
-		_library.insert(std::make_pair(404, "error on Wikimedia"));
 		_library.insert(std::make_pair(400, "Bad Request"));
 		_library.insert(std::make_pair(401, "Unauthorized "));
 		_library.insert(std::make_pair(402, "Payment Required"));
