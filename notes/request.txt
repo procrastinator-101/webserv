@@ -1,0 +1,96 @@
+=================================================================================================
+format
+	-	start line
+	-	header fileds
+	-	CRLF
+	-	body
+
+
+-	errors:
+	-	whitespace between start line and the first header filed:
+		-	reject message
+		-	ignore the entire line
+=================================================================================================
+
+
+
+=================================================================================================
+request format state
+	-	fataly bad :
+		-	content-length : negative or exceeds the size of the size_t
+		*	stop reading and send badRequest response then close the connection
+	-	bad
+		*	read all the request then send badRequest response
+	-	good
+=================================================================================================
+
+
+=================================================================================================
+OWS(optional whitespace) = *( SP / HTAB )
+
+RWS(required whitespace) = 1*( SP / HTAB )
+
+BWS("bad" whitespace) = OWS
+=================================================================================================
+
+
+
+=================================================================================================
+Request Line:
+-------------------------------------------------------------------------------------------------
+format	= method SP request-target SP HTTP-version CRLF
+
+
+-	min request-line length : 8000 octets.
+
+a request-line not compliant with the form above, the server should return a response with:
+		-	400
+	or
+		-	301 (Moved Permanently) redirect with the request-target properly encoded.
+-	A recipient SHOULD NOT attempt to autocorrect and then process the request without a redirect.
+
+
+-	method too long: return 501
+-	URI too long: return 414
+=================================================================================================
+
+
+=================================================================================================
+Status Line
+-------------------------------------------------------------------------------------------------
+format	= HTTP-version SP status-code SP reason-phrase CRLF
+
+reason-phrase  = *( HTAB / SP / VCHAR / obs-text )
+=================================================================================================
+
+
+=================================================================================================
+Header Fields
+-------------------------------------------------------------------------------------------------
+header-field	= field-name ":" OWS field-value OWS
+
+-	No whitespace is allowed between the header field-name and colon.
+
+
+-	A sender MUST NOT generate multiple header fields with the same field name.
+	-	Exeptions:
+		-	Set-Cookie : it should be processed specially
+=================================================================================================
+
+
+=================================================================================================
+Host
+-------------------------------------------------------------------------------------------------
+400 is returned in case of :
+	-	absence of Host header field
+	-	multiple Host header fields
+	-	invalid field-value
+=================================================================================================
+
+=================================================================================================
+Effective Request URI
+-------------------------------------------------------------------------------------------------
+request-target is in :
+	-	absolute form -> Effective Request URI = request-target
+	-	
+=================================================================================================

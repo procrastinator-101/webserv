@@ -73,9 +73,16 @@ http response format
 	body
 =================================================================================================
 
-=================================================================================================
 
 =================================================================================================
+version:
+	-	the reply to a message must be compliant with the sender's version
+		Ex: if a recipient receives a message of HTTP/1.0 and it supports HTTP/1.1, it will 
+		return a reply compliant with HTTP/1.1
+	-	if a server receives an http version that it's not compliant with, it can return a 505
+		response.
+=================================================================================================
+
 
 =================================================================================================
 GET:
@@ -126,7 +133,6 @@ supported http headers
 		-	Connection
 		-	Transfer-Encoding
 	*	request headers
-		-	Accept??
 		-	Connection
 		-	Content-Length
 			-	must not be present is Transfer-Encoding is present
@@ -189,14 +195,4 @@ supported http headers
 			-	Content-Range
 			-	Trailer
 	-	these headers may be ignored or considered an error by the recepient
-=================================================================================================
-
-=================================================================================================
-request format state
-	-	fataly bad :
-		-	content-length : negative or exceeds the size of the size_t
-		*	stop reading and send badRequest response then close the connection
-	-	bad
-		*	read all the request then send badRequest response
-	-	good
 =================================================================================================
