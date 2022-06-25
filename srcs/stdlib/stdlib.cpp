@@ -288,4 +288,58 @@ namespace ft
 		}
 		return false;
 	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// HTTP Parsing Grammar
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
+	namespace http
+	{
+		bool	isTchar(int c)
+		{
+			if (!::isprint(c))
+				return false;
+			return !isDelimiter(c);
+		}
+
+		bool	isDelimiter(int c)
+		{
+			static std::string	delimiters = "\"(),/:;<=>?@[\\]{}\"";
+
+			return delimiters.find(c) != std::string::npos;
+		}
+
+		bool	isQdtext(int c)
+		{
+			if (c == '\t' || c == ' ' || c == 0x21)
+				return true;
+			if (c >= 0x23 && c <= 0x5b)
+				return true;
+			if (c >= 0x5d && c <= 0x7e)
+				return true;
+			return isObstext(c);
+		}
+
+		bool	isObstext(int c)
+		{
+			return c >= 0x80 && c <= 0xff;
+		}
+
+		bool	isCtext(int c)
+		{
+			if (c == '\t' || c == ' ')
+				return true;
+			if (c >= 0x21 && c <= 0x27)
+				return true;
+			if (c >= 0x2a && c <= 0x5b)
+				return true;
+			if (c >= 0x5d && c <= 0x7e)
+				return true;
+			return isObstext(c);
+		}
+
+
+	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// HTTP Parsing Grammar End
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
