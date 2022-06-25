@@ -151,7 +151,6 @@ namespace ft
 		size_t		pos;
 		std::string	line;
 
-		std::cout << "buffer : {" << _buffer << "}" << std::endl;
 		if (_buffer.empty())
 			return false;
 		pos = 0;

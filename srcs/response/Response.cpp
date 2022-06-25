@@ -45,13 +45,7 @@ namespace ft
 
 		//header message still has bufferSize or more bytes to send
 		if (_sent + BUFFER_SIZE <= _msg.length())
-		{
 			ret = ::send(fd, _msg.c_str() + _sent, BUFFER_SIZE, 0);
-			{
-				std::string s(_msg.c_str(), _sent, BUFFER_SIZE);
-				logs << s;
-			}
-		}
 		else
 		{
 			left = 0;
@@ -64,11 +58,6 @@ namespace ft
 			len = _body.gcount();
 			size = left + len;
 			ret = ::send(fd, buffer, size, 0);
-			{
-				std::string s(buffer, size);
-				logs << s;
-				// std::cout << s;
-			}
 			if (ret > 0 && ret < size)
 			{
 				if (ret > left)
