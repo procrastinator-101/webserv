@@ -74,6 +74,17 @@ namespace ft
 		return _sent == _contentLength + _msg.length();
 	}
 
+	void	Response::getFileFromStatus(const Host *host, int code)
+	{
+		std::map<int, std::string>::const_iterator	it;
+
+		it = host->_errorPages.find(code);
+		if (it == host->_errorPages.end())
+			_bodyFileName = "error_pages/" + std::to_string(code) + ".html";
+		else
+			_bodyFileName = it->second;
+	}
+
 	void	Response::build(const std::vector<Host *>& hosts, const Request& request)
 	{
 		const Host											*host;
@@ -93,6 +104,8 @@ namespace ft
 		// }
 		host = _fetchTargetedHost(hosts, hostName->second);
 		// _prepare(host, request);
+		// if (_status.code != 200 && _bodyFileName.empty())
+		// 	getFileFromStatus(host, _status.code);
 		//temporary
 		_bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
 		_status = 200;
@@ -190,20 +203,18 @@ namespace ft
 		if (location.second == NULL)
 		{
 			_status = 404;
-			// _bodyFileName = ;
 			return ;
 		}
 		if (location.second->_redirection.first != 0)
 		{
 			_status = location.second->_redirection.first;
 			_headers["Location"] = location.second->_redirection.second;
-			// _bodyFileName = ;
+			_bodyFileName = location.second->_redirection.second;
 			return ;
 		}
 		if (!is_method_allowded_in_location(request._method, location.second))
 		{
 			_status = 405;
-			// _bodyFileName = ;
 			return ;
 		}
 		if (request._method == "GET")
@@ -270,24 +281,18 @@ namespace ft
 		{
 			_status = 301;
 			_headers["Location"] = path.append("/");
-			// _bodyFileName = ;
 			return ;
 		}
 		index_file = IsDirHasIndexFiles(location, path);
 		if (index_file.length())
-		{
 			_handleFileInGet(location, index_file);
-		}
 		else if (location.second->_autoIndex == true)
 		{
 			_status = 200;
-			// _bodyFileName = ;
+			_bodyFileName = path;
 		}
 		else
-		{
 			_status = 403;
-			// _bodyFileName = ;
-		}
 	}
 
 	void	Response::_handleGetMethod(const Request& request, const std::pair<std::string, Location *>& location)
@@ -304,10 +309,7 @@ namespace ft
 				_handleFileInGet(location, path);
 		}
 		else
-		{
 			_status = 404;
-			// _bodyFileName = ;
-		}
 	}
 
 	void	Response::_handleDirIn_POST(const std::pair<std::string, Location *>& location, std::string& path)
@@ -318,19 +320,13 @@ namespace ft
 		{
 			_status = 301;
 			_headers["Location"] = path.append("/");
-			// _bodyFileName = ;
 			return ;
 		}
 		index_file = IsDirHasIndexFiles(location, path);
 		if (index_file.length())
-		{
 			_handleFileIn_POST(location, index_file);
-		}
 		else
-		{
 			_status = 403;
-			// _bodyFileName = ;
-		}
 	}
 
 	void	Response::_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path)
@@ -342,7 +338,6 @@ namespace ft
 		// else
 		{
 			_status = 403;
-			// _bodyFileName = ;
 			return ;
 		}
 	}
@@ -356,7 +351,6 @@ namespace ft
 		{
 			// uplaod the Post Request Body
 			_status = 201;
-			// _bodyFileName = ;
 			return ;
 		}
 		path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
@@ -368,10 +362,7 @@ namespace ft
 				_handleFileIn_POST(location, path);
 		}
 		else
-		{
 			_status = 404;
-			// _bodyFileName = ;
-		}
 	}
  
 	int	DeleteFolderContent(std::string& path)
@@ -423,7 +414,6 @@ namespace ft
 		if (path[path.length() - 1] != '/')
 		{
 			_status = 409;
-			// _bodyFileName = ;
 			return ;
 		}
 							//			CGI
@@ -437,7 +427,6 @@ namespace ft
 		// 	else
 		// 	{
 		// 		_status = 403;
-		// 		// _bodyFileName = ;
 		// 	}
 		// }
 		// else
@@ -452,7 +441,6 @@ namespace ft
 			}
 			else
 				_status = ret;
-			// _bodyFileName = ; //_status.code
 		}
 	}
 
@@ -472,7 +460,6 @@ namespace ft
 				_status = 500;
 			else
 				_status = 204;
-			// _bodyFileName = ; //_status.code
 		}
 	}
 
@@ -492,10 +479,7 @@ namespace ft
 				_handleFileIn_DELETE(location, path);
 		}
 		else
-		{
 			_status = 404;
-			// _bodyFileName = ;
-		}
 	}
 
 	void	Response::reset()
