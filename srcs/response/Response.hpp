@@ -95,6 +95,7 @@ namespace ft
 			void			_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path);
 			void			_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path);
 			int				DeleteFolderContent(std::string& path);
+			void			getFileFromStatus(const Host *host, int code);
 
 			void	_constructStatusLine();
 			void	_constructHeaders(const Request& request);
