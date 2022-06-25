@@ -1,4 +1,5 @@
 #include "Location.hpp"
+#include <sys/_types/_size_t.h>
 
 namespace ft
 {
@@ -167,10 +168,16 @@ namespace ft
 	void	Location::_fetchUploadPath(std::stringstream& streamLine)
 	{
 		std::string	token;
+		struct stat s;
 
 		streamLine >> token;
 		if (token != "#")
-			_uploadPath = token;
+		{
+			if (stat(token.c_str(), &s) == 0)
+				_uploadPath = token;
+			else
+				throw std::runtime_error("Location:: uploadPath is not valid");
+		}
 		else
 			throw std::runtime_error("Location:: uploadPath is not valid");
 		if (streamLine.good())
@@ -206,7 +213,8 @@ namespace ft
 		streamLine >> code_str;
 		if (streamLine.good() && isnumber(code_str))
 		{
-			int code = ::atoi(code_str.c_str());
+			// int code = ::atoi(code_str.c_str());
+			int	code = ft::stoi(code_str);
 			if (code < 300 || code > 399)
 				throw std::runtime_error("Location:: return: invalid code");
 			try
