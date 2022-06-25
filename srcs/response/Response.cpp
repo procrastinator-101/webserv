@@ -1,4 +1,5 @@
 #include "Response.hpp"
+#include <_types/_intmax_t.h>
 #include <cstddef>
 #include <cstring>
 #include <fstream>
@@ -223,7 +224,7 @@ namespace ft
 			path.append(uri);
 		}
 		else if (path[path.length() - 1] == '/' && uri[0] == '/')
-			path.append(uri, 1, std::string::npos);
+			path.append(uri, 1);
 		else
 			path.append(uri);
 		return path;
@@ -233,13 +234,15 @@ namespace ft
 	std::string		Response::IsDirHasIndexFiles(const std::pair<std::string, Location *>& location, std::string& path)
 	{
 		struct stat s;
+		std::string	tmp;
 		std::string	nfound("");
 
 		if (location.second->_indexes.size())
 		{
 			for (std::set<std::string>::const_iterator it = location.second->_indexes.begin(); it != location.second->_indexes.end(); ++it)
 			{
-				if (stat(path.append(*it).c_str(), &s) == 0)
+				tmp = path + *it;
+				if (stat(tmp.c_str(), &s) == 0)
 					return *it;
 			}
 		}
@@ -370,15 +373,51 @@ namespace ft
 			// _bodyFileName = ;
 		}
 	}
-
-	void	Response::DeleteFolderContent(std::string& path)
+ 
+	int	DeleteFolderContent(std::string& path)
 	{
-		(void)path;//mathayedhach bash ytcompila
+		DIR				*d;
+		struct dirent	de, *dep; 
+		int				i;
+		int				ret;
+		std::string		path2;
+
+		if (!isFileWritable(path))
+			return (403);
+		d = opendir(path.c_str());
+		if (d == NULL) 
+			return (500);
+		i = 0;
+		while (readdir_r(d, &de, &dep) == 0 && dep != NULL)
+		{
+			if (strcmp(de.d_name, ".") == 0 || strcmp(de.d_name, "..") == 0)
+				continue ;
+			path2 = path + "/" + de.d_name;
+			if (de.d_type == 4) // dir
+			{
+				ret = DeleteFolderContent(path2);
+				if (ret != 204)
+					return (ret);
+				if (rmdir(path2.c_str()) < 0)
+					return (500);
+			}
+			else
+			{
+				if (!isFileWritable(path2))
+					return (403);
+				if (unlink(path2.c_str()) < 0)
+					return (500);
+			}
+		}
+		if (closedir(d) == -1)
+			return (500);
+		return (204);
 	}
 
 	void	Response::_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path)
 	{
 		std::string		index_file;
+		int				ret;
 
 		(void)location;//mathayedhach bash ytcompila
 		if (path[path.length() - 1] != '/')
@@ -403,22 +442,38 @@ namespace ft
 		// }
 		// else
 		{
-			DeleteFolderContent(path);
+			ret = DeleteFolderContent(path);
+			if (ret == 204)
+			{
+				if (rmdir(path.c_str()) < 0)
+					_status = 500;
+				else
+				 	_status = 204;
+			}
+			else
+				_status = ret;
+			// _bodyFileName = ; //_status.code
 		}
 	}
 
 	void	Response::_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path)
 	{
 		(void)location;//mathayedhach bash ytcompila
-		(void)path;//mathayedhach bash ytcompila
+
 		// if (if_location_has_cgi())
 		// {
 		// 	// run cgi  on requested file with DELTE REQUEST_METHOD
 		// }
 		// else
-		// {
-		// 	// delete the file
-		// }
+		{
+			if (!isFileWritable(path))
+				_status = 403;
+			else if (unlink(path.c_str()) < 0)
+				_status = 500;
+			else
+				_status = 204;
+			// _bodyFileName = ; //_status.code
+		}
 	}
 
 	void	Response::_handleDeleteMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)

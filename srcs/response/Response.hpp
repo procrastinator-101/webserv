@@ -17,6 +17,10 @@
 
 #include "../http_status/HttpStatus.hpp"
 
+// #include<string.h>
+// #include <sys/types.h> 
+#include <dirent.h> 
+
 namespace ft
 {
 	class Host;
@@ -90,7 +94,7 @@ namespace ft
 			void			_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path);
 			void			_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path);
 			void			_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path);
-			void			DeleteFolderContent(std::string& path);
+			int				DeleteFolderContent(std::string& path);
 
 			void	_constructStatusLine();
 			void	_constructHeaders(const Request& request);
