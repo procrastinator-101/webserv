@@ -19,7 +19,8 @@
 
 // #include<string.h>
 // #include <sys/types.h> 
-#include <dirent.h> 
+#include <dirent.h>
+#include <stdlib.h>
 
 namespace ft
 {

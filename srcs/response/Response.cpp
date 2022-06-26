@@ -240,7 +240,6 @@ namespace ft
 		return path;
 	}
 
-	// first file found is taked (I feel somthing wrong, to check later)
 	std::string		Response::IsDirHasIndexFiles(const std::pair<std::string, Location *>& location, std::string& path)
 	{
 		struct stat s;
@@ -365,7 +364,14 @@ namespace ft
 			file.close();
 			return ;
 		}
-
+		buffer = (char *)malloc(1048576);
+		if (!buffer)
+		{
+			_status = 500;
+			file.close();
+			read_from.close();
+			return ;
+		}
 		while (read_from.good())
 		{
 			read_from.read(buffer, buffer_size);
@@ -374,6 +380,7 @@ namespace ft
 			if (file_size - readedsize < buffer_size)
 				buffer_size = file_size - readedsize;
 		}
+		free(buffer);
 		file.close();
 		read_from.close();
 		_status = 201;
