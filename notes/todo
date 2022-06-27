@@ -14,15 +14,18 @@ concepts :
 		-	check request validity
 		-	handle chunked requests
 
+
+--------------------------------------------------------------------------------
 -	host in the same server with have the same name
 -	get : path is symbolic link ??
--	default host port = 8080
 -	http version should not excedd 1.1
+
+-	default host port = 8080 : done
+-	check select fd > fd_maxset : done
 
 
 add no-blocking to the sockets
 add Server header
 set the header part max length
 
-check
-	-	IsDirHasIndexFiles
+--------------------------------------------------------------------------------

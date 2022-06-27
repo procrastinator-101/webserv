@@ -1,6 +1,7 @@
 #include "Request.hpp"
 #include <cstring>
 #include <iostream>
+#include <string.h>
 #include <string>
 #include <sys/_types/_size_t.h>
 
@@ -247,7 +248,7 @@ namespace ft
 		std::vector<std::string>	msgLines;
 
 		msgLines = split(_buffer, "\r\n");
-		ret = _setStatus(_parseStartLine(msgLines));
+		ret = _setStatus(_parseRequestLine(msgLines));
 		std::cout << "ret(_parseStartLine) : " << ret << std::endl;
 		if (ret)
 			return ret;
@@ -256,19 +257,70 @@ namespace ft
 		return ret;
 	}
 
-	Request::Status	Request::_parseStartLine(std::vector<std::string>& msgLines)
+	Request::Status	Request::_parseRequestLine(std::vector<std::string>& msgLines)
 	{
-		std::vector<std::string>	startLine;
+		Request::Status				ret;
+		std::vector<std::string>	requestLine;
 
-		if (msgLines.empty())
+		if (msgLines.empty() || msgLines[0].length() > MAX_REQUEST_LINE_LENGTH)
 			return bad;
-		startLine = mtsplit(msgLines[0], HTTP_WHITE_SPACES);
-		if (startLine.size() != 3)
+		requestLine = split(msgLines[0], " ");
+		if (requestLine.size() != 3)
 			return bad;
-		_method = startLine[0];
-		_path = startLine[1];
-		_version = startLine[2];
-		return _checkStartLine();
+		
+		ret = _parseMethod(requestLine[0]);
+		if (ret != good)
+			return ret;
+		ret = _parseUri(requestLine[1]);
+		if (ret != good)
+			return ret;
+		return _parseVersion(requestLine[2]);
+	}
+
+	Request::Status	Request::_parseMethod(std::string& method)
+	{
+		_method = method;
+
+		//check if method is an http token or has an http whitespace
+		for (size_t i = 0; i < _method.length(); i++)
+		{
+			if (!http::isTchar(_method[i]) || std::string(HTTP_WHITE_SPACES).find(_method[i]) != std::string::npos)
+				return bad;
+		}
+		if (_method != "GET" && _method != "POST" && _method != "DELETE")
+			return bad;
+		return good;
+	}
+
+	Request::Status	Request::_parseUri(std::string& uri)
+	{
+		_path = strdtok(uri, "?");
+		_querry = uri;
+		if (_path.find_first_of(HTTP_WHITE_SPACES) != std::string::npos)
+			return bad;
+		if (_querry.find_first_of(HTTP_WHITE_SPACES) != std::string::npos)
+			return bad;
+		return good;
+	}
+
+	Request::Status	Request::_parseVersion(std::string& version)
+	{
+		std::string	name;
+		std::string	major;
+		std::string	minor;
+
+		_version = version;
+
+		name = strdtok(version, "/");
+		if (name != "HTTP" && name != "%x48.54.54.50")
+			return bad;
+		major = strdtok(version, ".");
+		if (major != "1")
+			return bad;
+		minor = version;
+		if (minor != "0" && minor != "1")
+			return bad;
+		return good;
 	}
 
 	Request::Status	Request::_parseHeaders(std::vector<std::string>& msgLines, size_t offset)

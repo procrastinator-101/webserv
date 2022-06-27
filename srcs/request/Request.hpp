@@ -26,6 +26,8 @@
 # define HTTP_WHITE_SPACES	"\t\v\f "
 
 
+# define MAX_REQUEST_LINE_LENGTH	10000
+
 namespace ft
 {
 	class Request
@@ -59,6 +61,7 @@ namespace ft
 			bool								_isChunked;
 			bool								_keepAlive;
 			size_t								_contentLength;
+			std::string							_querry;
 			std::set<std::string>				_trailerHeaders;
 
 
@@ -111,6 +114,10 @@ namespace ft
 			//return true if status is fatal, false otehrwise
 			bool	_setStatus(Status status);
 
+			Request::Status	_parseMethod(std::string& method);
+			Request::Status	_parseUri(std::string& uri);
+			Request::Status	_parseVersion(std::string& version);
+
 			//return true if receiving has ended
 			bool	_parseHead();
 			bool	_fetchTrailerPart();
@@ -120,7 +127,7 @@ namespace ft
 			void	_resetChunk();
 			bool	_beginChunk();
 
-			Status	_parseStartLine(std::vector<std::string>& msgLines);
+			Status	_parseRequestLine(std::vector<std::string>& msgLines);
 			Status	_parseHeaders(std::vector<std::string>& msgLines, size_t offset);
 
 			Status	_setHeader(const std::string& key, const std::string& value);

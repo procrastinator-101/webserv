@@ -40,8 +40,12 @@ Request Line:
 -------------------------------------------------------------------------------------------------
 format	= method SP request-target SP HTTP-version CRLF
 
+method	= token
 
--	min request-line length : 8000 octets.
+HTTP-version  = HTTP-name "/" DIGIT "." DIGIT
+HTTP-name     = %x48.54.54.50 ; "HTTP", case-sensitive
+
+-	min max request-line length : 8000 octets.
 
 a request-line not compliant with the form above, the server should return a response with:
 		-	400

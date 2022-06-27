@@ -1,6 +1,8 @@
 #include "stdlib.hpp"
+#include <cstring>
 #include <string>
 #include <iostream>
+#include <sys/_types/_size_t.h>
 
 namespace ft
 {
@@ -335,6 +337,19 @@ namespace ft
 			if (c >= 0x5d && c <= 0x7e)
 				return true;
 			return isObstext(c);
+		}
+
+		char	*ft_strdup(const char *s1)
+		{
+			size_t		len;
+			char		*ret;
+
+			len = strlen(s1);
+			ret = new char[len + 1];
+			for (size_t i = 0; i < len; i++)
+				ret[i] = s1[i];
+			ret[len] = 0;
+			return ret;
 		}
 
 

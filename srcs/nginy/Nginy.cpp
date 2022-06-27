@@ -69,13 +69,11 @@ namespace ft
 		//stop or retrying waking it up ????
 		for (size_t i = 0; i < _servers.size(); i++)
 		{
-			// _servers[i]->_sockt.wakeUp();
 			_servers[i]->_sockt.open();
 			_servers[i]->_sockt.setOption(SOL_SOCKET, SO_REUSEADDR, &optionValue);
 			_servers[i]->_sockt.bind();
 			_servers[i]->_sockt.listen();
 			_multiplexer.add(_servers[i]->_sockt.fd, aRead);
-			// std::cout << "servers[" << i << "].fd : " << _servers[i]->_sockt.fd << std::endl;
 		}
 	}
 
