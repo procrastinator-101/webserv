@@ -22,3 +22,6 @@ web server:
 		-	write the request.body to the pipe
 	-	read the response from the cgi
 	-	send it to the client
+
+
+Default CONTENT-TYPE : TEXT/PLAIN

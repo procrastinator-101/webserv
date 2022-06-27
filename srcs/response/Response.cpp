@@ -1,15 +1,5 @@
 #include "Response.hpp"
-#include <_types/_intmax_t.h>
 #include <cstddef>
-#include <cstring>
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <sys/_types/_size_t.h>
-#include <sys/stat.h>
-#include <vector>
 
 namespace ft
 {
@@ -32,6 +22,23 @@ namespace ft
 			return *this;
 		_deepCopy(rop);
 		return *this;
+	}
+
+	void	cgi(const Request& request)
+	{
+		size_t	size;
+		char	**envp;
+
+
+		envp = new char * [size];
+		for (size_t i = 0; i < size; i++)
+		{
+			envp[i] = strdup("env");
+		}
+		_setEnv("REQUEST_METHOD", request._method);
+		_setEnv("SERVER_PROTOCOL", request._version);
+		_setEnv("SERVER_PORT", )
+
 	}
 
 	bool	Response::send(int fd)

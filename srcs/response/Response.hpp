@@ -104,6 +104,8 @@ namespace ft
 			void	_buildBadRequestResponse();
 			const Host	*_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name);
 
+
+			void	_setEnv(std::string& key, std::string& value);
 			void	_deepCopy(const Response& src);
 		//================================================================================================
 		//	private methods End
