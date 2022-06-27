@@ -68,6 +68,8 @@ namespace ft
 	size_t	stoz(const std::string& str);
 	size_t	hstoz(const std::string& str);
 	std::string	ft_itoa(int n);
+
+	char	*ft_strdup(const char *s1);
 	
 	std::string	trim(const std::string& str, const std::string& delimiters);
 	std::string	ltrim(const std::string& str, const std::string& delimiters);

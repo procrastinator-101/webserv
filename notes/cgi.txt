@@ -25,3 +25,6 @@ web server:
 
 
 Default CONTENT-TYPE : TEXT/PLAIN
+
+
+params : client host server

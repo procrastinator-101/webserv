@@ -33,6 +33,9 @@ namespace ft
 
 	void	Selecter::add(int fd, int options)
 	{
+		if (fd > FD_SETSIZE)
+			return ;
+
 		if (options & aRead)
 		{
 			FD_SET(fd, &_readfds);

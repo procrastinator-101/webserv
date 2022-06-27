@@ -26,6 +26,7 @@
 namespace ft
 {
 	class Host;
+	class Server;
 	class Request;
 
 	class Response
@@ -113,10 +114,10 @@ namespace ft
 			const Host	*_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name);
 
 
-			void	_cgi(const Request& request, const std::string& method);
+			void	_cgi(const Request& request, const Server& server);
 			bool	_isCgiEnv(const char *str);
-			void	_constructCgiEnv(const Request& request);
-			void	_setCgiEnv(std::string& key, std::string& value);
+			void	_constructCgiEnv(const Request& request, const Server& server);
+			void	_setCgiEnv(char **cgiEnv, size_t size, const std::string& key, const std::string& value);
 			void	_initialiseCgiEnvList(std::set<std::string>& cgiEnvList);
 
 

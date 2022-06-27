@@ -1,9 +1,6 @@
 #include "Response.hpp"
-#include <cstring>
-#include <set>
-#include <string.h>
-#include <string>
-#include <sys/_types/_size_t.h>
+
+#include "../server/Server.hpp"
 
 namespace ft
 {
@@ -34,7 +31,7 @@ namespace ft
 		return *this;
 	}
 
-	void	Response::_cgi(const Request& request, const std::string& method)
+	void	Response::_cgi(const Request& request, const Server& server)
 	{
 		size_t	size;
 		char	**cgiEnv;
@@ -45,30 +42,84 @@ namespace ft
 		cgiEnv = new char*[size + CGI_ENV_SIZE + 1];
 		for (size_t i = 0; i < size; i++)
 			cgiEnv[i] = strdup(_env[i]);
-		
-
+		_constructCgiEnv(request, server);
 	}
 
-	void	Response::_constructCgiEnv(const Request& request)
+	void	Response::_constructCgiEnv(const Request& request, const Server& server)
 	{
 		size_t	size;
 		char	**cgiEnv;
+		std::map<std::string, std::string>::const_iterator	it;
 
 		size = 0;
 		while (_env[size])
 			size++;
 		cgiEnv = new char*[size + CGI_ENV_SIZE + 1];
-		{
-			for (size_t i = 0; i < size; i++)
-			{
-				if (_isCgiEnv(_env[i]))
-					cgiEnv[i] = strdup(_env[i]);
-				else
-					cgiEnv[i] = strdup(_env[i]);
-			}
+		for (size_t i = 0; i < size; i++)
+			cgiEnv[i] = ft_strdup(_env[i]);
+		
+		//CONTENT_TYPE
+		it = request._headers.find("CONTENT_TYPE");
+		if (it != request._headers.end())
+			_setCgiEnv(cgiEnv, size++, "CONTENT_TYPE", it->second);
+		else
+			_setCgiEnv(cgiEnv, size++, "CONTENT_TYPE", "TEXT/PLAIN");
+		
+		//CONTENT_LENGTH
+		_setCgiEnv(cgiEnv, size++, "CONTENT_LENGTH", ft_itoa(_contentLength));
 
+		//HTTP_COOKIE
+
+		//HTTP_USER_AGENT
+		it = request._headers.find("HTTP_USER_AGENT");
+		if (it != request._headers.end())
+			_setCgiEnv(cgiEnv, size++, "HTTP_USER_AGENT", it->second);
+		else
+			_setCgiEnv(cgiEnv, size++, "HTTP_USER_AGENT", "");
+
+
+		//PATH_INFO
+
+		//QUERY_STRING
+
+		//REMOTE_ADDR
+
+		//REMOTE_HOST
+
+		//REQUEST_METHOD
+		_setCgiEnv(cgiEnv, size++, "REQUEST_METHOD", request._method);
+
+		//SCRIPT_FILENAME
+
+		//SCRIPT_NAME
+
+		//SERVER_NAME
+
+
+		//SERVER_SOFTWARE
+		_setCgiEnv(cgiEnv, size++, "SERVER_SOFTWARE", "Nginy");
+	}
+
+	void	Response::_setCgiEnv(char **cgiEnv, size_t size, const std::string& key, const std::string& value)
+	{
+		char		*ptr;
+		std::string	tmp;
+
+		for (size_t i = 0; i < size; i++)
+		{
+			ptr = strstr(cgiEnv[i], "=");
+			if (ptr)
+				tmp.assign(cgiEnv[i], ptr - cgiEnv[i]);
+			else
+				tmp = cgiEnv[i];
+			if (key == value)
+			{
+				delete [] cgiEnv[i];
+				cgiEnv[i] = ft_strdup((key + "=" + value).c_str());
+			}
 		}
 	}
+
 	bool	Response::_isCgiEnv(const char *str)
 	{
 		std::string	key;
@@ -304,7 +355,6 @@ namespace ft
 	{
 		struct stat s;
 		std::string	tmp;
-		std::string	nfound;
 
 		if (location.second->_indexes.size())
 		{
@@ -315,7 +365,7 @@ namespace ft
 					return *it;
 			}
 		}
-		return nfound;
+		return std::string();
 	}
 
 	void	Response::_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path)
@@ -424,7 +474,7 @@ namespace ft
 			file.close();
 			return ;
 		}
-		buffer = new char[UPLOAD_BUFFER_SIZE];
+		buffer = new (std::nothrow) char[UPLOAD_BUFFER_SIZE];
 		if (!buffer)
 		{
 			_status = 500;
@@ -435,6 +485,7 @@ namespace ft
 		while (read_from.good())
 		{
 			read_from.read(buffer, buffer_size);
+			// read_from.fail()
 			file.write(buffer, buffer_size);
 			readedsize += buffer_size;
 			if (file_size - readedsize < buffer_size)
