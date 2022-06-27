@@ -8,8 +8,9 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Mon Jun 27 09:38:53 2022
+# Make data base, printed on Mon Jun 27 11:41:51 2022
 
+ 
 # Variables
 
 # automatic
@@ -40,7 +41,6 @@ MULTIPLEX_SRC = $(MULTIPLEX_PATH)/Selecter.cpp
 @F = $(notdir $@)
 # makefile
 CURDIR := /Users/yarroubi/Desktop/webserv
- 
 # makefile
 SHELL = /bin/sh
 # environment
@@ -70,11 +70,11 @@ VSCODE_VERBOSE_LOGGING = true
 # makefile (from `Makefile', line 120)
 _NGINY_CONF_PATH = $$PWD/confFiles/default.conf
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-ae530a30-72e5-491e-994f-470e4e541e97.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-15533e38-06a2-47d5-ba48-fe3ff09082c2.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.GVdSid4vJH/Render
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.7uKv9dcAqR/Render
 # makefile (from `Makefile', line 111)
 STDLIB_PATH = $(SRCS_PATH)/stdlib
 # environment
@@ -98,7 +98,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from `Makefile', line 41)
 HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.589xf6t7Dr/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.m96CzZoBCk/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -194,7 +194,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.microsoft.VSCode.1188
+XPC_SERVICE_NAME = com.microsoft.VSCode.1240
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
@@ -234,7 +234,7 @@ _NGINY_VAR_PATH = /goinfre/$$USER/var/nginy
 # environment
 LANG = C
 # environment
-VSCODE_PID = 29188
+VSCODE_PID = 8650
 # makefile (from `Makefile', line 52)
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 # variable set hash-table stats:
@@ -274,6 +274,7 @@ srcs/location/Location.hpp:
 #  File has not been updated.
 
 all: webserv
+ 
 #  Command-line target.
 #  Implicit rule search has been done.
 #  File does not exist.
@@ -286,7 +287,6 @@ webserv: NGINX_PATHS srcs/main.cpp srcs/client/Client.cpp srcs/host/Host.cpp src
 #  Implicit rule search has not been done.
 #  Last modified 2022-06-24 19:24:32
 #  File has been updated.
- 
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/3=0%
@@ -542,6 +542,6 @@ srcs/response/Response.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Mon Jun 27 09:38:53 2022
+# Finished Make data base on Mon Jun 27 11:41:51 2022
 
  

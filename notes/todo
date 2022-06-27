@@ -23,3 +23,6 @@ concepts :
 add no-blocking to the sockets
 add Server header
 set the header part max length
+
+check
+	-	IsDirHasIndexFiles

@@ -4,7 +4,7 @@
 
 namespace ft
 {
-	Client::Client()
+	Client::Client() :	_sockt(), _request(), _response()
 	{
 	}
 
@@ -13,8 +13,13 @@ namespace ft
 		_sockt.close();
 	}
 
-	Client::Client(const Client& src) : _sockt(src._sockt), _request(src._request), _response(src._response)
+	Client::Client(const char **env) :	_sockt(), _request(), _response(env)
 	{
+	}
+	
+	Client::Client(const Client& src)
+	{
+		(void)src;
 	}
 
 	Client	&Client::operator=(const Client& rop)
@@ -52,9 +57,7 @@ namespace ft
 
 	void	Client::_deepCopy(const Client& src)
 	{
-		_sockt = src._sockt;
-		_request = src._request;
-		_response = src._response;
+		(void)src;
 	}
 
 	std::ostream	&operator<<(std::ostream& ostr, const Client& client)

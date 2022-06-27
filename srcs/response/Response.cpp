@@ -1,13 +1,23 @@
 #include "Response.hpp"
-#include <cstddef>
+#include <cstring>
+#include <set>
+#include <string.h>
+#include <string>
+#include <sys/_types/_size_t.h>
 
 namespace ft
 {
-	Response::Response() : _sent(0), _contentLength(0)
+	Response::Response() :	_env(0), _sent(0), _msg(), _keepAlive(true), _contentLength(0), _version("HTTP/1.1"),
+							_status(), _headers(), _bodyFileName(), _body()
 	{
 	}
 
 	Response::~Response()
+	{
+	}
+
+	Response::Response(const char **env) :	_env(env), _sent(0), _msg(), _keepAlive(true), _contentLength(0),
+											_version("HTTP/1.1"), _status(), _headers(), _bodyFileName(), _body()
 	{
 	}
 
@@ -24,21 +34,72 @@ namespace ft
 		return *this;
 	}
 
-	void	cgi(const Request& request)
+	void	Response::_cgi(const Request& request, const std::string& method)
 	{
 		size_t	size;
-		char	**envp;
+		char	**cgiEnv;
 
-
-		envp = new char * [size];
+		size = 0;
+		while (_env[size])
+			size++;
+		cgiEnv = new char*[size + CGI_ENV_SIZE + 1];
 		for (size_t i = 0; i < size; i++)
-		{
-			envp[i] = strdup("env");
-		}
-		_setEnv("REQUEST_METHOD", request._method);
-		_setEnv("SERVER_PROTOCOL", request._version);
-		_setEnv("SERVER_PORT", )
+			cgiEnv[i] = strdup(_env[i]);
+		
 
+	}
+
+	void	Response::_constructCgiEnv(const Request& request)
+	{
+		size_t	size;
+		char	**cgiEnv;
+
+		size = 0;
+		while (_env[size])
+			size++;
+		cgiEnv = new char*[size + CGI_ENV_SIZE + 1];
+		{
+			for (size_t i = 0; i < size; i++)
+			{
+				if (_isCgiEnv(_env[i]))
+					cgiEnv[i] = strdup(_env[i]);
+				else
+					cgiEnv[i] = strdup(_env[i]);
+			}
+
+		}
+	}
+	bool	Response::_isCgiEnv(const char *str)
+	{
+		std::string	key;
+		const char	*ptr;
+		static std::set<std::string>	cgiEnvList;
+
+		if (cgiEnvList.empty())
+			_initialiseCgiEnvList(cgiEnvList);
+		ptr = strstr(str, "=");
+		if (!ptr)
+			key = str;
+		else
+			key.assign(str, ptr - str);
+		return cgiEnvList.find(key) != cgiEnvList.end();
+	}
+
+	void	Response::_initialiseCgiEnvList(std::set<std::string>& cgiEnvList)
+	{
+		cgiEnvList.insert("CONTENT_TYPE");
+		cgiEnvList.insert("CONTENT_LENGTH");
+		cgiEnvList.insert("HTTP_COOKIE");
+		cgiEnvList.insert("HTTP_USER_AGENT");
+		cgiEnvList.insert("PATH_INFO");
+		cgiEnvList.insert("QUERY_STRING");
+		cgiEnvList.insert("REMOTE_ADDR");
+		cgiEnvList.insert("REMOTE_HOST");
+		cgiEnvList.insert("REQUEST_METHOD");
+		cgiEnvList.insert("SCRIPT_FILENAME");
+		cgiEnvList.insert("SCRIPT_NAME");
+		cgiEnvList.insert("SERVER_NAME");
+		cgiEnvList.insert("SERVER_SOFTWARE");
 	}
 
 	bool	Response::send(int fd)
@@ -172,8 +233,8 @@ namespace ft
 
 	std::pair<std::string, Location *>	Response::get_matched_location_for_request_uri(const std::string path, const std::map<std::string, Location *> locations)
 	{
-		std::vector<std::pair<std::string, Location *> >	tmp;
 		size_t												res;
+		std::vector<std::pair<std::string, Location *> >	tmp;
 
 		for (std::map<std::string, Location *>::const_iterator it = locations.begin(); it != locations.end(); ++it)
 			tmp.push_back(std::make_pair(it->first, it->second));
@@ -181,23 +242,18 @@ namespace ft
 		for (size_t i = 0; i < tmp.size(); i++)
 		{
 			res = path.find(tmp[i].first);
-			if (res != std::string::npos && res == 0) {
+			if (res != std::string::npos && res == 0)
 				return std::make_pair(tmp[i].first, tmp[i].second);
-			}
 		}
-		std::string a("");
-		Location	*k = NULL;			
-		return std::make_pair(a, k);
+		return std::make_pair<std::string, Location*>(std::string(), NULL);
 	}
 
 	bool	Response::is_method_allowded_in_location(const std::string &method, const Location *location)
 	{
-		for (std::set<std::string>::const_iterator it = location->_methods.begin(); it != location->_methods.end(); ++it)
-		{
-			if (*it == method)
-				return true;
-		}
-		return false;
+		std::set<std::string>::const_iterator it;
+
+		it  = location->_methods.find(method);
+		return it != location->_methods.end();
 	}
 
 
@@ -233,13 +289,10 @@ namespace ft
 
 	std::string	Response::prepare_path(const std::string& location_root, const std::string &uri)
 	{
-		std::string	path = location_root;
-
+		std::string	path(location_root);
+		
 		if (path[path.length() - 1] != '/' && uri[0] != '/')
-		{
-			path.append("/");
-			path.append(uri);
-		}
+			path.append("/" + uri);
 		else if (path[path.length() - 1] == '/' && uri[0] == '/')
 			path.append(uri, 1);
 		else
@@ -251,7 +304,7 @@ namespace ft
 	{
 		struct stat s;
 		std::string	tmp;
-		std::string	nfound("");
+		std::string	nfound;
 
 		if (location.second->_indexes.size())
 		{
@@ -353,7 +406,7 @@ namespace ft
 		std::ofstream	file;
 		std::ifstream	read_from;
 		char			*buffer;
-		int				buffer_size = 1048576;
+		size_t			buffer_size = UPLOAD_BUFFER_SIZE;
 		size_t			readedsize = 0;
 		size_t			file_size = getFileSize(request._bodyFileName);
 
@@ -371,7 +424,7 @@ namespace ft
 			file.close();
 			return ;
 		}
-		buffer = (char *)malloc(1048576);
+		buffer = new char[UPLOAD_BUFFER_SIZE];
 		if (!buffer)
 		{
 			_status = 500;
@@ -387,7 +440,7 @@ namespace ft
 			if (file_size - readedsize < buffer_size)
 				buffer_size = file_size - readedsize;
 		}
-		free(buffer);
+		delete [] buffer;
 		file.close();
 		read_from.close();
 		_status = 201;

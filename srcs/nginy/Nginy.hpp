@@ -29,6 +29,7 @@ namespace ft
 		//================================================================================================
 		private:
 			std::string				_configFileName;
+			const char				**_env;
 			Selecter				_multiplexer;
 			std::vector<Server *>	_servers;
 		//================================================================================================
@@ -40,14 +41,15 @@ namespace ft
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
 		private:
+			Nginy();
 			Nginy(const Nginy& src);
 			Nginy	&operator=(const Nginy& rop);
 
 		public:
-			Nginy();
 			~Nginy();
 
-			Nginy(const std::string& configFileName);
+			Nginy(const char **env);
+			Nginy(const std::string& configFileName, const char **env);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================

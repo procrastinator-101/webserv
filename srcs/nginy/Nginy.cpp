@@ -3,7 +3,7 @@
 
 namespace ft
 {
-	Nginy::Nginy()
+	Nginy::Nginy() :	_configFileName(), _env(0), _multiplexer(), _servers()
 	{
 		//!!!!!!!! to remove
 		ServerSockt	sockt("127.0.0.1", "8080");
@@ -17,7 +17,11 @@ namespace ft
 			delete _servers[i];
 	}
 
-	Nginy::Nginy(const std::string& configFileName) : _configFileName(configFileName)
+	Nginy::Nginy(const char **env) :	_configFileName(), _env(env), _multiplexer(), _servers()
+	{
+	}
+
+	Nginy::Nginy(const std::string& configFileName, const char **env) :	_configFileName(configFileName), _env(env), _multiplexer(), _servers()
 	{
 		_parseConfigFile();
 	}
@@ -139,7 +143,7 @@ namespace ft
 				continue;
 			if (it->second & aRead)
 			{
-				Client	*client = new Client;
+				Client	*client = new Client(_env);
 
 				try 
 				{

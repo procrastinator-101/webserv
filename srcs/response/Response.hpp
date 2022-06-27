@@ -17,10 +17,11 @@
 
 #include "../http_status/HttpStatus.hpp"
 
-// #include<string.h>
-// #include <sys/types.h> 
 #include <dirent.h>
 #include <stdlib.h>
+
+# define UPLOAD_BUFFER_SIZE	1048576
+# define CGI_ENV_SIZE		13
 
 namespace ft
 {
@@ -35,6 +36,7 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
+			const char							**_env;
 			size_t								_sent;
 			std::string							_msg;
 
@@ -49,14 +51,18 @@ namespace ft
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
+
+		
 		//================================================================================================
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
 		public:
-			Response();
 			~Response();
 
+			Response(const char **env);
+
 		private:
+			Response();
 			Response(const Response& src);
 			Response	&operator=(const Response& rop);
 		//================================================================================================
@@ -107,7 +113,13 @@ namespace ft
 			const Host	*_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name);
 
 
-			void	_setEnv(std::string& key, std::string& value);
+			void	_cgi(const Request& request, const std::string& method);
+			bool	_isCgiEnv(const char *str);
+			void	_constructCgiEnv(const Request& request);
+			void	_setCgiEnv(std::string& key, std::string& value);
+			void	_initialiseCgiEnvList(std::set<std::string>& cgiEnvList);
+
+
 			void	_deepCopy(const Response& src);
 		//================================================================================================
 		//	private methods End
