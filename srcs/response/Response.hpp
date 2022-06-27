@@ -105,6 +105,7 @@ namespace ft
 			int				DeleteFolderContent(std::string& path);
 			void			getFileFromStatus(const Host *host, int code);
 			void			_uploadfile(const Request& request, const std::string& path);
+			void			_prepare_indixng(std::string& path);
 
 			void	_constructStatusLine();
 			void	_constructHeaders(const Request& request);
