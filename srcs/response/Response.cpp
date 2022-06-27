@@ -63,7 +63,7 @@ namespace ft
 		if (it != request._headers.end())
 			_setCgiEnv(cgiEnv, size++, "CONTENT_TYPE", it->second);
 		else
-			_setCgiEnv(cgiEnv, size++, "CONTENT_TYPE", "TEXT/PLAIN");
+			_setCgiEnv(cgiEnv, size++, "CONTENT_TYPE", "text/plain");
 		
 		//CONTENT_LENGTH
 		_setCgiEnv(cgiEnv, size++, "CONTENT_LENGTH", ft_itoa(_contentLength));

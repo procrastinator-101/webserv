@@ -28,3 +28,9 @@ Default CONTENT-TYPE : TEXT/PLAIN
 
 
 params : client host server
+
+no content-type header in case of server redirection
+
+headers for caching:
+-	Pragma
+-	Expires
