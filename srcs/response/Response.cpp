@@ -524,7 +524,6 @@ namespace ft
 	{
 		DIR				*d;
 		struct dirent	de, *dep; 
-		int				i;
 		int				ret;
 		std::string		path2;
 
@@ -533,7 +532,6 @@ namespace ft
 		d = opendir(path.c_str());
 		if (d == NULL) 
 			return (500);
-		i = 0;
 		while (readdir_r(d, &de, &dep) == 0 && dep != NULL)
 		{
 			if (strcmp(de.d_name, ".") == 0 || strcmp(de.d_name, "..") == 0)
