@@ -75,6 +75,7 @@ namespace ft
 			void	_fetchUploadPath(std::stringstream& streamLine);
 			void	_fetchAutoIndex(std::stringstream& streamLine);
 			void	_fetchRedirections(std::stringstream& streamLine);
+			void	_fetchCGI(std::stringstream& streamLine);
 		//================================================================================================
 		//	private methods End
 		//================================================================================================

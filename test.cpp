@@ -1,6 +1,7 @@
 #include "srcs/response/Response.hpp"
 #include "srcs/stdlib/stdlib.hpp"
 #include <cstring>
+#include <dirent.h>
 #include <string>
 #include <sys/dirent.h>
 #include <unistd.h>

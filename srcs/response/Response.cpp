@@ -517,6 +517,10 @@ namespace ft
 		{
 			if(s.st_mode & S_IFDIR)		//it's a directory
 				_handleDirInGet(location, path);
+			// else if (s.st_mode & S_IFLNK)
+			// {
+			// 	;
+			// }
 			else
 				_handleFileInGet(location, path);
 		}

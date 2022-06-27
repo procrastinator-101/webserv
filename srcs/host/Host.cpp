@@ -182,7 +182,7 @@ namespace ft
 		std::string	value;
 		std::map<std::string, Location *>::iterator	lit;
 		
-		//opening and clonsing brackets are not handled // it's handled inside fonc line 169
+		//opening and clonsing brackets are not handled // done
 		lineStream >> path;
 		if (path == "#")
 			throw std::runtime_error("Host:: invalid location");
