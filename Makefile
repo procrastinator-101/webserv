@@ -117,9 +117,11 @@ STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 
 # includes
 #--------------------------------------------------------------------------------
-_NGINY_CONF_PATH = $$PWD/confFiles/default.conf
+ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
+_NGINY_CONF_PATH = $(ROOT_DIR)/confFiles/default.conf
 _NGINY_VAR_PATH = /goinfre/$$USER/var/nginy
-_NGINY_INDEX_PATH = $$PWD/indexes
+_NGINY_INDEX_PATH = $(ROOT_DIR)/indexes
 
 
 NGINY_CONF_PATH_INC = NGINY_CONF_PATH=\"$(_NGINY_CONF_PATH)\"

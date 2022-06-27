@@ -14,6 +14,8 @@
 #include <iomanip>
 #include <iostream>
 
+#include <fcntl.h>
+
 #include <cstring>
 #include <cstdlib>
 
@@ -104,6 +106,7 @@ namespace ft
 			void	connect(const Sockt& dst);//might throw
 			void	connect(const in_addr_t& ipAddress, const in_port_t& port);//might throw
 
+			void	setStatusFlag(int flag);//might throw
 			void	setOption(const int& level, const int& optionName, const void* optionValue);//might throw
 		//================================================================================================
 		//	Socket operations End

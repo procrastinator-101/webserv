@@ -1,5 +1,7 @@
 #include "stdlib.hpp"
+#include <_ctype.h>
 #include <cstring>
+#include <exception>
 #include <string>
 #include <iostream>
 #include <sys/_types/_size_t.h>
@@ -291,6 +293,19 @@ namespace ft
 		return false;
 	}
 
+	char	*ft_strdup(const char *s1)
+	{
+		size_t		len;
+		char		*ret;
+
+		len = strlen(s1);
+		ret = new char[len + 1];
+		for (size_t i = 0; i < len; i++)
+			ret[i] = s1[i];
+		ret[len] = 0;
+		return ret;
+	}
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// HTTP Parsing Grammar
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -339,20 +354,66 @@ namespace ft
 			return isObstext(c);
 		}
 
-		char	*ft_strdup(const char *s1)
+		bool	isUnreserved(int c)
 		{
-			size_t		len;
-			char		*ret;
-
-			len = strlen(s1);
-			ret = new char[len + 1];
-			for (size_t i = 0; i < len; i++)
-				ret[i] = s1[i];
-			ret[len] = 0;
-			return ret;
+			if (isalpha(c) || isdigit(c) || c == '-' || c == '.' || c == '_' || c =='~')
+				return true;
+			return false;
 		}
 
+		bool	isPctEncoded(int c)//
+		{
+			return c == 0;
+		}
 
+		bool	isSubDelim(int c)//
+		{
+			return c == 0;
+		}
+
+		bool	isPchar(int c)
+		{
+			if (isUnreserved(c) || isPctEncoded(c) || isSubDelim(c))
+				return true;
+			return c == ':' || c == '@';
+		}
+
+		bool	isQuery(const std::string& query)
+		{
+			for (size_t i = 0; i < query.length(); i++)
+			{
+				if (!isPchar(query[i]) && query[i] != '/' && query[i] != '?')
+					return false;
+			}
+			return true;
+		}
+
+		bool	isFragment(const std::string& fragment)
+		{
+			for (size_t i = 0; i < fragment.length(); i++)
+			{
+				if (!isPchar(fragment[i]) && fragment[i] != '/' && fragment[i] != '?')
+					return false;
+			}
+			return true;
+		}
+
+		bool	isPort(const std::string& port)
+		{
+			size_t	tmp;
+
+			try
+			{
+				tmp = stoz(port);
+				if (tmp > 65535)
+					return false;
+			}
+			catch (std::exception& e)
+			{
+				return false;
+			}
+			return true;
+		}
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// HTTP Parsing Grammar End

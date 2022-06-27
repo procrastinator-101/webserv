@@ -70,6 +70,7 @@ namespace ft
 		for (size_t i = 0; i < _servers.size(); i++)
 		{
 			_servers[i]->_sockt.open();
+			_servers[i]->_sockt.setStatusFlag(O_NONBLOCK);
 			_servers[i]->_sockt.setOption(SOL_SOCKET, SO_REUSEADDR, &optionValue);
 			_servers[i]->_sockt.bind();
 			_servers[i]->_sockt.listen();

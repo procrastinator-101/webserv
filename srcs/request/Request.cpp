@@ -1,9 +1,4 @@
 #include "Request.hpp"
-#include <cstring>
-#include <iostream>
-#include <string.h>
-#include <string>
-#include <sys/_types/_size_t.h>
 
 namespace ft
 {

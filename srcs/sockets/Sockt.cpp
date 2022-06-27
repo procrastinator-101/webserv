@@ -119,6 +119,20 @@ namespace ft
 		fd = -1;
 	}
 
+	void	Sockt::setStatusFlag(int flag)
+	{
+		int	ret;
+		int	flags;
+
+		flags = fcntl(fd, F_GETFL);
+		if (flags < 0)
+			throw std::runtime_error("socket:: fcntl failed");
+		
+		ret = fcntl(fd, F_SETFL, flags | flag);
+		if (ret < 0)
+			throw std::runtime_error("socket:: fcntl failed");
+	}
+
 	void	Sockt::setOption(const int& level, const int& optionName, const void* optionValue)
 	{
 		int			ret;

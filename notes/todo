@@ -18,14 +18,33 @@ concepts :
 --------------------------------------------------------------------------------
 -	host in the same server with have the same name
 -	get : path is symbolic link ??
--	http version should not excedd 1.1
+-	add timeout to the connection
 
 -	default host port = 8080 : done
 -	check select fd > fd_maxset : done
+-	http version should not excedd 1.1 : done
 
 
-add no-blocking to the sockets
-add Server header
+add no-blocking to the sockets : done
+add Server header field
 set the header part max length
 
+
+
+parsing:
+	-	request line:
+		-	method : done
+		-	uri
+			-	scheme
+			-	authority
+				-	user info
+				-	host
+				-	port : done
+			-	path
+			-	query : done
+			-	fragment : done
+		-	version : done
+	-	headers:
+		-	key
+		-	value
 --------------------------------------------------------------------------------

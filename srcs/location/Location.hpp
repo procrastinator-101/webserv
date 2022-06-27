@@ -23,12 +23,13 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			std::string					_root;
-			bool						_autoIndex;
-			std::set<std::string>		_methods;
-			std::set<std::string>		_indexes;
-			std::pair<int, std::string>	_redirection;
-			std::string					_uploadPath;
+			std::string							_root;
+			bool								_autoIndex;
+			std::set<std::string>				_methods;
+			std::set<std::string>				_indexes;
+			std::pair<int, std::string>			_redirection;
+			std::map<std::string, std::string>	_cgis;
+			std::string							_uploadPath;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
