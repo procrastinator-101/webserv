@@ -112,6 +112,10 @@ namespace ft
 			_fetchAutoIndex(streamLine);
 		else if (key == "return" && streamLine.good())
 			_fetchRedirections(streamLine);
+		else if (key == "cgi" && streamLine.good())
+			_fetchCGI(streamLine);
+		else
+			throw std::runtime_error("Server:: invalid key {" + key + "}");
 	}
 
 	void	Location::_fetchRoot(std::stringstream& streamLine)
@@ -239,6 +243,27 @@ namespace ft
 			if (token != "#")
 				throw std::runtime_error("Location:: too many arguments for return");
 		}
+	}
+
+	void	Location::_fetchCGI(std::stringstream& streamLine)
+	{
+		std::string path;
+		std::string ext;
+		std::string	value;
+
+		streamLine >> ext;
+		if (path == "#" || !streamLine.good())
+			throw std::runtime_error("Location:: invalid CGI");
+		streamLine >> path;
+		if (path == "#")
+			throw std::runtime_error("Location:: invalid CGI");
+		if (streamLine.good())
+		{
+			streamLine >> value;
+			if (value != "#")
+				throw std::runtime_error("Location:: too many arguments for CGI");
+		}
+		_cgis[ext] = path;
 	}
 
 	void	Location::_deepCopy(const Location& src)
