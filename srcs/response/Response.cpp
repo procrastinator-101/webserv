@@ -216,7 +216,6 @@ namespace ft
 		{
 			_status = location.second->_redirection.first;
 			_headers["Location"] = location.second->_redirection.second;
-			_bodyFileName = location.second->_redirection.second;
 			return ;
 		}
 		if (!is_method_allowded_in_location(request._method, location.second))
@@ -248,7 +247,6 @@ namespace ft
 		return path;
 	}
 
-	// first file found is taked (I feel somthing wrong, to check later)
 	std::string		Response::IsDirHasIndexFiles(const std::pair<std::string, Location *>& location, std::string& path)
 	{
 		struct stat s;
@@ -296,7 +294,7 @@ namespace ft
 		else if (location.second->_autoIndex == true)
 		{
 			_status = 200;
-			_bodyFileName = path;
+			// _bodyFileName = path;
 		}
 		else
 			_status = 403;
@@ -349,6 +347,52 @@ namespace ft
 		}
 	}
 
+	void	Response::_uploadfile(const Request& request, const std::string& path)
+	{
+		std::string		file_uploaded_name;
+		std::ofstream	file;
+		std::ifstream	read_from;
+		char			*buffer;
+		int				buffer_size = 1048576;
+		size_t			readedsize = 0;
+		size_t			file_size = getFileSize(request._bodyFileName);
+
+		file_uploaded_name = path + "/" + ft::getRandomFileName();
+		file.open(file_uploaded_name.c_str());
+		if (!file.is_open())
+		{
+			_status = 500;
+			return ;
+		}
+		read_from.open(request._bodyFileName.c_str());
+		if (!read_from.is_open())
+		{
+			_status = 500;
+			file.close();
+			return ;
+		}
+		buffer = (char *)malloc(1048576);
+		if (!buffer)
+		{
+			_status = 500;
+			file.close();
+			read_from.close();
+			return ;
+		}
+		while (read_from.good())
+		{
+			read_from.read(buffer, buffer_size);
+			file.write(buffer, buffer_size);
+			readedsize += buffer_size;
+			if (file_size - readedsize < buffer_size)
+				buffer_size = file_size - readedsize;
+		}
+		free(buffer);
+		file.close();
+		read_from.close();
+		_status = 201;
+	}
+
 	void	Response::_handlePostMethod(const Request& request, const std::pair<std::string, Location *>& location)
 	{
 		struct stat s;
@@ -357,7 +401,7 @@ namespace ft
 		if (location.second->_uploadPath.length() != 0)
 		{
 			// uplaod the Post Request Body
-			_status = 201;
+			_uploadfile(request, location.second->_uploadPath);
 			return ;
 		}
 		path = prepare_path(location.second->_root, request._path.substr(location.first.length()));

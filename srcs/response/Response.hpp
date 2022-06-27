@@ -19,7 +19,8 @@
 
 // #include<string.h>
 // #include <sys/types.h> 
-#include <dirent.h> 
+#include <dirent.h>
+#include <stdlib.h>
 
 namespace ft
 {
@@ -96,6 +97,7 @@ namespace ft
 			void			_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path);
 			int				DeleteFolderContent(std::string& path);
 			void			getFileFromStatus(const Host *host, int code);
+			void			_uploadfile(const Request& request, const std::string& path);
 
 			void	_constructStatusLine();
 			void	_constructHeaders(const Request& request);

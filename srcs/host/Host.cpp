@@ -111,7 +111,7 @@ namespace ft
 
 		lineStream >> value;
 		if (value != "#" && ft::isnumber(value))
-			_maxBodySize = atoi(value.c_str());
+			_maxBodySize = ft::stoz(value);	//atoi(value.c_str());
 		else
 			throw std::runtime_error("Host:: max_body_size is not valid");
 		if (lineStream.good())
@@ -150,7 +150,8 @@ namespace ft
 			throw std::runtime_error("Host:: invalid error_page");
 		if (lineStream.good() && isnumber(code_str))
 		{
-			code = ::atoi(code_str.c_str());
+			// code = ::atoi(code_str.c_str());
+			code = ft::stoi(code_str);
 			try
 			{
 				HttpStatus::resolve(code);
