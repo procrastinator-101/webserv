@@ -1,4 +1,4 @@
-THIS_DIR := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
+ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 all :
-	echo $(THIS_DIR)
+	echo $(ROOT_DIR)

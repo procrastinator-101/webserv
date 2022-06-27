@@ -94,7 +94,7 @@ namespace ft
 		//SCRIPT_NAME
 
 		//SERVER_NAME
-
+		(void)server;
 
 		//SERVER_SOFTWARE
 		_setCgiEnv(cgiEnv, size++, "SERVER_SOFTWARE", "Nginy");
@@ -624,7 +624,7 @@ namespace ft
 			_status = 404;
 	}
  
-	int	DeleteFolderContent(std::string& path)
+	int	Response::DeleteFolderContent(std::string& path)
 	{
 		DIR				*d;
 		struct dirent	de, *dep; 

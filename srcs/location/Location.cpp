@@ -1,9 +1,10 @@
 #include "Location.hpp"
+#include <cstdio>
 #include <sys/_types/_size_t.h>
 
 namespace ft
 {
-	Location::Location()
+	Location::Location() :	_root(), _autoIndex(false), _methods(), _indexes(), _redirection(), _cgis(), _uploadPath()
 	{
 	}
 
@@ -11,7 +12,9 @@ namespace ft
 	{
 	}
 
-	Location::Location(std::ifstream& configFile, std::string& root, bool autoIndex, std::set<std::string>& indexes, std::set<std::string>& methods) : _autoIndex(false)
+	Location::Location(std::ifstream& configFile, std::string& root, bool autoIndex, std::set<std::string>& indexes, std::set<std::string>& methods) :	_root(), _autoIndex(autoIndex), _methods(),
+																																						_indexes(), _redirection(), _cgis(),
+																																						_uploadPath()
 	{
 		int				inside_location = 0;
 		std::string		line;
@@ -245,6 +248,7 @@ namespace ft
 		_methods = src._methods;
 		_indexes = src._indexes;
 		_redirection = src._redirection;
+		_cgis = src._cgis;
 		_uploadPath = src._uploadPath;
 	}
 
@@ -268,6 +272,11 @@ namespace ft
 		ostr << getDisplayHeader("indexes", LOCATION_SHSIZE) << std::endl;
 		for (std::set<std::string>::const_iterator it = location._indexes.begin(); it != location._indexes.end(); ++it)
 			ostr << *it << std::endl;
+		ostr << getDisplayFooter(LOCATION_SHSIZE) << std::endl;
+
+		ostr << getDisplayHeader("cgis", LOCATION_SHSIZE) << std::endl;
+		for (std::map<std::string, std::string>::const_iterator it = location._cgis.begin(); it != location._cgis.end(); ++it)
+			ostr << it->first << " : " << it->second << std::endl;
 		ostr << getDisplayFooter(LOCATION_SHSIZE) << std::endl;
 
 		ostr << getDisplayFooter(LOCATION_HSIZE) << std::endl;
