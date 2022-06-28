@@ -37,7 +37,9 @@ namespace ft
 		ret = _request.receive(_sockt.fd);
 		if (!ret)
 			return ret;
+		std::cout << _request << std::endl;
 		_response.build(server._hosts, _request);
+		_request.reset();
 		return ret;
 	}
 
@@ -45,9 +47,19 @@ namespace ft
 	{
 		//check connection timeout
 		if (_request.timeOut())
+		{
+			_request.reset();
+			//build 408 Request Timeout response
 			return true;
+		}
 		//check cgi timeout
-		return  _response.timeOut();
+		if (_response.timeOut())
+		{
+			_response.reset();
+			//502 bad gateway response
+			return true;
+		}
+		return false;
 	}
 
 	void	Client::_prepareResponse()

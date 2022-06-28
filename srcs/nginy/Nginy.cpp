@@ -46,10 +46,10 @@ namespace ft
 		_initiateServers();
 		while (1)
 		{
+			_manageTimeouts();
 			candidates = _multiplexer.fetch(MULTIPLEXING_TIMEOUT);
 			if (candidates.empty())
 				continue ;
-			_manageTimeouts();
 			_acceptNewClients(candidates);
 			_serveClients(candidates);
 		}
@@ -63,12 +63,9 @@ namespace ft
 		{
 			for (it = _servers[i]->_clients.begin(); it != _servers[i]->_clients.end(); ++it)
 			{
-				//check connection timeouts
-
-				//check response timeouts : cgi timeouts
-				if (it->second->isTimedOut())
+				//checks and handles connection and cgi timeouts
+				if (it->second->timeOut())
 				{
-					it->second->timeOut();
 					_multiplexer.del(it->first, aRead);
 					_multiplexer.add(it->first, aWrite);
 				}
@@ -124,11 +121,8 @@ namespace ft
 		bool	isFinished;
 
 		isFinished = client.handleRequest(server);
-		std::cout << "isRequestFinished : " << isFinished << std::endl;
 		if (isFinished)
 		{
-			std::cout << client._request << std::endl;
-			client._request.reset();
 			_multiplexer.del(client._sockt.fd, aRead);
 			_multiplexer.add(client._sockt.fd, aWrite);
 		}

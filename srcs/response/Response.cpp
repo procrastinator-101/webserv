@@ -28,7 +28,16 @@ namespace ft
 
 	bool	Response::timeOut()
 	{
-		return _cgi.isTimedOut();
+		Cgi::Status	ret;
+
+		ret = _cgi.timeOut();
+		if (ret == Cgi::cTimeout)
+			return true;
+		else if (ret == Cgi::cError)
+		{
+			//build internal server error
+		}
+		return false;
 	}
 
 	bool	Response::send(int fd)

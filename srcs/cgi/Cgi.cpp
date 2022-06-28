@@ -59,7 +59,7 @@ namespace ft
 		return false;
 	}
 
-	int	Cgi::checkTermination()
+	Cgi::Status	Cgi::timeOut()
 	{
 		int	ret;
 		int	status;
@@ -71,19 +71,19 @@ namespace ft
 			if (isTimedOut())
 			{
 				kill(_pid, SIGKILL);
-				return 1;
+				return cTimeout;
 			}
 			else
-				return 2;
+				return cWait;
 		}
 		else if (ret < 0)
 		{
 			kill(_pid, SIGKILL);
-			return -1;
+			return cError;
 		}
 		else if (!WIFEXITED(status) || WEXITSTATUS(status))
-			return -1;
-		return 2;
+			return cError;
+		return cSucces;
 	}
 
 
@@ -134,7 +134,7 @@ namespace ft
 			close(fd[1]);
 			exit(EXIT_FAILURE);
 		}
-		return checkTermination();
+		return timeOut();
 	}
 
 	void	Cgi::constructEnv(Response& response, Request& request)

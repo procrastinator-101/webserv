@@ -184,3 +184,5 @@ timeouts:
 
 
 eot eob cont
+
+dav_methods  PUT DELETE MKCOL COPY MOVE;
