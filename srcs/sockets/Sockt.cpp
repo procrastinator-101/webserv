@@ -1,4 +1,6 @@
 #include "Sockt.hpp"
+#include <arpa/inet.h>
+#include <string>
 #include <sys/_types/_socklen_t.h>
 #include <sys/_types/_timeval.h>
 #include <sys/socket.h>
@@ -157,6 +159,21 @@ namespace ft
 		ret = setsockopt(fd, level, optionName, optionValue, len);
 		if (ret < 0)
 			throw std::runtime_error("socket:: setsockopt failed");
+	}
+
+	std::string	Sockt::getPort() const
+	{
+		return itoa(ntohs(address.sin_port));
+	}
+
+	std::string	Sockt::getIpAddress() const
+	{
+		char	*tmp;
+
+		tmp = inet_ntoa(address.sin_addr);
+		if (tmp)
+			return tmp;
+		return std::string();
 	}
 
 	void	Sockt::_deepCopy(const Sockt& src)

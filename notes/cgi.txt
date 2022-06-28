@@ -12,14 +12,14 @@ no prefix : web server must set the reponse headers itself, and send the cgi res
 
 
 set the cgi
-	-	set querry in env variables if the method is get
 	-	set env variables
 	-	create a pipe
 	-	fork
+	-	execve
 
 web server:
-	-	method == post
-		-	write the request.body to the pipe
+	-	write the request.body to the pipe
+	-	set the timeout
 	-	read the response from the cgi
 	-	send it to the client
 
@@ -27,10 +27,141 @@ web server:
 Default CONTENT-TYPE : TEXT/PLAIN
 
 
-params : client host server
+params :
+	-	client : ip address
+	-	host : hostname
+	-	server : port
+
 
 no content-type header in case of server redirection
 
 headers for caching:
 -	Pragma
 -	Expires
+
+
+====================================================================================
+protocol-var-name  = ( protocol | scheme ) "_" var-name
+scheme             = alpha *( alpha | digit | "+" | "-" | "." )
+var-name           = token
+extension-var-name = token
+
+
+meta-variable-value = "" | 1*<TEXT, CHAR or tokens of value>
+====================================================================================
+
+
+
+====================================================================================
+AUTH_TYPE      = "" | auth-scheme (http header field)
+auth-scheme    = "Basic" | "Digest" | extension-auth
+extension-auth = token
+====================================================================================
+
+====================================================================================
+CONTENT_LENGTH : set if and only if the request is accompanied by a message-body entity.
+====================================================================================
+
+====================================================================================
+CONTENT_TYPE :
+	-	must be set by the server if CONTENT_TYPE header field is set. otherwise, 
+		it may be determined by the server or omitted.
+====================================================================================
+
+====================================================================================
+GATEWAY_INTERFACE = "CGI" "/" 1*digit "." 1*digit
+
+ spec vesion: CGI/1.1
+====================================================================================
+
+====================================================================================
+PATH_INFO = "" | ( "/" path )
+path      = lsegment *( "/" lsegment )
+lsegment  = *lchar
+lchar     = <any TEXT or CTL except "/">
+
+
+example :
+	-	url : /var/www/index.php/databse.sql
+	-	SCRIPT_FILENAME = /var/www/index.php
+	-	PATH_INFO = /databse.sql
+====================================================================================
+
+====================================================================================
+If PATH_INFO is NULL, then the PATH_TRANSLATED variable MUST be set to NULL (or unset).
+
+PATH_TRANSLATED = sheme + request authority + PATH_INFO
+====================================================================================
+
+====================================================================================
+QUERY_STRING = query-string
+query-string = *uric
+uric         = reserved | unreserved | escaped
+
+-	The server MUST set this variable; if the Script-URI does not include a query
+	component, the QUERY_STRING MUST be defined as an empty string ("").
+====================================================================================
+
+====================================================================================
+REMOTE_ADDR : set to the network address of the client sending the request to the server.
+====================================================================================
+
+====================================================================================
+REMOTE_HOST:
+	-	The server SHOULD set this variable.  If the hostname is not available for
+		performance reasons or otherwise, the server MAY substitute the REMOTE_ADDR value.
+====================================================================================
+
+====================================================================================
+REMOTE_IDENT :
+	-	provide identity information reported about the connection by a request
+		to the remote agent
+====================================================================================
+
+====================================================================================
+REMOTE_USER :
+	-	If the client request required HTTP Authentication, then the value of the 
+		REMOTE_USER meta-variable MUST be set to the user-ID supplied.
+====================================================================================
+
+====================================================================================
+REQUEST_METHOD
+====================================================================================
+
+====================================================================================
+SCRIPT_NAME = "" | ( "/" path )
+It must be set.
+====================================================================================
+
+====================================================================================
+SERVER_NAME : host header field in case of multiple virtual hosts, or the ip address
+	of the server
+====================================================================================
+
+====================================================================================
+SERVER_PORT
+====================================================================================
+
+====================================================================================
+SERVER_PROTOCOL : 
+
+SERVER_PROTOCOL   = HTTP-Version | "INCLUDED" | extension-version
+HTTP-Version      = "HTTP" "/" 1*digit "." 1*digit
+extension-version = protocol [ "/" 1*digit "." 1*digit ]
+protocol          = token
+====================================================================================
+
+====================================================================================
+SERVER_SOFTWARE : nginy/1
+====================================================================================
+
+====================================================================================
+Protocol-Specific Meta-Variables:
+	-	should not include : 
+		-	Connection
+		-	Content-Type
+		-	Content-Length
+		-	Authorization
+====================================================================================
+
+

@@ -20,8 +20,8 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			Sockt	_sockt;
-			Request	_request;
+			Sockt		_sockt;
+			Request		_request;
 			Response	_response;
 		//================================================================================================
 		//	attributes End
@@ -49,7 +49,6 @@ namespace ft
 		//	Client operations
 		//================================================================================================
 		public:
-			bool	keepAlive() const;
 			/**
 			 * @brief 
 			 * 
@@ -65,6 +64,12 @@ namespace ft
 			 * @return false : the client is not ready to receive requests
 			 */
 			bool	handleResponse();
+
+			bool	keepAlive() const;
+			int		getSocktFd() const;
+			std::string	getIpAddress() const;
+
+			bool	timeOut();
 		//================================================================================================
 		//	Client operations End
 		//================================================================================================

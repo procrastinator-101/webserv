@@ -1,8 +1,9 @@
 #include "Request.hpp"
+#include <sys/select.h>
 
 namespace ft
 {
-	Request::Request() :	_isInChunk(false), _chunkLen(0), _chunkSize(0), _isTrailerSet(false), _isTrailerReached(false),
+	Request::Request() :	_isReceiving(false), _isInChunk(false), _chunkLen(0), _chunkSize(0), _isTrailerSet(false), _isTrailerReached(false),
 							_status(good), _bodySize(0), _buffer(), _isChunked(false), _keepAlive(true), _contentLength(0),
 							_trailerHeaders(), _method(), _path(), _version(), _headers(), _bodyFileName(), _body()
 	{
@@ -32,6 +33,7 @@ namespace ft
 		char	str[BUFFER_SIZE];
 
 		ret = true;
+		_updateRecvState();
 		received = ::recv(fd, str, BUFFER_SIZE, 0);
 		std::cout << "received : " << received << std::endl;
 		if (received < 0)
@@ -40,10 +42,26 @@ namespace ft
 			ret = _parse(str, received);
 		else
 			_keepAlive = false;//should close the connection
+		//end of receiving
+		if (ret)
+			_isReceiving = false;
 		return ret;
 	}
 
-	
+	bool	Request::timeOut() const
+	{
+		if (getTimeStamp(_begin) >= RECV_TIMEOUT)
+			return true;
+		return false;
+	}
+
+	void	Request::_updateRecvState()
+	{
+		if (_isReceiving)
+			return ;
+		_isReceiving = true;
+		gettimeofday(&_begin, 0);
+	}
 
 	bool	Request::_parse(char *str, size_t size)
 	{
@@ -156,11 +174,9 @@ namespace ft
 			if (pos != std::string::npos)
 			{
 				line = strdtok(_buffer, HTTP_NEWLINE);
-				std::cout << "line : [" << line << "]" << std::endl;
 				if (line.empty())
 					return true;
 				ret = _setStatus(_setTrailerHeaders(line));
-				std::cout << "ret : " << ret << std::endl;
 				if (ret)
 					return true;
 			}

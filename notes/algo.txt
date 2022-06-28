@@ -162,4 +162,27 @@ strtok :
 	-	string delimiter, no multiple traversal
 =====================================================================================================
 
+=====================================================================================================
+timeouts:
+	-	connection:
+		-	first recv : initiate clock
+		-	still in recv : check timeout connection
+			-	timeout:
+				-	send 408 Request Timeout
+				-	close connection
+				-	delete client
+			-	else
+				-	continue to receive
+	-	cgi
+		-	execute cgi : initiate clock
+		-	while in nginy, check if cgi timeout
+			-	timeout:
+				-	send : 502 bad gateway
+				-	close connection
+				-	delete client
+=====================================================================================================
+
+
 eot eob cont
+
+dav_methods  PUT DELETE MKCOL COPY MOVE;

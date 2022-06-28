@@ -1,13 +1,19 @@
 #include "stdlib.hpp"
-#include <_ctype.h>
-#include <cstring>
-#include <exception>
-#include <string>
-#include <iostream>
-#include <sys/_types/_size_t.h>
+
 
 namespace ft
 {
+	//return timestamp in milliseconds
+	long	getTimeStamp(timeval start)
+	{
+		long	timestamp;
+		timeval	now;
+
+		gettimeofday(&now, 0);
+		timestamp = (now.tv_sec - start.tv_sec) * 1000000;
+		timestamp = timestamp + now.tv_usec - start.tv_usec;
+		return (timestamp / 1000);
+	}
 	//left trim by delimiters
 	std::string	ltrim(const std::string& str, const std::string& delimiters)
 	{
@@ -158,6 +164,26 @@ namespace ft
 		if (sstream.fail())
 			throw std::overflow_error("hstoz overflow");
 		return ret;
+	}
+
+	std::string	ztoa(size_t n)
+	{
+		std::stringstream	sstream;
+
+		sstream << n;
+		if (sstream.fail())
+			return std::string();
+		return sstream.str();
+	}
+
+	std::string	itoa(int n)
+	{
+		std::stringstream	sstream;
+
+		sstream << n;
+		if (sstream.fail())
+			return std::string();
+		return sstream.str();
 	}
 	
 	std::string	removeTrailingWhiteSpaces(const std::string& str)
@@ -413,6 +439,20 @@ namespace ft
 				return false;
 			}
 			return true;
+		}
+
+		std::string	headerToEnv(const std::string& header)
+		{
+			std::string	ret(header);
+
+			for (size_t i = 0; i < ret.length(); i++)
+			{
+				if (ret[i] == '-')
+					ret[i] = '_';
+				else if (islower(ret[i]))
+					ret[i] = tolower(ret[i]);
+			}
+			return ret;
 		}
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////

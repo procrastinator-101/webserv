@@ -5,14 +5,18 @@
 #include <vector>
 #include <sstream>
 
-// #define NGINY_CONF_PATH	""
-// #define NGINY_VAR_PATH		""
-// #define NGINY_INDEX_PATH	""
-
 #include <grp.h>
 #include <pwd.h>
 #include <unistd.h>
 #include <sys/stat.h>
+
+#include <cstring>
+#include <_ctype.h>
+#include <exception>
+#include <stdexcept>
+#include <iostream>
+
+#include <sys/time.h>
 
 //level 1
 //-------------------------------------------------------
@@ -63,13 +67,19 @@
 
 namespace ft
 {
+	long	getTimeStamp(timeval start);
+
+
 	int	stoi(const std::string& str);
 	bool	isnumber(const std::string &str);
 	size_t	stoz(const std::string& str);
 	size_t	hstoz(const std::string& str);
-	std::string	ft_itoa(int n);
+	std::string	itoa(int n);
+	std::string	ztoa(size_t n);
 
 	char	*ft_strdup(const char *s1);
+
+
 	
 	std::string	trim(const std::string& str, const std::string& delimiters);
 	std::string	ltrim(const std::string& str, const std::string& delimiters);
@@ -106,6 +116,8 @@ namespace ft
 		bool	isQdtext(int c);
 		bool	isObstext(int c);
 		bool	isDelimiter(int c);
+
+		std::string	headerToEnv(const std::string& header);
 	}
 }
 

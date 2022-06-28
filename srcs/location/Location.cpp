@@ -113,7 +113,7 @@ namespace ft
 		else if (key == "return" && streamLine.good())
 			_fetchRedirections(streamLine);
 		else if (key == "cgi" && streamLine.good())
-			_fetchCGI(streamLine);
+			_fetchCgi(streamLine);
 		else
 			throw std::runtime_error("Server:: invalid key {" + key + "}");
 	}
@@ -245,7 +245,7 @@ namespace ft
 		}
 	}
 
-	void	Location::_fetchCGI(std::stringstream& streamLine)
+	void	Location::_fetchCgi(std::stringstream& streamLine)
 	{
 		std::string path;
 		std::string ext;

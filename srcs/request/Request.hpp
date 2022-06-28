@@ -5,6 +5,7 @@
 #include <cstring>
 #include <exception>
 #include <string>
+#include <sys/_types/_timeval.h>
 #include <vector>
 
 #include <map>
@@ -27,6 +28,7 @@
 
 
 # define MAX_REQUEST_LINE_LENGTH	10000
+# define RECV_TIMEOUT				10000
 
 namespace ft
 {
@@ -34,6 +36,7 @@ namespace ft
 	{
 		friend class Client;
 		friend class Response;
+		friend class Cgi;
 
 		enum Status
 		{
@@ -46,6 +49,9 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
+			bool								_isReceiving;
+			timeval								_begin;
+
 			bool								_isInChunk;
 			size_t								_chunkLen;
 			size_t								_chunkSize;
@@ -98,6 +104,8 @@ namespace ft
 			void	reset();
 			bool	receive(int fd);
 			bool	isValid();
+
+			bool	timeOut() const;
 		//================================================================================================
 		//	Request operations End
 		//================================================================================================
@@ -106,6 +114,7 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
+			void	_updateRecvState();
 
 			bool	_endBody();
 			bool	_parse(char *buffer, size_t size);

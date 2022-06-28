@@ -16,7 +16,7 @@ concepts :
 
 
 --------------------------------------------------------------------------------
--	host in the same server with have the same name
+-	host in the same server witch has the same name
 -	get : path is symbolic link ??
 -	add timeout to the connection
 
@@ -29,22 +29,22 @@ add no-blocking to the sockets : done
 add Server header field
 set the header part max length
 
-
+handle sigpipe
 
 parsing:
 	-	request line:
 		-	method : done
-		-	uri
-			-	scheme
-			-	authority
-				-	user info
-				-	host
+		-	uri :
+			-	scheme :
+			-	authority :
+				-	user info :
+				-	host :
 				-	port : done
 			-	path
 			-	query : done
 			-	fragment : done
 		-	version : done
 	-	headers:
-		-	key
-		-	value
+		-	key :
+		-	value :
 --------------------------------------------------------------------------------

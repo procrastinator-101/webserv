@@ -2,6 +2,7 @@
 # define SOCKT_HPP
 
 #include <netdb.h>
+#include <string>
 #include <sys/_types/_socklen_t.h>
 #include <unistd.h>
 #include <netinet/in.h>
@@ -108,6 +109,9 @@ namespace ft
 
 			void	setStatusFlag(int flag);//might throw
 			void	setOption(const int& level, const int& optionName, const void* optionValue);//might throw
+
+			std::string	getPort() const;
+			std::string	getIpAddress() const;
 		//================================================================================================
 		//	Socket operations End
 		//================================================================================================

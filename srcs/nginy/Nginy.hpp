@@ -20,6 +20,8 @@
 #include "../request/Request.hpp"
 #include "../response/Response.hpp"
 
+# define MULTIPLEXING_TIMEOUT	2000	//milliseconds
+
 namespace ft
 {
 	class Nginy
@@ -70,6 +72,10 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
+			void	_manageRequest(Client& client, Server& server);
+			void	_manageResponse(Client& client, Server& server);
+
+			void	_manageTimeouts();
 			void	_parseConfigFile();
 
 			//server block parsing functions

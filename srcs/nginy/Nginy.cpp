@@ -46,12 +46,30 @@ namespace ft
 		_initiateServers();
 		while (1)
 		{
-			// std::cout << _multiplexer << std::endl;
-			candidates = _multiplexer.fetch();
+			_manageTimeouts();
+			candidates = _multiplexer.fetch(MULTIPLEXING_TIMEOUT);
 			if (candidates.empty())
 				continue ;
 			_acceptNewClients(candidates);
 			_serveClients(candidates);
+		}
+	}
+
+	void	Nginy::_manageTimeouts()
+	{
+		std::map<int, Client *>::iterator	it;
+
+		for (size_t i = 0; i < _servers.size(); i++)
+		{
+			for (it = _servers[i]->_clients.begin(); it != _servers[i]->_clients.end(); ++it)
+			{
+				//checks and handles connection and cgi timeouts
+				if (it->second->timeOut())
+				{
+					_multiplexer.del(it->first, aRead);
+					_multiplexer.add(it->first, aWrite);
+				}
+			}
 		}
 	}
 
@@ -80,7 +98,6 @@ namespace ft
 
 	void	Nginy::_serveClients(std::map<int, int>& candidates)
 	{
-		bool	isFinished;
 		std::map<int, int>::iterator		it;
 		std::map<int, Client *>::iterator	cit;
 
@@ -92,42 +109,42 @@ namespace ft
 				if (it == candidates.end())
 					continue;
 				if (it->second & aRead)
-				{
-					isFinished = cit->second->handleRequest(*_servers[i]);
-					std::cout << "isRequestFinished : " << isFinished << std::endl;
-					if (isFinished)
-					{
-						std::cout << cit->second->_request << std::endl;
-						// std::cout << cit->second->_request.
-						cit->second->_request.reset();
-						_multiplexer.del(cit->first, aRead);
-						_multiplexer.add(cit->first, aWrite);
-					}
-				}
+					_manageRequest(*cit->second, *_servers[i]);
 				else if (it->second & aWrite)
-				{
-					isFinished = cit->second->handleResponse();
-					std::cout << "isResponseFinished : " << isFinished << std::endl;
-					if (isFinished)
-					{
-						// std::cout << cit->second->_response << std::endl;
-						_multiplexer.del(cit->first, aWrite);
-						if (cit->second->keepAlive())
-						{
-							cit->second->_response.reset();
-							_multiplexer.add(cit->first, aRead);
-						}
-						else
-						{
-							delete cit->second;
-							_servers[i]->_clients.erase(it->second);
-						}
-						return;//!!!!!!!
-					}
-				}
-				else
-					std::cout << "fd except" << std::endl;
+					_manageResponse(*cit->second, *_servers[i]);
 			}
+		}
+	}
+
+	void	Nginy::_manageRequest(Client& client, Server& server)
+	{
+		bool	isFinished;
+
+		isFinished = client.handleRequest(server);
+		if (isFinished)
+		{
+			_multiplexer.del(client._sockt.fd, aRead);
+			_multiplexer.add(client._sockt.fd, aWrite);
+		}
+	}
+
+	void	Nginy::_manageResponse(Client& client, Server& server)
+	{
+		bool	isFinished;
+
+		isFinished = client.handleResponse();
+		std::cout << "isResponseFinished : " << isFinished << std::endl;
+		if (isFinished)
+		{
+			// std::cout << client._response << std::endl;
+			_multiplexer.del(client._sockt.fd, aWrite);
+			if (client.keepAlive())
+			{
+				client._response.reset();
+				_multiplexer.add(client._sockt.fd, aRead);
+			}
+			else
+				server.delClient(&client);
 		}
 	}
 
