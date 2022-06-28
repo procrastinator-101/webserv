@@ -23,7 +23,10 @@ namespace ft
 
 	Nginy::Nginy(const std::string& configFileName, const char **env) :	_configFileName(configFileName), _env(env), _multiplexer(), _servers()
 	{
-		_parseConfigFile();
+		if(_configFileName.substr(_configFileName.find_last_of(".")) == ".conf")
+			_parseConfigFile();
+		else
+			throw std::runtime_error("Nginy:: invalid config file name");
 	}
 
 	Nginy::Nginy(const Nginy& src)
