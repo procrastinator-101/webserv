@@ -41,6 +41,15 @@ namespace ft
 		return ret;
 	}
 
+	bool	Client::timeOut()
+	{
+		//check connection timeout
+		if (_request.timeOut())
+			return true;
+		//check cgi timeout
+		return  _response.timeOut();
+	}
+
 	void	Client::_prepareResponse()
 	{
 	}
@@ -49,6 +58,8 @@ namespace ft
 	{
 		return _response.send(_sockt.fd);
 	}
+
+
 
 	bool	Client::keepAlive() const
 	{

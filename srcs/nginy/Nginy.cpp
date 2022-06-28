@@ -66,10 +66,11 @@ namespace ft
 				//check connection timeouts
 
 				//check response timeouts : cgi timeouts
-				if (it->second->_response.isTimedOut())
+				if (it->second->isTimedOut())
 				{
-					_servers[i]->delClient(it->second);
-					_multiplexer.add(it->first, aAll);
+					it->second->timeOut();
+					_multiplexer.del(it->first, aRead);
+					_multiplexer.add(it->first, aWrite);
 				}
 			}
 		}
@@ -100,7 +101,6 @@ namespace ft
 
 	void	Nginy::_serveClients(std::map<int, int>& candidates)
 	{
-		bool	isFinished;
 		std::map<int, int>::iterator		it;
 		std::map<int, Client *>::iterator	cit;
 

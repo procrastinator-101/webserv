@@ -10,13 +10,14 @@
 #include <string>
 #include <sys/_types/_timeval.h>
 #include <sys/fcntl.h>
+#include <sys/select.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
 
 namespace ft
 {
-	Cgi::Cgi() :	_sysEnv(0), _host(0), _server(0), _client(0), _env(), _isRunning(false), _begin()
+	Cgi::Cgi() :	_sysEnv(0), _host(0), _server(0), _client(0), _env(), _pid(-1), _isRunning(false), _begin()
 	{
 	}
 
@@ -25,8 +26,10 @@ namespace ft
 	}
 
 	
-	Cgi::Cgi(const char **sysEnv, const Host *host, const Server *server, const Client *client) :	_sysEnv(sysEnv), _host(host), _server(server),
-																									_client(client), _env(), _isRunning(false), _begin()
+	Cgi::Cgi(const char **sysEnv, const Host *host, const Server *server, const Client *client) :	_sysEnv(sysEnv), _host(host),
+																									_server(server), _client(client),
+																									_env(), _pid(-1), _isRunning(false),
+																									_begin()
 	{
 		if (!sysEnv)
 			throw std::invalid_argument("Cgi:: sysEnv is null");
@@ -34,7 +37,7 @@ namespace ft
 	}
 
 	Cgi::Cgi(const Cgi& src) :	_sysEnv(src._sysEnv), _host(src._host), _server(src._server), _client(src._client), _env(src._env), 
-								_isRunning(src._isRunning), _begin(src._begin)
+								_pid(src._pid), _isRunning(src._isRunning), _begin(src._begin)
 	{
 	}
 
@@ -56,6 +59,33 @@ namespace ft
 		return false;
 	}
 
+	int	Cgi::checkTermination()
+	{
+		int	ret;
+		int	status;
+
+		ret = waitpid(_pid, &status, WNOHANG);
+
+		if (!ret)
+		{
+			if (isTimedOut())
+			{
+				kill(_pid, SIGKILL);
+				return 1;
+			}
+			else
+				return 2;
+		}
+		else if (ret < 0)
+		{
+			kill(_pid, SIGKILL);
+			return -1;
+		}
+		else if (!WIFEXITED(status) || WEXITSTATUS(status))
+			return -1;
+		return 2;
+	}
+
 
 	void	Cgi::selectScript()
 	{
@@ -65,17 +95,16 @@ namespace ft
 	int	Cgi::execute(Response& response, Request& request)
 	{
 		int	ret;
-		int	pid;
 		int	fd[2];
-		int	status;
+		
 
 		constructEnv(response, request);
-		pid = fork();
-		if (pid < 0)
+		_pid = fork();
+		if (_pid < 0)
 			return  -1;
 
 		gettimeofday(&_begin, 0);
-		if (!pid)
+		if (!_pid)
 		{
 			fd[0] = open(request._bodyFileName.c_str(), O_RDONLY);
 			if (fd[0] < 0)
@@ -105,10 +134,7 @@ namespace ft
 			close(fd[1]);
 			exit(EXIT_FAILURE);
 		}
-		ret = waitpid(pid, &status, WNOHANG);
-		if (ret == pid && WIFEXITED(status) && !WEXITSTATUS(status))
-			return 1;
-		return 0;
+		return checkTermination();
 	}
 
 	void	Cgi::constructEnv(Response& response, Request& request)
@@ -242,6 +268,37 @@ namespace ft
 		_envList.insert("SERVER_PORT");
 		_envList.insert("SERVER_PROTOCOL");
 		_envList.insert("SERVER_SOFTWARE");
+	}
+
+	void	Cgi::reset()
+	{
+		_sysEnv = 0;
+		_host = 0;
+		_server = 0;
+		_client = 0;
+		_env.clear();
+		_pid = -1;
+		_isRunning = false;
+	}
+
+	void	Cgi::_setHost(const Host *host)
+	{
+		_host = host;
+	}
+
+	void	Cgi::_setSysEnv(const char **sysEnv)
+	{
+		_sysEnv = sysEnv;
+	}
+	
+	void	Cgi::_setServer(const Server *server)
+	{
+		_server = server;
+	}
+	
+	void	Cgi::_setClient(const Client *client)
+	{
+		_client = client;
 	}
 
 	void	Cgi::_deepCopy(const Cgi& src)

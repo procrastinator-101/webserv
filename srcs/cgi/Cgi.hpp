@@ -1,8 +1,11 @@
 #ifndef CGI_HPP
 #define CGI_HPP
 
-#include <set>
+
+#include <signal.h>
 #include <sys/time.h>
+
+#include <set>
 #include <vector>
 #include <string>
 #include <cstddef>
@@ -39,6 +42,7 @@ namespace ft
 			const Server				*_server;
 			const Client				*_client;
 			std::vector<std::string>	_env;
+			int							_pid;
 			bool						_isRunning;
 			timeval						_begin;
 		//================================================================================================
@@ -65,14 +69,36 @@ namespace ft
 		//	Cgi operations
 		//================================================================================================
 		public:
+			void	reset();
 			bool	isTimedOut() const;
 			void	selectScript();
-			int	execute(Response& response, Request& request);
+			int		execute(Response& response, Request& request);
 			void	constructEnv(Response& response, Request& request);
+
+			//returns 0 : normal termination
+			//return -1 : an error occured
+			//returns 1 : timeout
+			//returns 2 : still not done + with not timeout
+			int		checkTermination();
 		//================================================================================================
 		//	Cgi operations End
 		//================================================================================================
 		
+		
+		//================================================================================================
+		//	Cgi Setters
+		//================================================================================================
+		public:
+			void	_setHost(const Host *host);
+			void	_setSysEnv(const char **sysEnv);
+			void	_setServer(const Server *server);
+			void	_setClient(const Client *client);
+		//================================================================================================
+		//	Cgi Setters End
+		//================================================================================================
+		
+
+
 		//================================================================================================
 		//	Private methods
 		//================================================================================================

@@ -20,8 +20,8 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			Sockt	_sockt;
-			Request	_request;
+			Sockt		_sockt;
+			Request		_request;
 			Response	_response;
 		//================================================================================================
 		//	attributes End
@@ -68,6 +68,8 @@ namespace ft
 			bool	keepAlive() const;
 			int		getSocktFd() const;
 			std::string	getIpAddress() const;
+
+			bool	timeOut();
 		//================================================================================================
 		//	Client operations End
 		//================================================================================================

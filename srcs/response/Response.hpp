@@ -40,11 +40,11 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			const char							**_env;
 			size_t								_sent;
 			std::string							_msg;
 
 			Cgi									_cgi;
+			bool								_isReady;
 
 			bool								_keepAlive;
 			size_t								_contentLength;
@@ -80,7 +80,7 @@ namespace ft
 		//	Response operations
 		//================================================================================================
 		public:
-			bool	isTimedOut();
+			bool	timeOut();
 			void	reset();
 			bool	send(int fd);
 			void	build(const std::vector<Host *>& hosts, const Request& request);

@@ -4,17 +4,12 @@
 
 namespace ft
 {
-	Response::Response() :	_env(0), _sent(0), _msg(), _keepAlive(true), _contentLength(0), _version("HTTP/1.1"),
+	Response::Response() :	_sent(0), _msg(), _cgi(), _keepAlive(true), _contentLength(0), _version("HTTP/1.1"),
 							_status(), _headers(), _bodyFileName(), _body()
 	{
 	}
 
 	Response::~Response()
-	{
-	}
-
-	Response::Response(const char **env) :	_env(env), _sent(0), _msg(), _keepAlive(true), _contentLength(0),
-											_version("HTTP/1.1"), _status(), _headers(), _bodyFileName(), _body()
 	{
 	}
 
@@ -31,7 +26,7 @@ namespace ft
 		return *this;
 	}
 
-	bool	Response::isTimedOut()
+	bool	Response::timeOut()
 	{
 		return _cgi.isTimedOut();
 	}
@@ -630,8 +625,14 @@ namespace ft
 	void	Response::reset()
 	{
 		_sent = 0;
-		_contentLength = 0;
 		_msg.clear();
+
+		_cgi.reset();
+		_isReady = false;
+
+		_keepAlive = true;
+		_contentLength = 0;
+
 		_version.clear();
 		_status = 200;
 		_headers.clear();
