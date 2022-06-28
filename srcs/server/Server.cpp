@@ -32,6 +32,25 @@ namespace ft
 		return *this;
 	}
 
+	void	Server::delClient(Client *client)
+	{
+		int fd;
+
+		fd = client->getSocktFd();
+		delete client;
+		_clients.erase(fd);
+	}
+
+	int	Server::getSocktFd() const
+	{
+		return _sockt.fd;
+	}
+
+	std::string	Server::getPortNumber() const
+	{
+		return _sockt.getPort();
+	}
+
 	void	Server::_deepCopy(const Server& src)
 	{
 		_sockt = src._sockt;

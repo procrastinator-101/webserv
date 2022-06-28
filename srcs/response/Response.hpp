@@ -15,6 +15,8 @@
 
 #include "../host/Host.hpp"
 
+#include "../cgi/Cgi.hpp"
+
 #include "../http_status/HttpStatus.hpp"
 
 #include <dirent.h>
@@ -32,6 +34,7 @@ namespace ft
 	class Response
 	{
 		friend class Client;
+		friend class Cgi;
 		
 		//================================================================================================
 		//	attributes
@@ -40,6 +43,8 @@ namespace ft
 			const char							**_env;
 			size_t								_sent;
 			std::string							_msg;
+
+			Cgi									_cgi;
 
 			bool								_keepAlive;
 			size_t								_contentLength;
@@ -75,6 +80,7 @@ namespace ft
 		//	Response operations
 		//================================================================================================
 		public:
+			bool	isTimedOut();
 			void	reset();
 			bool	send(int fd);
 			void	build(const std::vector<Host *>& hosts, const Request& request);
@@ -113,14 +119,6 @@ namespace ft
 
 			void	_buildBadRequestResponse();
 			const Host	*_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name);
-
-
-			void	_cgi(const Request& request, const Server& server);
-			bool	_isCgiEnv(const char *str);
-			void	_constructCgiEnv(const Request& request, const Server& server);
-			void	_setCgiEnv(char **cgiEnv, size_t size, const std::string& key, const std::string& value);
-			void	_initialiseCgiEnvList(std::set<std::string>& cgiEnvList);
-
 
 			void	_deepCopy(const Response& src);
 		//================================================================================================

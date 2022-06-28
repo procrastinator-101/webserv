@@ -55,6 +55,16 @@ namespace ft
 		return _response._keepAlive;
 	}
 
+	int		Client::getSocktFd() const
+	{
+		return _sockt.fd;
+	}
+
+	std::string	Client::getIpAddress() const
+	{
+		return _sockt.getIpAddress();
+	}
+
 	void	Client::_deepCopy(const Client& src)
 	{
 		(void)src;

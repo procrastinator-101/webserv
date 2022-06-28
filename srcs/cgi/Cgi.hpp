@@ -1,96 +1,97 @@
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#ifndef CGI_HPP
+#define CGI_HPP
 
-#include "../sockets/Sockt.hpp"
-#include "../request/Request.hpp"
-#include "../response/Response.hpp"
+#include <set>
+#include <sys/time.h>
+#include <vector>
+#include <string>
 #include <cstddef>
+#include <stdexcept>
 
-#define HTTP_NEWLINE "\r\n"
+# define CGI_EXEC_TIMEOUT	3000	//milliseconds
 
 namespace ft
 {
+	class Host;
 	class Server;
+	class Client;
+	class Request;
+	class Response;
 
-	class Client
+	class Cgi
 	{
-		friend class Nginy;
+		//================================================================================================
+		//	static attributes
+		//================================================================================================
+		private:
+			static std::set<std::string>	_envList;
+			static std::set<std::string>	_httpForbiddenEnvHeaders;
+		//================================================================================================
+		//	static attributes End
+		//================================================================================================
 
 		//================================================================================================
 		//	attributes
 		//================================================================================================
 		private:
-			Sockt	_sockt;
-			Request	_request;
-			Response	_response;
+			const char					**_sysEnv;
+			const Host					*_host;
+			const Server				*_server;
+			const Client				*_client;
+			std::vector<std::string>	_env;
+			bool						_isRunning;
+			timeval						_begin;
 		//================================================================================================
 		//	attributes End
 		//================================================================================================
 
-
 		//================================================================================================
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
-		public:
-			~Client();
-
-			Client(const char **env);
-
 		private:
-			Client();
-			Client(const Client& src);
-			Client	&operator=(const Client& rop);
+			Cgi	&operator=(const Cgi& rhs);//delete
+
+		public:
+			Cgi();
+			~Cgi();
+			
+			Cgi(const char **sysEnv, const Host *host, const Server *server, const Client *client);
+			Cgi(const Cgi& src);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================
-
-
+		
 		//================================================================================================
-		//	Client operations
+		//	Cgi operations
 		//================================================================================================
 		public:
-			/**
-			 * @brief 
-			 * 
-			 * @return true : the client is ready(request handled completely) to send the response
-			 * @return false : the client is not ready to send the response
-			 */
-			bool	handleRequest(const Server& server);
-
-			/**
-			 * @brief : takes the server that the client is interracting with
-			 * 
-			 * @return true : the client is ready(reponse completely sent) to receive new requests
-			 * @return false : the client is not ready to receive requests
-			 */
-			bool	handleResponse();
-
-			bool	keepAlive() const;
-			int		getSocktFd() const;
-			std::string	getIpAddress() const;
+			bool	isTimedOut() const;
+			void	selectScript();
+			int	execute(Response& response, Request& request);
+			void	constructEnv(Response& response, Request& request);
 		//================================================================================================
-		//	Client operations End
+		//	Cgi operations End
 		//================================================================================================
-
+		
 		//================================================================================================
-		//	private methods
+		//	Private methods
 		//================================================================================================
 		private:
-			void	_deepCopy(const Client& src);
+			void	_initialiseHttpForbiddenEnvHeaders();
+			void	_setHttpEnvHeaders(const Request& request);
+			bool	_isForbiddenHttpHeaderEnv(const std::string& header);
 
-			void	_prepareResponse();
+			bool	_isCgiEnv(const std::string& str);
+
+			void	_initialiseEnv();
+			void	_initialiseEnvList();
+
+			void	_deepCopy(const Cgi& src);
 		//================================================================================================
-		//	private methods End
+		//	Private methods End
 		//================================================================================================
 
-		//================================================================================================
-		//	overload << for Client
-		//================================================================================================
-		public:
-			friend std::ostream	&operator<<(std::ostream& ostr, const Client& client);
-		//================================================================================================
-		//	overload << for Client End
-		//================================================================================================
+
 	};
 }
 

@@ -34,6 +34,7 @@ namespace ft
 	{
 		friend class Client;
 		friend class Response;
+		friend class Cgi;
 
 		enum Status
 		{

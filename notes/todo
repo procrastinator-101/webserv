@@ -34,17 +34,17 @@ set the header part max length
 parsing:
 	-	request line:
 		-	method : done
-		-	uri
-			-	scheme
-			-	authority
-				-	user info
-				-	host
+		-	uri :
+			-	scheme :
+			-	authority :
+				-	user info :
+				-	host :
 				-	port : done
 			-	path
 			-	query : done
 			-	fragment : done
 		-	version : done
 	-	headers:
-		-	key
-		-	value
+		-	key :
+		-	value :
 --------------------------------------------------------------------------------

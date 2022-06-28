@@ -156,11 +156,9 @@ namespace ft
 			if (pos != std::string::npos)
 			{
 				line = strdtok(_buffer, HTTP_NEWLINE);
-				std::cout << "line : [" << line << "]" << std::endl;
 				if (line.empty())
 					return true;
 				ret = _setStatus(_setTrailerHeaders(line));
-				std::cout << "ret : " << ret << std::endl;
 				if (ret)
 					return true;
 			}

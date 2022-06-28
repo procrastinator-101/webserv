@@ -31,126 +31,9 @@ namespace ft
 		return *this;
 	}
 
-	void	Response::_cgi(const Request& request, const Server& server)
+	bool	Response::isTimedOut()
 	{
-		size_t	size;
-		char	**cgiEnv;
-
-		size = 0;
-		while (_env[size])
-			size++;
-		cgiEnv = new char*[size + CGI_ENV_SIZE + 1];
-		for (size_t i = 0; i < size; i++)
-			cgiEnv[i] = strdup(_env[i]);
-		_constructCgiEnv(request, server);
-	}
-
-	void	Response::_constructCgiEnv(const Request& request, const Server& server)
-	{
-		size_t	size;
-		char	**cgiEnv;
-		std::map<std::string, std::string>::const_iterator	it;
-
-		size = 0;
-		while (_env[size])
-			size++;
-		cgiEnv = new char*[size + CGI_ENV_SIZE + 1];
-		for (size_t i = 0; i < size; i++)
-			cgiEnv[i] = ft_strdup(_env[i]);
-		
-		//CONTENT_TYPE
-		it = request._headers.find("CONTENT_TYPE");
-		if (it != request._headers.end())
-			_setCgiEnv(cgiEnv, size++, "CONTENT_TYPE", it->second);
-		else
-			_setCgiEnv(cgiEnv, size++, "CONTENT_TYPE", "text/plain");
-		
-		//CONTENT_LENGTH
-		_setCgiEnv(cgiEnv, size++, "CONTENT_LENGTH", ft_itoa(_contentLength));
-
-		//HTTP_COOKIE
-
-		//HTTP_USER_AGENT
-		it = request._headers.find("HTTP_USER_AGENT");
-		if (it != request._headers.end())
-			_setCgiEnv(cgiEnv, size++, "HTTP_USER_AGENT", it->second);
-		else
-			_setCgiEnv(cgiEnv, size++, "HTTP_USER_AGENT", "");
-
-
-		//PATH_INFO
-
-		//QUERY_STRING
-
-		//REMOTE_ADDR
-
-		//REMOTE_HOST
-
-		//REQUEST_METHOD
-		_setCgiEnv(cgiEnv, size++, "REQUEST_METHOD", request._method);
-
-		//SCRIPT_FILENAME
-
-		//SCRIPT_NAME
-
-		//SERVER_NAME
-		(void)server;
-
-		//SERVER_SOFTWARE
-		_setCgiEnv(cgiEnv, size++, "SERVER_SOFTWARE", "Nginy");
-	}
-
-	void	Response::_setCgiEnv(char **cgiEnv, size_t size, const std::string& key, const std::string& value)
-	{
-		char		*ptr;
-		std::string	tmp;
-
-		for (size_t i = 0; i < size; i++)
-		{
-			ptr = strstr(cgiEnv[i], "=");
-			if (ptr)
-				tmp.assign(cgiEnv[i], ptr - cgiEnv[i]);
-			else
-				tmp = cgiEnv[i];
-			if (key == value)
-			{
-				delete [] cgiEnv[i];
-				cgiEnv[i] = ft_strdup((key + "=" + value).c_str());
-			}
-		}
-	}
-
-	bool	Response::_isCgiEnv(const char *str)
-	{
-		std::string	key;
-		const char	*ptr;
-		static std::set<std::string>	cgiEnvList;
-
-		if (cgiEnvList.empty())
-			_initialiseCgiEnvList(cgiEnvList);
-		ptr = strstr(str, "=");
-		if (!ptr)
-			key = str;
-		else
-			key.assign(str, ptr - str);
-		return cgiEnvList.find(key) != cgiEnvList.end();
-	}
-
-	void	Response::_initialiseCgiEnvList(std::set<std::string>& cgiEnvList)
-	{
-		cgiEnvList.insert("CONTENT_TYPE");
-		cgiEnvList.insert("CONTENT_LENGTH");
-		cgiEnvList.insert("HTTP_COOKIE");
-		cgiEnvList.insert("HTTP_USER_AGENT");
-		cgiEnvList.insert("PATH_INFO");
-		cgiEnvList.insert("QUERY_STRING");
-		cgiEnvList.insert("REMOTE_ADDR");
-		cgiEnvList.insert("REMOTE_HOST");
-		cgiEnvList.insert("REQUEST_METHOD");
-		cgiEnvList.insert("SCRIPT_FILENAME");
-		cgiEnvList.insert("SCRIPT_NAME");
-		cgiEnvList.insert("SERVER_NAME");
-		cgiEnvList.insert("SERVER_SOFTWARE");
+		return _cgi.isTimedOut();
 	}
 
 	bool	Response::send(int fd)
@@ -215,6 +98,7 @@ namespace ft
 		// 	_buildBadRequestResponse();
 		// 	return ;
 		// }
+		// _cgi.setup(servers, host, this);
 		hostName = request._headers.find("Host");
 		// if (hostName == request._headers.end())
 		// {
