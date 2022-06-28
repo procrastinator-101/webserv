@@ -20,6 +20,14 @@ CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
 SRCS_PATH = srcs
 
+# cgi
+#================================================================================
+CGI_PATH = $(SRCS_PATH)/cgi
+
+CGI_SRC = $(CGI_PATH)/Cgi.cpp
+CGI_HDR = $(CGI_PATH)/Cgi.hpp
+#================================================================================
+
 # client
 #================================================================================
 CLIENT_PATH = $(SRCS_PATH)/client
@@ -132,12 +140,13 @@ INCLUDE_PARAMS = $(NGINY_CONF_PATH_INC) $(NGINY_VAR_PATH_INC) $(NGINY_INDEX_PATH
 #--------------------------------------------------------------------------------
 
 
-SRC =	$(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HOST_SRC) $(HTTP_STATUS_SRC) \
+SRC =	$(SRCS_PATH)/main.cpp $(CGI_SRC) $(CLIENT_SRC) $(HOST_SRC) $(HTTP_STATUS_SRC) \
 		$(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) \
 		$(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
 
-HDR =	$(CLIENT_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) $(MULTIPLEX_HDR) \
-		$(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR) $(STDLIB_HDR)
+HDR =	$(CGI_HDR) $(CLIENT_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) \
+		$(MULTIPLEX_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) \
+		$(SOCKT_HDR) $(STDLIB_HDR)
 
 
 INC = $(INCLUDE_PARAMS:%=-D%)

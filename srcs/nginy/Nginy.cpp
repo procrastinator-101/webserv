@@ -159,11 +159,12 @@ namespace ft
 				continue;
 			if (it->second & aRead)
 			{
-				Client	*client = new Client(_env);
+				Client	*client = new Client;
 
 				try 
 				{
 					client->_sockt = _servers[i]->_sockt.accept();
+					(void)_env;//!!!!!!!!!!!!!
 					_servers[i]->_clients[client->_sockt.fd] = client;
 					_multiplexer.add(client->_sockt.fd, aRead);
 				}

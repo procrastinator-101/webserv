@@ -17,6 +17,8 @@
 
 namespace ft
 {
+	std::set<std::string>	Cgi::_envList;
+	std::set<std::string>	Cgi::_httpForbiddenEnvHeaders;
 	Cgi::Cgi() :	_sysEnv(0), _host(0), _server(0), _client(0), _env(), _pid(-1), _isRunning(false), _begin()
 	{
 	}
@@ -98,7 +100,7 @@ namespace ft
 		int	fd[2];
 		
 
-		constructEnv(response, request);
+		constructEnv(request);
 		_pid = fork();
 		if (_pid < 0)
 			return  -1;
@@ -137,7 +139,7 @@ namespace ft
 		return timeOut();
 	}
 
-	void	Cgi::constructEnv(Response& response, Request& request)
+	void	Cgi::constructEnv(Request& request)
 	{
 		std::map<std::string, std::string>::iterator	it;
 		//clean cgi envs from env

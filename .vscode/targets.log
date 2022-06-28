@@ -8,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Tue Jun 28 11:13:48 2022
+# Make data base, printed on Tue Jun 28 20:51:49 2022
 
 # Variables
 
@@ -16,24 +16,23 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
-# makefile (from `Makefile', line 104)
+# makefile (from `Makefile', line 112)
 SOCKT_HDR = $(SOCKT_PATH)/ClientSockt.hpp $(SOCKT_PATH)/ServerSockt.hpp $(SOCKT_PATH)/Sockt.hpp
- 
-# makefile (from `Makefile', line 145)
+# makefile (from `Makefile', line 154)
 OBJ = $(SRC:.cpp=.o)
-# makefile (from `Makefile', line 68)
+# makefile (from `Makefile', line 76)
 NGINY_SRC = $(NGINY_PATH)/Nginy.cpp
-# makefile (from `Makefile', line 135)
-SRC = $(SRCS_PATH)/main.cpp $(CLIENT_SRC) $(HOST_SRC) $(HTTP_STATUS_SRC) $(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) $(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
+# makefile (from `Makefile', line 143)
+SRC = $(SRCS_PATH)/main.cpp $(CGI_SRC) $(CLIENT_SRC) $(HOST_SRC) $(HTTP_STATUS_SRC) $(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) $(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
 # environment
 VSCODE_LOG_NATIVE = false
-# makefile (from `Makefile', line 128)
+# makefile (from `Makefile', line 136)
 NGINY_VAR_PATH_INC = NGINY_VAR_PATH=\"$(_NGINY_VAR_PATH)\"
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
-# makefile (from `Makefile', line 74)
+# makefile (from `Makefile', line 82)
 REQUEST_PATH = $(SRCS_PATH)/request
-# makefile (from `Makefile', line 59)
+# makefile (from `Makefile', line 67)
 MULTIPLEX_SRC = $(MULTIPLEX_PATH)/Selecter.cpp
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
@@ -43,53 +42,58 @@ MULTIPLEX_SRC = $(MULTIPLEX_PATH)/Selecter.cpp
 CURDIR := /Users/yarroubi/Desktop/webserv
 # makefile
 SHELL = /bin/sh
-# makefile (from `Makefile', line 120)
+ 
+# makefile (from `Makefile', line 128)
 ROOT_DIR := /Users/yarroubi/Desktop/webserv
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
-# makefile (from `Makefile', line 82)
+# makefile (from `Makefile', line 90)
 RESPONSE_PATH = $(SRCS_PATH)/response
 # environment
 _ = /usr/bin/make
+# makefile (from `Makefile', line 28)
+CGI_HDR = $(CGI_PATH)/Cgi.hpp
 # makefile (from `Makefile', line 18)
 CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
-# makefile (from `Makefile', line 49)
+# makefile (from `Makefile', line 57)
 LOCATION_PATH = $(SRCS_PATH)/location
-# makefile (from `Makefile', line 114)
+# makefile (from `Makefile', line 122)
 STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
-# makefile (from `Makefile', line 98)
+# makefile (from `Makefile', line 106)
 SOCKT_PATH = $(SRCS_PATH)/sockets
 # makefile (from `Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
-# makefile (from `Makefile', line 36)
+# makefile (from `Makefile', line 44)
 HOST_HDR = $(HOST_PATH)/Host.hpp
-# makefile (from `Makefile', line 84)
+# makefile (from `Makefile', line 92)
 RESPONSE_SRC = $(RESPONSE_PATH)/Response.cpp
-# makefile (from `Makefile', line 93)
+# makefile (from `Makefile', line 101)
 SERVER_HDR = $(SERVER_PATH)/Server.hpp
 # environment
 VSCODE_VERBOSE_LOGGING = true
-# makefile (from `Makefile', line 122)
+# makefile (from `Makefile', line 130)
 _NGINY_CONF_PATH = $(ROOT_DIR)/confFiles/default.conf
+# makefile (from `Makefile', line 25)
+CGI_PATH = $(SRCS_PATH)/cgi
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-73970010-c316-4c31-8ba7-84c154886018.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-62b1e8c3-2a17-4bbc-807a-bb72f1404ac1.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.HpAp6KfYgG/Render
-# makefile (from `Makefile', line 111)
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.iIv8d980qw/Render
+# makefile (from `Makefile', line 119)
 STDLIB_PATH = $(SRCS_PATH)/stdlib
 # environment
 PATH = /Users/yarroubi/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki
-# makefile (from `Makefile', line 44)
+# makefile (from `Makefile', line 52)
 HTTP_STATUS_HDR = $(HTTP_STATUS_PATH)/HttpStatus.hpp
-# makefile (from `Makefile', line 33)
+# makefile (from `Makefile', line 41)
 HOST_PATH = $(SRCS_PATH)/host
-# makefile (from `Makefile', line 27)
+# makefile (from `Makefile', line 35)
 CLIENT_SRC = $(CLIENT_PATH)/Client.cpp
-# makefile (from `Makefile', line 90)
+# makefile (from `Makefile', line 98)
 SERVER_PATH = $(SRCS_PATH)/server
-# makefile (from `Makefile', line 127)
+# makefile (from `Makefile', line 135)
 NGINY_CONF_PATH_INC = NGINY_CONF_PATH=\"$(_NGINY_CONF_PATH)\"
 # environment
 VSCODE_LOG_STACK = false
@@ -97,10 +101,10 @@ VSCODE_LOG_STACK = false
 ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
-# makefile (from `Makefile', line 41)
+# makefile (from `Makefile', line 49)
 HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.8lmm79VNKT/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.1ZJiccmGnD/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -113,7 +117,7 @@ VSCODE_PIPE_LOGGING = true
 PWD = /Users/yarroubi/Desktop/webserv
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
-# makefile (from `Makefile', line 69)
+# makefile (from `Makefile', line 77)
 NGINY_HDR = $(NGINY_PATH)/Nginy.hpp
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
@@ -121,7 +125,7 @@ VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 HOME = /Users/yarroubi
 # default
 MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
-# makefile (from `Makefile', line 76)
+# makefile (from `Makefile', line 84)
 REQUEST_SRC = $(REQUEST_PATH)/Request.cpp
 # environment
 VSCODE_CODE_CACHE_PATH = /Users/yarroubi/Library/Application Support/Code/CachedData/4af164ea3a06f701fe3e89a2bcbb421d2026b68f
@@ -129,15 +133,15 @@ VSCODE_CODE_CACHE_PATH = /Users/yarroubi/Library/Application Support/Code/Cached
 LOGNAME = yarroubi
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
-# makefile (from `Makefile', line 60)
+# makefile (from `Makefile', line 68)
 MULTIPLEX_HDR = $(MULTIPLEX_PATH)/Action.hpp $(MULTIPLEX_PATH)/Selecter.hpp
-# makefile (from `Makefile', line 100)
+# makefile (from `Makefile', line 108)
 SOCKT_SRC = $(SOCKT_PATH)/ClientSockt.cpp $(SOCKT_PATH)/ServerSockt.cpp $(SOCKT_PATH)/Sockt.cpp
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
-# makefile (from `Makefile', line 51)
+# makefile (from `Makefile', line 59)
 LOCATION_SRC = $(LOCATION_PATH)/Location.cpp
 # environment
 XPC_FLAGS = 0x0
@@ -149,33 +153,35 @@ MAKECMDGOALS := all
 HOMEBREW_CACHE = /tmp/yarroubi/Homebrew/Caches
 # environment
 SHLVL = 1
-# makefile (from `Makefile', line 66)
+# makefile (from `Makefile', line 74)
 NGINY_PATH = $(SRCS_PATH)/nginy
 # makefile (from `Makefile', line 17)
 CC = g++
 # default
 MAKE_VERSION := 3.81
-# makefile (from `Makefile', line 85)
+# makefile (from `Makefile', line 93)
 RESPONSE_HDR = $(RESPONSE_PATH)/Response.hpp
 # environment
 USER = yarroubi
 # makefile
 .DEFAULT_GOAL := all
-# makefile (from `Makefile', line 57)
+# makefile (from `Makefile', line 65)
 MULTIPLEX_PATH = $(SRCS_PATH)/multiplex
 # makefile (from `Makefile', line 15)
 NAME = webserv
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
-# makefile (from `Makefile', line 113)
+# makefile (from `Makefile', line 27)
+CGI_SRC = $(CGI_PATH)/Cgi.cpp
+# makefile (from `Makefile', line 121)
 STDLIB_SRC = $(STDLIB_PATH)/stdlib.cpp
 # default
 MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
-# makefile (from `Makefile', line 143)
+# makefile (from `Makefile', line 152)
 INC = $(INCLUDE_PARAMS:%=-D%)
-# makefile (from `Makefile', line 124)
+# makefile (from `Makefile', line 132)
 _NGINY_INDEX_PATH = $(ROOT_DIR)/indexes
-# makefile (from `Makefile', line 35)
+# makefile (from `Makefile', line 43)
 HOST_SRC = $(HOST_PATH)/Host.cpp
 # default
 .VARIABLES := 
@@ -187,27 +193,27 @@ TMPDIR = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/
 VSCODE_IPC_HOOK = /Users/yarroubi/Library/Application Support/Code/1.68.0-main.sock
 # makefile
 MAKEFLAGS = Rrqp
-# makefile (from `Makefile', line 92)
+# makefile (from `Makefile', line 100)
 SERVER_SRC = $(SERVER_PATH)/Server.cpp
-# makefile (from `Makefile', line 28)
+# makefile (from `Makefile', line 36)
 CLIENT_HDR = $(CLIENT_PATH)/Client.hpp
 # environment
 MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000002.Electron
+XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000003.Electron
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
 +F = $(notdir $+)
-# makefile (from `Makefile', line 129)
+# makefile (from `Makefile', line 137)
 NGINY_INDEX_PATH_INC = NGINY_INDEX_PATH=\"$(_NGINY_INDEX_PATH)\"
 # environment
 __CF_USER_TEXT_ENCODING = 0x5D8:0x0:0x0
 # environment
 COMMAND_MODE = unix2003
-# makefile (from `Makefile', line 43)
+# makefile (from `Makefile', line 51)
 HTTP_STATUS_SRC = $(HTTP_STATUS_PATH)/HttpStatus.cpp
 # default
 MAKEFILES := 
@@ -215,9 +221,9 @@ MAKEFILES :=
 <F = $(notdir $<)
 # makefile (from `Makefile', line 21)
 SRCS_PATH = srcs
-# makefile (from `Makefile', line 131)
+# makefile (from `Makefile', line 139)
 INCLUDE_PARAMS = $(NGINY_CONF_PATH_INC) $(NGINY_VAR_PATH_INC) $(NGINY_INDEX_PATH_INC)
-# makefile (from `Makefile', line 25)
+# makefile (from `Makefile', line 33)
 CLIENT_PATH = $(SRCS_PATH)/client
 # environment
 LC_ALL = C
@@ -229,22 +235,22 @@ SECURITYSESSIONID = 186a8
 SUFFIXES := 
 # default
 .INCLUDE_DIRS = /usr/local/include
-# makefile (from `Makefile', line 77)
+# makefile (from `Makefile', line 85)
 REQUEST_HDR = $(REQUEST_PATH)/Request.hpp
-# makefile (from `Makefile', line 139)
-HDR = $(CLIENT_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) $(MULTIPLEX_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR) $(STDLIB_HDR)
+# makefile (from `Makefile', line 147)
+HDR = $(CGI_HDR) $(CLIENT_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) $(MULTIPLEX_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR) $(STDLIB_HDR)
 # environment
 MAKELEVEL := 0
-# makefile (from `Makefile', line 123)
+# makefile (from `Makefile', line 131)
 _NGINY_VAR_PATH = /goinfre/$$USER/var/nginy
 # environment
 LANG = C
 # environment
-VSCODE_PID = 82734
-# makefile (from `Makefile', line 52)
+VSCODE_PID = 3706
+# makefile (from `Makefile', line 60)
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 # variable set hash-table stats:
-# Load=115/1024=11%, Rehash=0, Collisions=10/226=4%
+# Load=118/1024=12%, Rehash=0, Collisions=10/235=4%
 
 # Pattern-specific Variable Values
 
@@ -252,14 +258,14 @@ LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 
 # Directories
 
-# . (device 16777227, inode 395979): 23 files, no impossibilities.
+# . (device 16777227, inode 395979): 22 files, no impossibilities.
 
-# 23 files, no impossibilities in 1 directories.
+# 22 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 %.o: %.cpp
-#  commands to execute (from `Makefile', line 153):
+#  commands to execute (from `Makefile', line 162):
 	@$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 	
 
@@ -281,7 +287,6 @@ srcs/location/Location.hpp:
 
 all: webserv
 #  Command-line target.
- 
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
@@ -289,14 +294,15 @@ all: webserv
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/3=0%
 
-webserv: NGINX_PATHS srcs/main.cpp srcs/client/Client.cpp srcs/host/Host.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockets/ClientSockt.cpp srcs/sockets/ServerSockt.cpp srcs/sockets/Sockt.cpp srcs/stdlib/stdlib.cpp srcs/client/Client.hpp srcs/host/Host.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/multiplex/Action.hpp srcs/multiplex/Selecter.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockets/ClientSockt.hpp srcs/sockets/ServerSockt.hpp srcs/sockets/Sockt.hpp srcs/stdlib/stdlib.hpp
+ 
+webserv: NGINX_PATHS srcs/main.cpp srcs/cgi/Cgi.cpp srcs/client/Client.cpp srcs/host/Host.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockets/ClientSockt.cpp srcs/sockets/ServerSockt.cpp srcs/sockets/Sockt.cpp srcs/stdlib/stdlib.cpp srcs/cgi/Cgi.hpp srcs/client/Client.hpp srcs/host/Host.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/multiplex/Action.hpp srcs/multiplex/Selecter.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockets/ClientSockt.hpp srcs/sockets/ServerSockt.hpp srcs/sockets/Sockt.hpp srcs/stdlib/stdlib.hpp
 #  Implicit rule search has not been done.
-#  Last modified 2022-06-27 18:37:39
+#  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/3=0%
-#  commands to execute (from `Makefile', line 150):
+#  commands to execute (from `Makefile', line 159):
 	@$(CC) $(CFLAGS) $(INC) -o $@ $(SRC)
 	
 
@@ -330,9 +336,15 @@ srcs/request/Request.cpp:
 #  File has not been updated.
 
 # Not a target:
+srcs/cgi/Cgi.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-27 16:58:43
+#  Last modified 2022-06-28 20:51:24
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -363,6 +375,12 @@ srcs/request/Request.hpp:
 #  File has not been updated.
 
 # Not a target:
+srcs/cgi/Cgi.hpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 srcs/nginy/Nginy.hpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -379,7 +397,7 @@ fclean: clean
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 164):
+#  commands to execute (from `Makefile', line 173):
 	@rm -rf $(NAME)
 	
 
@@ -438,7 +456,7 @@ NGINX_PATHS:
 # ? := 
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/11=9%
-#  commands to execute (from `Makefile', line 157):
+#  commands to execute (from `Makefile', line 166):
 	@mkdir -p $(_NGINY_VAR_PATH)
 	
 
@@ -465,7 +483,7 @@ clean:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 161):
+#  commands to execute (from `Makefile', line 170):
 	@rm -rf $(OBJ)
 	
 
@@ -536,7 +554,7 @@ srcs/response/Response.cpp:
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=38/1024=4%, Rehash=0, Collisions=0/89=0%
+# Load=40/1024=4%, Rehash=0, Collisions=0/93=0%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -548,6 +566,6 @@ srcs/response/Response.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Tue Jun 28 11:13:48 2022
+# Finished Make data base on Tue Jun 28 20:51:49 2022
 
  

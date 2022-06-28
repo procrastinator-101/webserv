@@ -88,7 +88,7 @@ namespace ft
 			bool	isTimedOut() const;
 			void	selectScript();
 			int		execute(Response& response, Request& request);
-			void	constructEnv(Response& response, Request& request);
+			void	constructEnv(Request& request);
 
 			//returns 0 : normal termination
 			//return -1 : an error occured
