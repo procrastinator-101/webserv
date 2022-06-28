@@ -32,12 +32,10 @@ namespace ft
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
 		public:
+			Client();
 			~Client();
 
-			Client(const char **env);
-
 		private:
-			Client();
 			Client(const Client& src);
 			Client	&operator=(const Client& rop);
 		//================================================================================================

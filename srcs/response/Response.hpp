@@ -65,10 +65,9 @@ namespace ft
 		public:
 			~Response();
 
-			Response(const char **env);
+			Response();
 
 		private:
-			Response();
 			Response(const Response& src);
 			Response	&operator=(const Response& rop);
 		//================================================================================================

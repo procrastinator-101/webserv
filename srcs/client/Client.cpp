@@ -12,10 +12,6 @@ namespace ft
 	{
 		_sockt.close();
 	}
-
-	Client::Client(const char **env) :	_sockt(), _request(), _response(env)
-	{
-	}
 	
 	Client::Client(const Client& src)
 	{
