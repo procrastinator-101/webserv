@@ -5,6 +5,9 @@
 
 #include "../client/Client.hpp"
 #include "../server/Server.hpp"
+#include <new>
+#include <sys/_types/_size_t.h>
+#include <unistd.h>
 
 
 namespace ft
@@ -81,13 +84,7 @@ namespace ft
 		return cSucces;
 	}
 
-
-	void	Cgi::selectScript()
-	{
-
-	}
-
-	int	Cgi::execute(Response& response, Request& request)
+	Cgi::Status	Cgi::execute(Response& response, Request& request)
 	{
 		int	ret;
 		int	fd[2];
@@ -96,7 +93,7 @@ namespace ft
 		constructEnv(request);
 		_pid = fork();
 		if (_pid < 0)
-			return  -1;
+			return  cError;
 
 		gettimeofday(&_begin, 0);
 		if (!_pid)
@@ -130,6 +127,27 @@ namespace ft
 			exit(EXIT_FAILURE);
 		}
 		return timeOut();
+	}
+
+	int	Cgi::_runScript(int fd[2])
+	{
+		char **env;
+		char **args;
+
+		env = new(std::nothrow) char *[_env.size() + 1];
+		if (!env)
+		{
+			close(fd[0]);
+			close(fd[1]);
+			exit(EXIT_FAILURE);
+		}
+		args = new(std::nothrow) char *[2];
+		for (size_t i = 0; i < _env.size(); i++)
+			env[i] = _env[i].c_str();
+		env[_env.size()] = 0;
+		args[0] = _scriptName.c_str();
+		args[1] = 0;
+		execve(_scriptName.c_str(), args, env);
 	}
 
 	void	Cgi::constructEnv(Request& request)
@@ -283,6 +301,7 @@ namespace ft
 
 	void	Cgi::setScriptName(const std::string& scriptName)
 	{
+		_scriptName = scriptName;
 		_env.push_back("SCRIPT_NAME=" + scriptName);
 	}
 

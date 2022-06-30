@@ -34,9 +34,7 @@ namespace ft
 		if (ret == Cgi::cTimeout)
 			return true;
 		else if (ret == Cgi::cError)
-		{
-			//build internal server error
-		}
+			_constructErrorResponse(, 500);
 		return false;
 	}
 
@@ -84,11 +82,16 @@ namespace ft
 	{
 		std::map<int, std::string>::const_iterator	it;
 
-		it = host->_errorPages.find(code);
-		if (it == host->_errorPages.end())
-			_bodyFileName = "error_pages/" + std::to_string(code) + ".html";
-		else
-			_bodyFileName = it->second;
+		if (host)
+		{
+			it = host->_errorPages.find(code);
+			if (it != host->_errorPages.end())
+			{
+				_bodyFileName = it->second;
+				return ;
+			}
+		}
+		_bodyFileName = NGINY_ERROR_PAGES_PATH + "/" + std::to_string(code) + ".html";
 	}
 
 	void	Response::build(const std::vector<Host *>& hosts, const Request& request)
@@ -96,39 +99,48 @@ namespace ft
 		const Host											*host;
 		std::map<std::string, std::string>::const_iterator	hostName;
 
-		std::cout << "build response" << std::endl;
-		// if (request._bodySize > request._contentLength)
-		// {
-		// 	_buildBadRequestResponse();
-		// 	return ;
-		// }
-		// _cgi.setup(servers, host, this);
-		hostName = request._headers.find("Host");
-		// if (hostName == request._headers.end())
-		// {
-		// 	_buildBadRequestResponse();
-		// 	return ;
-		// }
 		host = _fetchTargetedHost(hosts, hostName->second);
-		_cgi.setHost(host);
-		// _prepare(host, request);
-		// if (_status.code != 200 && _bodyFileName.empty())
-		// 	getFileFromStatus(host, _status.code);
-		//temporary
-		_bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
-		_status = 200;
-		//end temporary
-		//check if body exists
-		_keepAlive = request._keepAlive;
+		if (request.status() != Request::good)
+			_constructErrorResponse(host, 400);
+		else
+		{
+			_cgi.setHost(host);
+
+			_constructHead(request);
+
+			// _prepare(host, request);
+
+			//temporary
+			_bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
+			_status = 200;
+			//end temporary
+		}
 		_contentLength = getFileSize(_bodyFileName);
-		_version = request._version;
+			
 		_constructStatusLine();
-		_constructHeaders(request);
-		_constructBody(request);
+		_constructHeaders();
+		_constructBody();
 	}
 
-	void	Response::_buildBadRequestResponse()
+	void	Response::_constructErrorResponse(const Host *host, const HttpStatus& status)
 	{
+		_status = status;
+		getFileFromStatus(host, _status.code);
+	}
+
+	void	Response::_constructHead(const Request& request)
+	{
+		_headers = request._headers;
+
+		//remove request headers related to content framing
+		_headers.erase("Content-Type");
+		_headers.erase("Content-Length");
+		_headers.erase("Transfer-Encoding");
+		_headers.erase("Host");
+		_headers.erase("Trailer");
+
+		_keepAlive = request._keepAlive;
+		_version = request._version;
 	}
 
 	void	Response::_constructStatusLine()
@@ -140,20 +152,21 @@ namespace ft
 		_msg.append("\r\n");
 	}
 
-	void	Response::_constructHeaders(const Request& request)
+	void	Response::_constructHeaders()
 	{
 		std::stringstream	line;
+		std::map<std::string, std::string>::iterator	it;
 
-		(void)request;
 		line << "Content-Length: " << _contentLength;
-		_msg.append(line.str());
+		_msg.append(line.str() + "\r\n");
+		for (it = _headers.begin(); it != _headers.end(); ++it)
+			_msg.append(it->first + ": " + it->second + "\r\n");
 		_msg.append("\r\n\r\n");
 	}
 
-	void	Response::_constructBody(const Request& request)
+	void	Response::_constructBody()
 	{
 		_body.open(_bodyFileName, std::ios_base::in);
-		(void)request;
 	}
 
 	const Host	*Response::_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name)
@@ -201,7 +214,6 @@ namespace ft
 	{
 		std::pair<std::string, Location *>	location;
 
-		_headers = request._headers;
 		location = get_matched_location_for_request_uri(request._path, host->_locations);
 		if (location.second == NULL)
 		{

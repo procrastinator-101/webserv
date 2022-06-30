@@ -56,6 +56,7 @@ namespace ft
 			const Host					*_host;
 			const Server				*_server;
 			const Client				*_client;
+			std::string					_scriptName;
 			std::vector<std::string>	_env;
 			int							_pid;
 			bool						_isRunning;
@@ -86,8 +87,7 @@ namespace ft
 		public:
 			void	reset();
 			bool	isTimedOut() const;
-			void	selectScript();
-			int		execute(Response& response, Request& request);
+			Status	execute(Response& response, Request& request);
 			void	constructEnv(Request& request);
 
 			//returns 0 : normal termination
@@ -127,6 +127,7 @@ namespace ft
 
 			bool	_isCgiEnv(const std::string& str);
 
+			void	_runScript();
 			void	_initialiseEnv();
 			void	_initialiseEnvList();
 

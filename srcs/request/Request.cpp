@@ -35,13 +35,10 @@ namespace ft
 		ret = true;
 		_updateRecvState();
 		received = ::recv(fd, str, BUFFER_SIZE, 0);
-		std::cout << "received : " << received << std::endl;
-		if (received < 0)
-			throw std::runtime_error("Request:: recv failed");
-		if (received)
+		if (received > 0)
 			ret = _parse(str, received);
 		else
-			_keepAlive = false;//should close the connection
+			ret = _setStatus(fatal);
 		//end of receiving
 		if (ret)
 			_isReceiving = false;
@@ -558,21 +555,9 @@ namespace ft
 		(void)src;
 	}
 
-	Request::badRequest::badRequest() : _str("Bad Request")
+	Request::Status	Request::status() const
 	{
-	}
-
-	Request::badRequest::~badRequest() throw()
-	{
-	}
-
-	Request::badRequest::badRequest(const std::string& str) : _str("Bad Request:: " + str)
-	{
-	}
-
-	const char	*Request::badRequest::what() const throw()
-	{
-		return _str.c_str();
+		return _status;
 	}
 
 	std::ostream	&operator<<(std::ostream& ostr, const ft::Request& request)

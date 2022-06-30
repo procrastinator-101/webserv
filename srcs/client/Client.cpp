@@ -31,16 +31,20 @@ namespace ft
 		bool	ret;
 		
 		ret = _request.receive(_sockt.fd);
-		if (!ret)
+		if (_request.status() == Request::fatal)
+			return true;
+		else if (!ret)
 			return ret;
-		
+
+		std::cout << _request << std::endl;
+
 		//set up cgi
 		_response._cgi.setSysEnv(env);
 		_response._cgi.setServer(&server);
 		_response._cgi.setClient(this);
 
-		std::cout << _request << std::endl;
 		_response.build(server._hosts, _request);
+
 		_request.reset();
 		return ret;
 	}

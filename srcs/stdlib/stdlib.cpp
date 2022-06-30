@@ -1,4 +1,5 @@
 #include "stdlib.hpp"
+#include <new>
 
 
 namespace ft
@@ -325,7 +326,9 @@ namespace ft
 		char		*ret;
 
 		len = strlen(s1);
-		ret = new char[len + 1];
+		ret = new(std::nothrow) char[len + 1];
+		if (!ret)
+			return 0;
 		for (size_t i = 0; i < len; i++)
 			ret[i] = s1[i];
 		ret[len] = 0;

@@ -18,18 +18,19 @@ concepts :
 --------------------------------------------------------------------------------
 -	host in the same server witch has the same name
 -	get : path is symbolic link ??
--	add timeout to the connection
 
+-	add Server header field
+# set the header part max length
+
+
+-	add timeout to the connection
 -	default host port = 8080 : done
 -	check select fd > fd_maxset : done
 -	http version should not excedd 1.1 : done
+-	add no-blocking to the sockets : done
+-	set request line max size
+-	ignore sigpipe : done
 
-
-add no-blocking to the sockets : done
-add Server header field
-set the header part max length
-
-handle sigpipe : done
 
 parsing:
 	-	request line:
