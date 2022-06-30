@@ -6,9 +6,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
- 
 
-# Make data base, printed on Thu Jun 30 19:03:25 2022
+# Make data base, printed on Thu Jun 30 20:53:43 2022
 
 # Variables
 
@@ -29,7 +28,6 @@ VSCODE_LOG_NATIVE = false
 # makefile (from `Makefile', line 137)
 NGINY_VAR_PATH_INC = NGINY_VAR_PATH=\"$(_NGINY_VAR_PATH)\"
 # automatic
- 
 ?D = $(patsubst %/,%,$(dir $?))
 # makefile (from `Makefile', line 82)
 REQUEST_PATH = $(SRCS_PATH)/request
@@ -76,11 +74,11 @@ _NGINY_CONF_PATH = $(ROOT_DIR)/confFiles/default.conf
 # makefile (from `Makefile', line 25)
 CGI_PATH = $(SRCS_PATH)/cgi
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-00ca5386-43a2-43f9-b2e5-47f05b7f97f9.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-c6464149-752d-489b-86f8-2e7b51603f61.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.as77GCyjSN/Render
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.TjxPktsQOB/Render
 # makefile (from `Makefile', line 119)
 STDLIB_PATH = $(SRCS_PATH)/stdlib
 # environment
@@ -104,7 +102,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from `Makefile', line 49)
 HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.l1ZknUzgcV/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.KLtJRq7zjC/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -192,7 +190,6 @@ TMPDIR = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/
 # automatic
 *F = $(notdir $*)
 # environment
- 
 VSCODE_IPC_HOOK = /Users/yarroubi/Library/Application Support/Code/1.68.0-main.sock
 # makefile
 MAKEFLAGS = Rrqp
@@ -205,7 +202,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.microsoft.VSCode.1148
+XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000003.Electron
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
@@ -214,6 +211,8 @@ XPC_SERVICE_NAME = com.microsoft.VSCode.1148
 NGINY_INDEX_PATH_INC = NGINY_INDEX_PATH=\"$(_NGINY_INDEX_PATH)\"
 # environment
 __CF_USER_TEXT_ENCODING = 0x5D8:0x0:0x0
+# environment
+COMMAND_MODE = unix2003
 # makefile (from `Makefile', line 51)
 HTTP_STATUS_SRC = $(HTTP_STATUS_PATH)/HttpStatus.cpp
 # default
@@ -228,6 +227,8 @@ INCLUDE_PARAMS = $(NGINY_CONF_PATH_INC) $(NGINY_VAR_PATH_INC) $(NGINY_INDEX_PATH
 CLIENT_PATH = $(SRCS_PATH)/client
 # environment
 LC_ALL = C
+# environment
+SECURITYSESSIONID = 186a8
 # automatic
 ^F = $(notdir $^)
 # default
@@ -245,13 +246,14 @@ _NGINY_VAR_PATH = /goinfre/$$USER/var/nginy
 # environment
 LANG = C
 # environment
-VSCODE_PID = 1717
+ 
+VSCODE_PID = 6250
 # makefile (from `Makefile', line 60)
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 # makefile (from `Makefile', line 139)
 _NGINY_ERROR_PAGES_PATH_INC = NGINY_ERROR_PAGES_PATH=\"$(_NGINY_ERROR_PAGES_PATH)\"
 # variable set hash-table stats:
-# Load=118/1024=12%, Rehash=0, Collisions=11/235=5%
+# Load=120/1024=12%, Rehash=0, Collisions=11/237=5%
 
 # Pattern-specific Variable Values
 
@@ -259,9 +261,9 @@ _NGINY_ERROR_PAGES_PATH_INC = NGINY_ERROR_PAGES_PATH=\"$(_NGINY_ERROR_PAGES_PATH
 
 # Directories
 
-# . (device 16777227, inode 395979): 23 files, no impossibilities.
+# . (device 16777227, inode 395979): 24 files, no impossibilities.
 
-# 23 files, no impossibilities in 1 directories.
+# 24 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -482,7 +484,6 @@ clean:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
- 
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 173):
 	@rm -rf $(OBJ)
@@ -548,6 +549,7 @@ srcs/sockets/ServerSockt.hpp:
 #  Modification time never checked.
 #  File has not been updated.
 
+ 
 # Not a target:
 srcs/response/Response.cpp:
 #  Implicit rule search has not been done.
@@ -567,6 +569,6 @@ srcs/response/Response.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Thu Jun 30 19:03:25 2022
+# Finished Make data base on Thu Jun 30 20:53:44 2022
 
  

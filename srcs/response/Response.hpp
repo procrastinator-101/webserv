@@ -40,6 +40,7 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
+			bool								_isGood;
 			const Host							*_host;
 			size_t								_sent;
 			std::string							_msg;
@@ -121,17 +122,6 @@ namespace ft
 			void			getFileFromStatus(const Host *host, int code);
 			void			_uploadfile(const Request& request, const std::string& path);
 			void			_prepare_indixng(std::string& path);
-
-<<<<<<< HEAD
-=======
-			bool			isThereACgi(const std::string& path, const Location *location);
-
-			void	_constructStatusLine();
-			void	_constructHeaders(const Request& request);
-			void	_constructBody(const Request& request);
->>>>>>> 0146a8a50e0529cca636beccd80fb5d4b6facae8
-
-			
 
 			const Host	*_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name);
 
