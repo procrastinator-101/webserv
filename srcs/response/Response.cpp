@@ -5,7 +5,7 @@
 
 namespace ft
 {
-	Response::Response() :	_host(0), _sent(0), _msg(), _cgi(), _keepAlive(true), _contentLength(0), _version("HTTP/1.1"),
+	Response::Response() :	_isGood(true), _host(0), _sent(0), _msg(), _cgi(), _keepAlive(true), _contentLength(0), _version("HTTP/1.1"),
 							_status(), _headers(), _bodyFileName(), _body()
 	{
 	}
@@ -109,6 +109,11 @@ namespace ft
 			_constructHead(request);
 
 			// _prepare(host, request);
+			if (!_isGood)
+			{
+				_constructErrorResponse(_status);
+				return;
+			}
 
 			//temporary
 			_bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
@@ -125,6 +130,8 @@ namespace ft
 
 	void	Response::_constructErrorResponse(const HttpStatus& status)
 	{
+		_headers.clear();
+
 		_status = status;
 		getFileFromStatus(_host, _status.code);
 		_contentLength = getFileSize(_bodyFileName);
@@ -493,6 +500,8 @@ namespace ft
 		size_t			readedsize = 0;
 		size_t			file_size = getFileSize(request._bodyFileName);
 
+
+		//max body size
 		file_uploaded_name = path + "/" + ft::getRandomFileName();
 		file.open(file_uploaded_name.c_str());
 		if (!file.is_open())
@@ -681,6 +690,7 @@ namespace ft
 
 	void	Response::reset()
 	{
+		_isGood = true;
 		_host = 0;
 		_sent = 0;
 		_msg.clear();

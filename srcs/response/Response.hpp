@@ -40,6 +40,7 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
+			bool								_isGood;
 			const Host							*_host;
 			size_t								_sent;
 			std::string							_msg;

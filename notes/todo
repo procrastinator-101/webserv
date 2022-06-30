@@ -24,11 +24,14 @@ concepts :
 
 
 -	add timeout to the connection
+-	handle end of transmissions
+-	correct uri parse
+
 -	default host port = 8080 : done
 -	check select fd > fd_maxset : done
 -	http version should not excedd 1.1 : done
 -	add no-blocking to the sockets : done
--	set request line max size
+-	set request line max size ; done
 -	ignore sigpipe : done
 
 
