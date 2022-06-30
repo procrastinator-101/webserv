@@ -112,6 +112,8 @@ namespace ft
 			void			_uploadfile(const Request& request, const std::string& path);
 			void			_prepare_indixng(std::string& path);
 
+			bool			isThereACgi(const std::string& path, const Location *location);
+
 			void	_constructStatusLine();
 			void	_constructHeaders(const Request& request);
 			void	_constructBody(const Request& request);

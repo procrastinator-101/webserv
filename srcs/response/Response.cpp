@@ -187,6 +187,11 @@ namespace ft
 		return std::make_pair<std::string, Location*>(std::string(), NULL);
 	}
 
+	bool	Response::isThereACgi(const std::string& path, const Location *location)
+	{
+		
+	}
+
 	bool	Response::is_method_allowded_in_location(const std::string &method, const Location *location)
 	{
 		std::set<std::string>::const_iterator it;
@@ -562,19 +567,19 @@ namespace ft
 			return ;
 		}
 							//			CGI
-		// if (if_location_has_cgi())
-		// {
-		// 	index_file = IsDirHasIndexFiles(location, path);
-		// 	if (index_file.length())
-		// 	{
-		// 		// run cgi  on requested file with DELTE REQUEST_METHOD
-		// 	}
-		// 	else
-		// 	{
-		// 		_status = 403;
-		// 	}
-		// }
-		// else
+		if (location.second->_cgis.size())
+		{
+			index_file = IsDirHasIndexFiles(location, path);
+			if (index_file.length())
+			{
+				// run cgi  on requested file with DELTE REQUEST_METHOD
+			}
+			else
+			{
+				_status = 403;
+			}
+		}
+		else
 		{
 			ret = DeleteFolderContent(path);
 			if (ret == 204)
