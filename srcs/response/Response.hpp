@@ -100,7 +100,7 @@ namespace ft
 			void	_constructErrorResponse(const HttpStatus& status);
 
 
-			void	_initiateCgi(Request& request, const std::string& scriptName, const std::string& pathInfo, const std::string& pathTranslated);
+			void	_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated);
 
 			void	_prepare(const Host* host, const Request& request);
 			void	_handleGetMethod(const Request& request, const std::pair<std::string, Location *>& location);

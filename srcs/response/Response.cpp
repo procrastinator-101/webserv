@@ -669,10 +669,11 @@ namespace ft
 			_status = 404;
 	}
 
-	void	Response::_initiateCgi(Request& request, const std::string& scriptName, const std::string& pathInfo, const std::string& pathTranslated)
+	void	Response::_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated)
 	{
+		(void)filePath;
 		_cgi.setPathInfo(pathInfo);
-		_cgi.setScriptName(scriptName);
+		_cgi.setScriptName(scriptPath);
 		_cgi.setPathTranslated(pathTranslated);
 
 		_cgi.execute(*this, request);
