@@ -2,6 +2,7 @@
 
 #include "../server/Server.hpp"
 #include <string>
+#include <sys/_types/_size_t.h>
 
 namespace ft
 {
@@ -95,7 +96,7 @@ namespace ft
 		_bodyFileName = NGINY_ERROR_PAGES_PATH + "/" + std::to_string(code) + ".html";
 	}
 
-	void	Response::build(const std::vector<Host *>& hosts, const Request& request)
+	void	Response::build(const std::vector<Host *>& hosts, Request& request)
 	{
 		std::map<std::string, std::string>::const_iterator	hostName;
 
@@ -109,11 +110,13 @@ namespace ft
 			_constructHead(request);
 
 			// _prepare(host, request);
-			if (!_isGood)
-			{
-				_constructErrorResponse(_status);
-				return;
-			}
+			// if (!_isGood)
+			// {
+			// 	_constructErrorResponse(_status);
+			// 	return;
+			// }
+			// if (_bodyFileName.empty())
+			// 	getFileFromStatus(_host, _status.code);
 
 			//temporary
 			_bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
@@ -141,7 +144,7 @@ namespace ft
 		_constructBody();
 	}
 
-	void	Response::_constructHead(const Request& request)
+	void	Response::_constructHead(Request& request)
 	{
 		_headers = request._headers;
 
@@ -223,7 +226,7 @@ namespace ft
 	}
 
 
-	void	Response::_prepare(const Host* host, const Request& request)
+	void	Response::_prepare(const Host* host, Request& request)
 	{
 		std::pair<std::string, Location *>	location;
 
@@ -231,6 +234,7 @@ namespace ft
 		if (location.second == NULL)
 		{
 			_status = 404;
+			_isGood = false;
 			return ;
 		}
 		if (location.second->_redirection.first != 0)
@@ -242,14 +246,15 @@ namespace ft
 		if (!is_method_allowded_in_location(request._method, location.second))
 		{
 			_status = 405;
+			_isGood = false;
 			return ;
 		}
 		if (request._method == "GET")
 			_handleGetMethod(request, location);
 		else if (request._method == "POST")
-			_handlePostMethod(request, location);
+			_handlePostMethod(request, location, host->_maxBodySize);
 		else if (request._method == "DELETE")
-			_handleDeleteMethod(host, request, location);
+			_handleDeleteMethod(request, location);
 	}
 
 	std::string	Response::prepare_path(const std::string& location_root, const std::string &uri)
@@ -282,9 +287,8 @@ namespace ft
 		return std::string();
 	}
 
-	bool	matched_ext(std::map<std::string, std::string> cgis, std::string& path)
+	bool	matched_ext(std::map<std::string, std::string> cgis, std::string& path, std::string& cgi_ext)
 	{
-		std::string	ext;
 		std::string	file;
 		size_t		tmp;
 
@@ -295,29 +299,31 @@ namespace ft
 			file = path;
 		tmp = file.find_last_of('.');
 		if (tmp != std::string::npos)
-			ext = file.substr(tmp + 1);
+			cgi_ext = file.substr(tmp + 1);
 		else
-			ext = "";
-
-		return (cgis.find(ext) != cgis.end());
+			cgi_ext = "";
+		
+		return (cgis.find(cgi_ext) != cgis.end());
 	}
 
-	void	Response::_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path, const Request& request)
+	void	Response::_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path, Request& request)
 	{
-		(void)location;
-		if (location.second->_cgis.size() && matched_ext(location.second->_cgis, path))
+		std::string	cgi_ext;
+		std::string cgi_path;
+
+		if (location.second->_cgis.size() && matched_ext(location.second->_cgis, path, cgi_ext))
 		{
-			
+			cgi_path = location.second->_cgis.find(cgi_ext)->second;
+			_initiateCgi(request, cgi_path, path, request._path, request._path);
 		}
 		else
 		{
 			_status = 200;
 			_bodyFileName = path;
-			return ;
 		}
 	}
 
-	void	Response::_prepare_indixng(std::string& path)
+	void	Response::_prepare_indixing(std::string& path)
 	{
 		std::string		file_name;
 		std::string		path2;
@@ -421,14 +427,14 @@ namespace ft
 		_bodyFileName = file_name;
 	}
 
-	void	Response::_handleDirInGet(const std::pair<std::string, Location *>& location, std::string& path, const Request& request)
+	void	Response::_handleDirInGet(const std::pair<std::string, Location *>& location, std::string& path, Request& request)
 	{
 		std::string		index_file;
 
 		if (path[path.length() - 1] != '/')
 		{
 			_status = 301;
-			_headers["Location"] = path.append("/");
+			_headers["Location"] = path + "/";
 			return ;
 		}
 		index_file = IsDirHasIndexFiles(location, path);
@@ -437,13 +443,18 @@ namespace ft
 		else if (location.second->_autoIndex == true)
 		{
 			_status = 200;
-			_prepare_indixng(path);
+			_prepare_indixing(path);
+			if (_status.code != 200)
+				_isGood = false;
 		}
 		else
+		{
+			_isGood = false;
 			_status = 403;
+		}
 	}
 
-	void	Response::_handleGetMethod(const Request& request, const std::pair<std::string, Location *>& location)
+	void	Response::_handleGetMethod(Request& request, const std::pair<std::string, Location *>& location)
 	{
 		struct stat s;
 		std::string	path;
@@ -457,10 +468,13 @@ namespace ft
 				_handleFileInGet(location, path, request);
 		}
 		else
+		{
+			_isGood = false;
 			_status = 404;
+		}
 	}
 
-	void	Response::_handleDirIn_POST(const std::pair<std::string, Location *>& location, std::string& path, const Request& request)
+	void	Response::_handleDirIn_POST(const std::pair<std::string, Location *>& location, std::string& path, Request& request)
 	{
 		std::string		index_file;
 
@@ -474,23 +488,31 @@ namespace ft
 		if (index_file.length())
 			_handleFileIn_POST(location, index_file, request);
 		else
+		{
+			_isGood = false;
 			_status = 403;
+		}
 	}
 
-	void	Response::_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path, const Request& request)
+	void	Response::_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path, Request& request)
 	{
-		(void)location;//mathayedhach bash ytcompila
-		(void)path;//mathayedhach bash ytcompila
-		// if (if_location_has_cgi())
-		// {}
-		// else
+		std::string	cgi_ext;
+		std::string cgi_path;
+
+		if (location.second->_cgis.size() && matched_ext(location.second->_cgis, path, cgi_ext))
 		{
+			cgi_path = location.second->_cgis.find(cgi_ext)->second;
+			_initiateCgi(request, cgi_path, path, request._path, request._path);
+		}
+		else
+		{
+			_isGood = false;
 			_status = 403;
 			return ;
 		}
 	}
 
-	void	Response::_uploadfile(const Request& request, const std::string& path)
+	void	Response::_uploadfile(Request& request, const std::string& path)
 	{
 		std::string		file_uploaded_name;
 		std::ofstream	file;
@@ -500,19 +522,27 @@ namespace ft
 		size_t			readedsize = 0;
 		size_t			file_size = getFileSize(request._bodyFileName);
 
-
-		//max body size
 		file_uploaded_name = path + "/" + ft::getRandomFileName();
 		file.open(file_uploaded_name.c_str());
 		if (!file.is_open())
 		{
-			_status = 500;
+			if (errno == EACCES)
+				_status = 403;
+			else if (errno == ENOENT)
+				_status = 404;
+			else
+				_status = 500;
 			return ;
 		}
 		read_from.open(request._bodyFileName.c_str());
 		if (!read_from.is_open())
 		{
-			_status = 500;
+			if (errno == EACCES)
+				_status = 403;
+			else if (errno == ENOENT)
+				_status = 404;
+			else
+				_status = 500;
 			file.close();
 			return ;
 		}
@@ -527,7 +557,6 @@ namespace ft
 		while (read_from.good())
 		{
 			read_from.read(buffer, buffer_size);
-			// read_from.fail()
 			file.write(buffer, buffer_size);
 			readedsize += buffer_size;
 			if (file_size - readedsize < buffer_size)
@@ -536,18 +565,27 @@ namespace ft
 		delete [] buffer;
 		file.close();
 		read_from.close();
+		_isGood = true;
 		_status = 201;
 	}
 
-	void	Response::_handlePostMethod(const Request& request, const std::pair<std::string, Location *>& location)
+	void	Response::_handlePostMethod(Request& request, const std::pair<std::string, Location *>& location, size_t MaxBodySize)
 	{
 		struct stat s;
 		std::string	path;
 
 		if (location.second->_uploadPath.length() != 0)
 		{
-			// uplaod the Post Request Body
-			_uploadfile(request, location.second->_uploadPath);
+			if (getFileSize(request._bodyFileName) > MaxBodySize)
+			{
+				_isGood = false;
+				_status = 400;
+			}
+			else
+			{
+				_isGood = false;
+				_uploadfile(request, location.second->_uploadPath);
+			}
 			return ;
 		}
 		path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
@@ -559,7 +597,10 @@ namespace ft
 				_handleFileIn_POST(location, path, request);
 		}
 		else
+		{
+			_isGood = false;
 			_status = 404;
+		}
 	}
  
 	int	Response::DeleteFolderContent(std::string& path)
@@ -600,32 +641,34 @@ namespace ft
 		return (204);
 	}
 
-	void	Response::_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path, const Request& request)
+	void	Response::_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path, Request& request)
 	{
 		std::string		index_file;
+		std::string		cgi_ext;
+		std::string		cgi_path;
 		int				ret;
 
-		(void)location;//mathayedhach bash ytcompila
 		if (path[path.length() - 1] != '/')
 		{
+			_isGood = false;
 			_status = 409;
 			return ;
 		}
-							//			CGI
-		// if (location.second->_cgis.size())
-		// {
-		// 	index_file = IsDirHasIndexFiles(location, path);
-		// 	if (index_file.length())
-		// 	{
-		// 		// _initiateCgi();
-		// 		// run cgi  on requested file with DELTE REQUEST_METHOD
-		// 	}
-		// 	else
-		// 	{
-		// 		_status = 403;
-		// 	}
-		// }
-		// else
+		if (location.second->_cgis.size())
+		{
+			index_file = IsDirHasIndexFiles(location, path);
+			if (index_file.length() && matched_ext(location.second->_cgis, path, cgi_ext))
+			{
+				cgi_path = location.second->_cgis.find(cgi_ext)->second;
+				_initiateCgi(request, cgi_path, path, request._path, request._path);
+			}
+			else
+			{
+				_isGood = false;
+				_status = 403;
+			}
+		}
+		else
 		{
 			ret = DeleteFolderContent(path);
 			if (ret == 204)
@@ -638,17 +681,21 @@ namespace ft
 			else
 				_status = ret;
 		}
+		if (_status.code != 204)
+			_isGood = false;
 	}
 
-	void	Response::_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path, const Request& request)
+	void	Response::_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path, Request& request)
 	{
-		(void)location;//mathayedhach bash ytcompila
+		std::string		cgi_ext;
+		std::string		cgi_path;
 
-		// if (if_location_has_cgi())
-		// {
-		// 	// run cgi  on requested file with DELTE REQUEST_METHOD
-		// }
-		// else
+		if (location.second->_cgis.size() && matched_ext(location.second->_cgis, path, cgi_ext))
+		{
+			cgi_path = location.second->_cgis.find(cgi_ext)->second;
+			_initiateCgi(request, cgi_path, path, request._path, request._path);
+		}
+		else
 		{
 			if (!isFileWritable(path))
 				_status = 403;
@@ -656,13 +703,13 @@ namespace ft
 				_status = 500;
 			else
 				_status = 204;
+			if (_status.code != 204)
+				_isGood = false;
 		}
 	}
 
-	void	Response::_handleDeleteMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location)
+	void	Response::_handleDeleteMethod(Request& request, const std::pair<std::string, Location *>& location)
 	{
-		(void)host;
-
 		struct stat s;
 		std::string	path;
 
@@ -675,7 +722,10 @@ namespace ft
 				_handleFileIn_DELETE(location, path, request);
 		}
 		else
+		{
+			_isGood = false;
 			_status = 404;
+		}
 	}
 
 	void	Response::_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated)

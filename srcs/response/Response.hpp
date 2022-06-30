@@ -84,7 +84,7 @@ namespace ft
 			bool	timeOut();
 			void	reset();
 			bool	send(int fd);
-			void	build(const std::vector<Host *>& hosts, const Request& request);
+			void	build(const std::vector<Host *>& hosts, Request& request);
 		//================================================================================================
 		//	Response operations End
 		//================================================================================================
@@ -96,36 +96,35 @@ namespace ft
 			void	_constructBody();
 			void	_constructHeaders();
 			void	_constructStatusLine();
-			void	_constructHead(const Request& request);
+			void	_constructHead(Request& request);
 
 			void	_constructErrorResponse(const HttpStatus& status);
 
 
 			void	_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated);
 
-			void	_prepare(const Host* host, const Request& request);
-			void	_handleGetMethod(const Request& request, const std::pair<std::string, Location *>& location);
-			void	_handlePostMethod(const Request& request, const std::pair<std::string, Location *>& location);
-			void	_handleDeleteMethod(const Host* host, const Request& request, const std::pair<std::string, Location *>& location);
+			void	_prepare(const Host* host, Request& request);
+			void	_handleGetMethod(Request& request, const std::pair<std::string, Location *>& location);
+			void	_handlePostMethod(Request& request, const std::pair<std::string, Location *>& location, size_t MaxBodySize);
+			void	_handleDeleteMethod(Request& request, const std::pair<std::string, Location *>& location);
 
 			std::pair<std::string, Location *>	get_matched_location_for_request_uri(const std::string path, const std::map<std::string, Location *> locations);
 			std::string		prepare_path(const std::string& location_root, const std::string &uri);
 			bool			is_method_allowded_in_location(const std::string &method, const Location *location);
-			void			_handleDirInGet(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
-			void			_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
+			void			_handleDirInGet(const std::pair<std::string, Location *>& location, std::string& path, Request& request);
+			void			_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path, Request& request);
 			std::string		IsDirHasIndexFiles(const std::pair<std::string, Location *>& location, std::string& path);
-			void			_handleDirIn_POST(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
-			void			_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
-			void			_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
-			void			_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
+			void			_handleDirIn_POST(const std::pair<std::string, Location *>& location, std::string& path, Request& request);
+			void			_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path, Request& request);
+			void			_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path, Request& request);
+			void			_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path, Request& request);
 			int				DeleteFolderContent(std::string& path);
 			void			getFileFromStatus(const Host *host, int code);
-			void			_uploadfile(const Request& request, const std::string& path);
-			void			_prepare_indixng(std::string& path);
+			void			_uploadfile(Request& request, const std::string& path);
+			void			_prepare_indixing(std::string& path);
 
-			bool		matched_ext(std::map<std::string, std::string> cgis, std::string& path);
+			bool		matched_ext(std::map<std::string, std::string> cgis, std::string& path, std::string& cgi_ext);
 
-			
 
 			const Host	*_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name);
 
