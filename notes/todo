@@ -29,7 +29,7 @@ add no-blocking to the sockets : done
 add Server header field
 set the header part max length
 
-handle sigpipe
+handle sigpipe : done
 
 parsing:
 	-	request line:
@@ -48,3 +48,18 @@ parsing:
 		-	key :
 		-	value :
 --------------------------------------------------------------------------------
+
+location	/www/var
+{
+	root	/usr
+	cgi		php		/usr/bin/php-cgi
+}
+
+
+uri /www/var/bin/php-cgi/exrta1/extra2  -->  /usr/bin/php-cgi/exrta1/extra2
+
+scrpit name : /www/var/bin/php-cgi
+path info : /exrta1/extra2
+path translated : find path info f ga3 location
+
+request uri : subpath/exrta1/extra2

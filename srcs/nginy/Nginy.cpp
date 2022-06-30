@@ -1,5 +1,6 @@
 #include "Nginy.hpp"
 #include <algorithm>
+#include <sys/signal.h>
 
 namespace ft
 {
@@ -87,7 +88,7 @@ namespace ft
 		int	optionValue;
 
 		optionValue = 1;
-		//stop or retrying waking it up ????
+		signal(SIGPIPE, SIG_IGN);
 		for (size_t i = 0; i < _servers.size(); i++)
 		{
 			_servers[i]->_sockt.open();
@@ -123,7 +124,7 @@ namespace ft
 	{
 		bool	isFinished;
 
-		isFinished = client.handleRequest(server);
+		isFinished = client.handleRequest(server, _env);
 		if (isFinished)
 		{
 			_multiplexer.del(client._sockt.fd, aRead);

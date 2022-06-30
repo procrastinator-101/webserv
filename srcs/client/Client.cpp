@@ -26,13 +26,19 @@ namespace ft
 		return *this;
 	}
 
-	bool	Client::handleRequest(const Server& server)
+	bool	Client::handleRequest(const Server& server, const char **env)
 	{
 		bool	ret;
 		
 		ret = _request.receive(_sockt.fd);
 		if (!ret)
 			return ret;
+		
+		//set up cgi
+		_response._cgi.setSysEnv(env);
+		_response._cgi.setServer(&server);
+		_response._cgi.setClient(this);
+
 		std::cout << _request << std::endl;
 		_response.build(server._hosts, _request);
 		_request.reset();

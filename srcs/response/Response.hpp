@@ -91,6 +91,7 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
+			void	_initiateCgi(Request& request, const std::string& scriptName, const std::string& pathInfo, const std::string& pathTranslated);
 
 			void	_prepare(const Host* host, const Request& request);
 			void	_handleGetMethod(const Request& request, const std::pair<std::string, Location *>& location);
