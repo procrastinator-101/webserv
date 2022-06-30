@@ -29,7 +29,7 @@ namespace ft
 		if (streamLine.good())
 		{
 			streamLine >> token;
-			if (token != "#")
+			if (!streamLine.fail() && token != "#")
 				throw std::runtime_error("Location:: invalid configuration");
 		}
 
@@ -48,7 +48,7 @@ namespace ft
 			streamLine.clear();
 			streamLine.str(line);
 			streamLine >> token;
-			if (token == "#")
+			if (streamLine.fail() || token == "#")
 				continue ;
 			if (token == "}")
 			{
@@ -123,53 +123,53 @@ namespace ft
 		std::string	token;
 
 		streamLine >> token;
-		if (token != "#")
+		if (!streamLine.fail() && token != "#")
 			_root = token;
 		else
 			throw std::runtime_error("Location:: root is not valid");
 		if (streamLine.good())
 		{
 			streamLine >> token;
-			if (token != "#")
+			if (!streamLine.fail() && token != "#")
 				throw std::runtime_error("Location:: too many arguments for root");
 		}
 	}
 
 	void	Location::_fetchMethods(std::stringstream& streamLine)
 	{
-		size_t		size;
+		int			flag = 0;
 		std::string	token;
 
-		size = _methods.size();
 		while (streamLine.good())
 		{
 			streamLine >> token;
-			if (token == "#")
+			if (streamLine.fail() || token == "#")
 				break ;
+			flag = 1;
 			if (token == "GET" || token == "POST" || token == "DELETE")
 				_methods.insert(token);
 			else
 				throw std::runtime_error("Location:: method is not valid");
 		}
-		if (_methods.size() == size)
+		if (flag == 0)
 			throw std::runtime_error("Location:: methods is not valid");
 	}
 
 	void	Location::_fetchIndexes(std::stringstream& streamLine)
 	{
-		size_t		size;
+		int			flag = 0;
 		std::string	token;
 
-		size = _indexes.size();
 		while (streamLine.good())
 		{
 			streamLine >> token;
-			if (token == "#")
+			if (streamLine.fail() || token == "#")
 				break ;
+			flag = 1;
 			_indexes.insert(token);
 		}
-		if (_indexes.size() == size)
-			throw std::runtime_error("Location:: indexes is not valid");
+		if (flag == 0)
+			throw std::runtime_error("Location:: index is not valid");
 	}
 
 	void	Location::_fetchUploadPath(std::stringstream& streamLine)
@@ -178,7 +178,7 @@ namespace ft
 		struct stat s;
 
 		streamLine >> token;
-		if (token != "#")
+		if (!streamLine.fail() && token != "#")
 		{
 			if (stat(token.c_str(), &s) == 0)
 				_uploadPath = token;
@@ -190,7 +190,7 @@ namespace ft
 		if (streamLine.good())
 		{
 			streamLine >> token;
-			if (token != "#")
+			if (!streamLine.fail() && token != "#")
 				throw std::runtime_error("Location:: too many arguments for uploadPath");
 		}
 	}
@@ -200,14 +200,14 @@ namespace ft
 		std::string	token;
 
 		streamLine >> token;
-		if (token == "on")
+		if (!streamLine.fail() && token == "on")
 			_autoIndex = true;
-		else if (token != "off")
+		else if (streamLine.fail() || token != "off")
 			throw std::runtime_error("Location:: autoindex is not valid");
 		if (streamLine.good())
 		{
 			streamLine >> token;
-			if (token != "#")
+			if (!streamLine.fail() && token != "#")
 				throw std::runtime_error("Location:: too many arguments for autoindex");
 		}
 	}
@@ -233,14 +233,17 @@ namespace ft
 				throw std::runtime_error("Location:: return: invalid code");
 			}
 			streamLine >> token;
-			_redirection = std::make_pair(code, token);
+			if (!streamLine.fail() && token != "#")
+				_redirection = std::make_pair(code, token);
+			else
+				throw std::runtime_error("Location:: return: invalid path");
 		}
 		else
 			throw std::runtime_error("Location:: invalid code/path");
 		if (streamLine.good())
 		{
 			streamLine >> token;
-			if (token != "#")
+			if (!streamLine.fail() && token != "#")
 				throw std::runtime_error("Location:: too many arguments for return");
 		}
 	}
@@ -252,15 +255,15 @@ namespace ft
 		std::string	value;
 
 		streamLine >> ext;
-		if (path == "#" || !streamLine.good())
+		if (streamLine.fail() || ext == "#")
 			throw std::runtime_error("Location:: invalid CGI");
 		streamLine >> path;
-		if (path == "#")
+		if (streamLine.fail() || path == "#")
 			throw std::runtime_error("Location:: invalid CGI");
 		if (streamLine.good())
 		{
 			streamLine >> value;
-			if (value != "#")
+			if (!streamLine.fail() && value != "#")
 				throw std::runtime_error("Location:: too many arguments for CGI");
 		}
 		_cgis[ext] = path;

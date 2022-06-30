@@ -42,18 +42,20 @@ namespace ft
 		size = _names.size();
 		while (lineStream.good())
 		{
+			value.clear();
 			lineStream >> value;
-			if (value == "#")
+			if (!value.length() || value == "#")
 				break ;
 			_names.insert(value);
 		}
-		if (_names.size() - size == 0)
+		if (_names.size() == size)
 			throw std::runtime_error("Host:: server_name is not valid");
 	}
 
 	void	Host::fetchRoot(std::stringstream& lineStream)
 	{
 		std::string	value;
+		std::string	check;
 
 		lineStream >> value;
 		if (value != "#")
@@ -62,8 +64,8 @@ namespace ft
 			throw std::runtime_error("Host:: root is not valid");
 		if (lineStream.good())
 		{
-			lineStream >> value;
-			if (value != "#")
+			lineStream >> check;
+			if (check.length() && check != "#")
 				throw std::runtime_error("Host:: too many arguments for root");
 		}
 	}
@@ -79,29 +81,30 @@ namespace ft
 			throw std::runtime_error("Host:: autoindex is not valid");
 		if (lineStream.good())
 		{
+			value.clear();
 			lineStream >> value;
-			if (value != "#")
+			if (value.length() && value != "#")
 				throw std::runtime_error("Host:: too many arguments for autoindex");
 		}
 	}
 
 	void	Host::fetchMethods(std::stringstream& lineStream)
 	{
-		size_t	size;
+		int			flag = 0;
 		std::string	value;
 
-		size = _methods.size();
 		while (lineStream.good())
 		{
 			lineStream >> value;
-			if (value == "#")
+			if (lineStream.fail() || value == "#")
 				break ;
+			flag = 1;
 			if (value == "GET" || value == "POST" || value == "DELETE")
 				_methods.insert(value);
 			else
 				throw std::runtime_error("Host:: invalid method");
 		}
-		if (_methods.size() - size == 0)
+		if (flag == 0)
 			throw std::runtime_error("Host:: methods is not valid");
 	}
 
@@ -110,32 +113,32 @@ namespace ft
 		std::string	value;
 
 		lineStream >> value;
-		if (value != "#" && ft::isnumber(value))
-			_maxBodySize = ft::stoz(value);	//atoi(value.c_str());
+		if (value != "#" && ft::isnumber(value) && !lineStream.fail())
+			_maxBodySize = ft::stoz(value);
 		else
-			throw std::runtime_error("Host:: max_body_size is not valid");
+			throw std::runtime_error("Host:: body_size is not valid");
 		if (lineStream.good())
 		{
 			lineStream >> value;
-			if (value != "#")
-				throw std::runtime_error("Host:: too many arguments for max_body_size");
+			if (!lineStream.fail() && value != "#")
+				throw std::runtime_error("Host:: too many arguments for body_size");
 		}
 	}
 
 	void	Host::fetchIndexes(std::stringstream& lineStream)
 	{
-		size_t	size;
+		int			flag = 0;
 		std::string	value;
 
-		size = _indexes.size();
 		while (lineStream.good())
 		{
 			lineStream >> value;
-			if (value == "#")
+			if (lineStream.fail() || value == "#")
 				break ;
+			flag = 1;
 			_indexes.insert(value);
 		}
-		if (_indexes.size() == size)
+		if (flag == 0)
 			throw std::runtime_error("Host:: invalid index");
 	}
 
@@ -170,7 +173,7 @@ namespace ft
 		if (lineStream.good())
 		{
 			lineStream >> value;
-			if (value != "#")
+			if (!lineStream.fail() && value != "#")
 				throw std::runtime_error("Host:: too many arguments for error_page");
 		}
 	}
@@ -184,12 +187,12 @@ namespace ft
 		
 		//opening and clonsing brackets are not handled // done
 		lineStream >> path;
-		if (path == "#")
+		if (lineStream.fail() || path == "#")
 			throw std::runtime_error("Host:: invalid location");
 		if (lineStream.good())
 		{
 			lineStream >> value;
-			if (value != "#")
+			if (!lineStream.fail() && value != "#")
 				throw std::runtime_error("Host:: too many arguments for location");
 		}
 		loc = new Location(configFile, _root, _autoIndex, _indexes, _methods);

@@ -80,7 +80,11 @@ namespace ft
 	void	Nginy::fetchConfiguration(const std::string& configFileName)
 	{
 		_configFileName = configFileName;
-		_parseConfigFile();
+		// _parseConfigFile();
+		if(_configFileName.substr(_configFileName.find_last_of(".")) == ".conf")
+			_parseConfigFile();
+		else
+			throw std::runtime_error("Nginy:: invalid config file name");
 	}
 	
 	void	Nginy::_initiateServers()
@@ -237,7 +241,7 @@ namespace ft
 				std::stringstream	lineStream(line);
 				
 				lineStream >> token;
-				if (token == "#")
+				if (lineStream.fail() || token == "#")
 					continue ;
 				if (token == "}")
 				{
@@ -290,11 +294,16 @@ namespace ft
 	ServerSockt	Nginy::_fetchServerSockt(std::stringstream& lineStream)
 	{
 		std::string	value;
+		std::string	check;
 		std::vector<std::string> tmp;
 
 		lineStream >> value;
 		if (lineStream.good())
-			throw std::runtime_error("Server:: too many arguments for listen");
+		{
+			lineStream >> check;
+			if (check.length() && check != "#")
+				throw std::runtime_error("Server:: too many arguments for listen");
+		}
 		
 		tmp = split(value, ":");
 		if (tmp.size() != 2)
