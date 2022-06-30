@@ -132,7 +132,10 @@ namespace ft
 		if (isFinished)
 		{
 			_multiplexer.del(client._sockt.fd, aRead);
-			_multiplexer.add(client._sockt.fd, aWrite);
+			if (client._request.status() == Request::fatal)
+				server.delClient(&client);
+			else
+				_multiplexer.add(client._sockt.fd, aWrite);
 		}
 	}
 

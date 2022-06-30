@@ -38,12 +38,13 @@ namespace ft
 		friend class Response;
 		friend class Cgi;
 
-		enum Status
-		{
-			good,
-			bad,
-			fatal
-		};
+		public:
+			enum Status
+			{
+				good,
+				bad,
+				fatal
+			};
 		
 		//================================================================================================
 		//	attributes
@@ -105,6 +106,8 @@ namespace ft
 			bool	receive(int fd);
 			bool	isValid();
 
+			Status	status() const;
+
 			bool	timeOut() const;
 		//================================================================================================
 		//	Request operations End
@@ -152,26 +155,6 @@ namespace ft
 			void	_deepCopy(const Request& src); // = delete
 		//================================================================================================
 		//	private methods End
-		//================================================================================================
-
-		//================================================================================================
-		//	Request exceptions
-		//================================================================================================
-		public:
-			class badRequest : public std::exception
-			{
-				private:
-					std::string	_str;
-				
-				public:
-					badRequest();
-					~badRequest() throw();
-					badRequest(const std::string& str);
-
-					const char	*what() const throw();
-			};
-		//================================================================================================
-		//	Request exceptions End
 		//================================================================================================
 
 

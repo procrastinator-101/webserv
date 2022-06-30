@@ -31,16 +31,20 @@ namespace ft
 		bool	ret;
 		
 		ret = _request.receive(_sockt.fd);
-		if (!ret)
+		if (_request.status() == Request::fatal)
+			return true;
+		else if (!ret)
 			return ret;
-		
+
+		std::cout << _request << std::endl;
+
 		//set up cgi
 		_response._cgi.setSysEnv(env);
 		_response._cgi.setServer(&server);
 		_response._cgi.setClient(this);
 
-		std::cout << _request << std::endl;
 		_response.build(server._hosts, _request);
+
 		_request.reset();
 		return ret;
 	}
@@ -51,14 +55,14 @@ namespace ft
 		if (_request.timeOut())
 		{
 			_request.reset();
-			//build 408 Request Timeout response
+			_response._constructErrorResponse(408);
 			return true;
 		}
 		//check cgi timeout
 		if (_response.timeOut())
 		{
 			_response.reset();
-			//502 bad gateway response
+			_response._constructErrorResponse(502);
 			return true;
 		}
 		return false;

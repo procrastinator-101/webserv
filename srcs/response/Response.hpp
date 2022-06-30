@@ -40,6 +40,7 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
+			const Host							*_host;
 			size_t								_sent;
 			std::string							_msg;
 
@@ -91,6 +92,14 @@ namespace ft
 		//	private methods
 		//================================================================================================
 		private:
+			void	_constructBody();
+			void	_constructHeaders();
+			void	_constructStatusLine();
+			void	_constructHead(const Request& request);
+
+			void	_constructErrorResponse(const HttpStatus& status);
+
+
 			void	_initiateCgi(Request& request, const std::string& scriptName, const std::string& pathInfo, const std::string& pathTranslated);
 
 			void	_prepare(const Host* host, const Request& request);
@@ -115,11 +124,8 @@ namespace ft
 
 			bool		matched_ext(std::map<std::string, std::string> cgis, std::string& path);
 
-			void	_constructStatusLine();
-			void	_constructHeaders(const Request& request);
-			void	_constructBody(const Request& request);
+			
 
-			void	_buildBadRequestResponse();
 			const Host	*_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name);
 
 			void	_deepCopy(const Response& src);
