@@ -104,10 +104,13 @@ namespace ft
 		//	Cgi Setters
 		//================================================================================================
 		public:
-			void	_setHost(const Host *host);
-			void	_setSysEnv(const char **sysEnv);
-			void	_setServer(const Server *server);
-			void	_setClient(const Client *client);
+			void	setHost(const Host *host);
+			void	setSysEnv(const char **sysEnv);
+			void	setServer(const Server *server);
+			void	setClient(const Client *client);
+			void	setPathInfo(const std::string& pathInfo);
+			void	setScriptName(const std::string& scriptName);
+			void	setPathTranslated(const std::string& pathTranslated);
 		//================================================================================================
 		//	Cgi Setters End
 		//================================================================================================

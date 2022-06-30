@@ -5,20 +5,13 @@
 
 #include "../client/Client.hpp"
 #include "../server/Server.hpp"
-#include <cstdlib>
-#include <map>
-#include <string>
-#include <sys/_types/_timeval.h>
-#include <sys/fcntl.h>
-#include <sys/select.h>
-#include <sys/wait.h>
-#include <unistd.h>
 
 
 namespace ft
 {
 	std::set<std::string>	Cgi::_envList;
 	std::set<std::string>	Cgi::_httpForbiddenEnvHeaders;
+
 	Cgi::Cgi() :	_sysEnv(0), _host(0), _server(0), _client(0), _env(), _pid(-1), _isRunning(false), _begin()
 	{
 	}
@@ -142,6 +135,7 @@ namespace ft
 	void	Cgi::constructEnv(Request& request)
 	{
 		std::map<std::string, std::string>::iterator	it;
+
 		//clean cgi envs from env
 		for (size_t i = 0;  i < _env.size(); i++)
 		{
@@ -185,7 +179,6 @@ namespace ft
 		_env.push_back("REQUEST_METHOD=" + request._method);
 		
 		//SCRIPT_NAME
-		_env.push_back("SCRIPT_NAME=" + request._path);//extract the sciprt path only
 
 		//SERVER_NAME
 		_env.push_back("SERVER_NAME=" + request._headers["Host"]);
@@ -283,22 +276,37 @@ namespace ft
 		_isRunning = false;
 	}
 
-	void	Cgi::_setHost(const Host *host)
+	void	Cgi::setPathInfo(const std::string& pathInfo)
+	{
+		_env.push_back("PATH_INFO=" + pathInfo);
+	}
+
+	void	Cgi::setScriptName(const std::string& scriptName)
+	{
+		_env.push_back("SCRIPT_NAME=" + scriptName);
+	}
+
+	void	Cgi::setPathTranslated(const std::string& pathTranslated)
+	{
+		_env.push_back("PATH_TRANSLATED=" + pathTranslated);
+	}
+
+	void	Cgi::setHost(const Host *host)
 	{
 		_host = host;
 	}
 
-	void	Cgi::_setSysEnv(const char **sysEnv)
+	void	Cgi::setSysEnv(const char **sysEnv)
 	{
 		_sysEnv = sysEnv;
 	}
 	
-	void	Cgi::_setServer(const Server *server)
+	void	Cgi::setServer(const Server *server)
 	{
 		_server = server;
 	}
 	
-	void	Cgi::_setClient(const Client *client)
+	void	Cgi::setClient(const Client *client)
 	{
 		_client = client;
 	}

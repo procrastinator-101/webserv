@@ -53,7 +53,7 @@ namespace ft
 			 * @return true : the client is ready(request handled completely) to send the response
 			 * @return false : the client is not ready to send the response
 			 */
-			bool	handleRequest(const Server& server);
+			bool	handleRequest(const Server& server, const char **env);
 
 			/**
 			 * @brief : takes the server that the client is interracting with

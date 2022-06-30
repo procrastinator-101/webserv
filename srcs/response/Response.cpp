@@ -110,6 +110,7 @@ namespace ft
 		// 	return ;
 		// }
 		host = _fetchTargetedHost(hosts, hostName->second);
+		_cgi.setHost(host);
 		// _prepare(host, request);
 		// if (_status.code != 200 && _bodyFileName.empty())
 		// 	getFileFromStatus(host, _status.code);
@@ -630,6 +631,15 @@ namespace ft
 		}
 		else
 			_status = 404;
+	}
+
+	void	Response::_initiateCgi(Request& request, const std::string& scriptName, const std::string& pathInfo, const std::string& pathTranslated)
+	{
+		_cgi.setPathInfo(pathInfo);
+		_cgi.setScriptName(scriptName);
+		_cgi.setPathTranslated(pathTranslated);
+
+		_cgi.execute(*this, request);
 	}
 
 	void	Response::reset()
