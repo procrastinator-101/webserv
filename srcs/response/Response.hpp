@@ -40,6 +40,7 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
+			const Host							*_host;
 			size_t								_sent;
 			std::string							_msg;
 
@@ -96,7 +97,7 @@ namespace ft
 			void	_constructStatusLine();
 			void	_constructHead(const Request& request);
 
-			void	_constructErrorResponse(const Host *host, const HttpStatus& status);
+			void	_constructErrorResponse(const HttpStatus& status);
 
 
 			void	_initiateCgi(Request& request, const std::string& scriptName, const std::string& pathInfo, const std::string& pathTranslated);

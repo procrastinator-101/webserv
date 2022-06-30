@@ -4,7 +4,7 @@
 
 namespace ft
 {
-	Response::Response() :	_sent(0), _msg(), _cgi(), _keepAlive(true), _contentLength(0), _version("HTTP/1.1"),
+	Response::Response() :	_host(0), _sent(0), _msg(), _cgi(), _keepAlive(true), _contentLength(0), _version("HTTP/1.1"),
 							_status(), _headers(), _bodyFileName(), _body()
 	{
 	}
@@ -34,7 +34,7 @@ namespace ft
 		if (ret == Cgi::cTimeout)
 			return true;
 		else if (ret == Cgi::cError)
-			_constructErrorResponse(, 500);
+			_constructErrorResponse(500);
 		return false;
 	}
 
@@ -96,15 +96,14 @@ namespace ft
 
 	void	Response::build(const std::vector<Host *>& hosts, const Request& request)
 	{
-		const Host											*host;
 		std::map<std::string, std::string>::const_iterator	hostName;
 
-		host = _fetchTargetedHost(hosts, hostName->second);
+		_host = _fetchTargetedHost(hosts, hostName->second);
 		if (request.status() != Request::good)
-			_constructErrorResponse(host, 400);
+			_constructErrorResponse(400);
 		else
 		{
-			_cgi.setHost(host);
+			_cgi.setHost(_host);
 
 			_constructHead(request);
 
@@ -114,18 +113,24 @@ namespace ft
 			_bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
 			_status = 200;
 			//end temporary
+
+			_contentLength = getFileSize(_bodyFileName);
+				
+			_constructStatusLine();
+			_constructHeaders();
+			_constructBody();
 		}
+	}
+
+	void	Response::_constructErrorResponse(const HttpStatus& status)
+	{
+		_status = status;
+		getFileFromStatus(_host, _status.code);
 		_contentLength = getFileSize(_bodyFileName);
 			
 		_constructStatusLine();
 		_constructHeaders();
 		_constructBody();
-	}
-
-	void	Response::_constructErrorResponse(const Host *host, const HttpStatus& status)
-	{
-		_status = status;
-		getFileFromStatus(host, _status.code);
 	}
 
 	void	Response::_constructHead(const Request& request)
@@ -651,6 +656,7 @@ namespace ft
 
 	void	Response::reset()
 	{
+		_host = 0;
 		_sent = 0;
 		_msg.clear();
 

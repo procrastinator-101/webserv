@@ -55,14 +55,14 @@ namespace ft
 		if (_request.timeOut())
 		{
 			_request.reset();
-			//build 408 Request Timeout response
+			_response._constructErrorResponse(408);
 			return true;
 		}
 		//check cgi timeout
 		if (_response.timeOut())
 		{
 			_response.reset();
-			//502 bad gateway response
+			_response._constructErrorResponse(502);
 			return true;
 		}
 		return false;
