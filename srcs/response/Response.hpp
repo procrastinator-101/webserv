@@ -101,19 +101,19 @@ namespace ft
 			std::pair<std::string, Location *>	get_matched_location_for_request_uri(const std::string path, const std::map<std::string, Location *> locations);
 			std::string		prepare_path(const std::string& location_root, const std::string &uri);
 			bool			is_method_allowded_in_location(const std::string &method, const Location *location);
-			void			_handleDirInGet(const std::pair<std::string, Location *>& location, std::string& path);
-			void			_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path);
+			void			_handleDirInGet(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
+			void			_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
 			std::string		IsDirHasIndexFiles(const std::pair<std::string, Location *>& location, std::string& path);
-			void			_handleDirIn_POST(const std::pair<std::string, Location *>& location, std::string& path);
-			void			_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path);
-			void			_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path);
-			void			_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path);
+			void			_handleDirIn_POST(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
+			void			_handleFileIn_POST(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
+			void			_handleDirIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
+			void			_handleFileIn_DELETE(const std::pair<std::string, Location *>& location, std::string& path, const Request& request);
 			int				DeleteFolderContent(std::string& path);
 			void			getFileFromStatus(const Host *host, int code);
 			void			_uploadfile(const Request& request, const std::string& path);
 			void			_prepare_indixng(std::string& path);
 
-			bool			isThereACgi(const std::string& path, const Location *location);
+			bool		matched_ext(std::map<std::string, std::string> cgis, std::string& path);
 
 			void	_constructStatusLine();
 			void	_constructHeaders(const Request& request);
