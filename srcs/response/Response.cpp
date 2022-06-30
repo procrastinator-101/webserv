@@ -575,19 +575,19 @@ namespace ft
 			return ;
 		}
 							//			CGI
-		// if (if_location_has_cgi())
-		// {
-		// 	index_file = IsDirHasIndexFiles(location, path);
-		// 	if (index_file.length())
-		// 	{
-		// 		// run cgi  on requested file with DELTE REQUEST_METHOD
-		// 	}
-		// 	else
-		// 	{
-		// 		_status = 403;
-		// 	}
-		// }
-		// else
+		if (location.second->_cgis.size())
+		{
+			index_file = IsDirHasIndexFiles(location, path);
+			if (index_file.length())
+			{
+				// run cgi  on requested file with DELTE REQUEST_METHOD
+			}
+			else
+			{
+				_status = 403;
+			}
+		}
+		else
 		{
 			ret = DeleteFolderContent(path);
 			if (ret == 204)
