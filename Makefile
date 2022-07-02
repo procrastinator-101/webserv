@@ -15,7 +15,7 @@ Author = younes
 NAME = webserv
 
 CC = g++
-CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g
 
 
 SRCS_PATH = srcs
