@@ -50,8 +50,6 @@ namespace ft
 
 	bool	Cgi::isTimedOut() const
 	{
-		if (!_isRunning)
-			return false;
 		if (getTimeStamp(_begin) >= CGI_EXEC_TIMEOUT)
 			return true;
 		return false;
@@ -86,6 +84,7 @@ namespace ft
 		}
 		else if (!WIFEXITED(status) || WEXITSTATUS(status))
 			return cError;
+		_isRunning = false;
 		return cSucces;
 	}
 
@@ -101,6 +100,7 @@ namespace ft
 			return  cError;
 
 		gettimeofday(&_begin, 0);
+		_isRunning = true;
 		if (!_pid)
 		{
 			fd[0] = open(request._bodyFileName.c_str(), O_RDONLY);

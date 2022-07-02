@@ -107,6 +107,7 @@ namespace ft
 			bool	isValid();
 
 			Status	status() const;
+			bool	isReceiving() const;
 
 			bool	timeOut() const;
 		//================================================================================================

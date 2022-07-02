@@ -47,6 +47,8 @@ namespace ft
 
 	bool	Request::timeOut() const
 	{
+		if (!_isReceiving)
+			return false;
 		if (getTimeStamp(_begin) >= RECV_TIMEOUT)
 			return true;
 		return false;
@@ -58,6 +60,11 @@ namespace ft
 			return ;
 		_isReceiving = true;
 		gettimeofday(&_begin, 0);
+	}
+
+	bool	Request::isReceiving() const
+	{
+		return _isReceiving;
 	}
 
 	bool	Request::_parse(char *str, size_t size)
@@ -528,6 +535,8 @@ namespace ft
 
 	void	Request::reset()
 	{
+		_isReceiving = false;
+
 		_resetChunk();
 
 		_isTrailerSet = false;
