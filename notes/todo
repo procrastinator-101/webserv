@@ -22,10 +22,13 @@ concepts :
 -	add Server header field
 # set the header part max length
 
+-	correct uri parse
+
 
 -	add timeout to the connection
 -	handle end of transmissions
--	correct uri parse
+
+
 
 -	default host port = 8080 : done
 -	check select fd > fd_maxset : done
