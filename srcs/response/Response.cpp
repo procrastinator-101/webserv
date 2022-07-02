@@ -138,6 +138,7 @@ namespace ft
 		_headers.clear();
 
 		_status = status;
+		_keepAlive = false;
 		getFileFromStatus(_host, _status.code);
 		_contentLength = getFileSize(_bodyFileName);
 			
@@ -176,9 +177,9 @@ namespace ft
 		std::map<std::string, std::string>::iterator	it;
 
 		line << "Content-Length: " << _contentLength;
-		_msg.append(line.str() + "\r\n");
+		_msg.append(line.str());
 		for (it = _headers.begin(); it != _headers.end(); ++it)
-			_msg.append(it->first + ": " + it->second + "\r\n");
+			_msg.append("\r\n" + it->first + ": " + it->second);
 		_msg.append("\r\n\r\n");
 	}
 

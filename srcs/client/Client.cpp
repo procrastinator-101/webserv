@@ -54,6 +54,7 @@ namespace ft
 		//check connection timeout
 		if (_request.timeOut())
 		{
+			std::cout << "request timeout" << std::endl;
 			_request.reset();
 			_response._constructErrorResponse(408);
 			return true;
@@ -61,6 +62,7 @@ namespace ft
 		//check cgi timeout
 		if (_response.timeOut())
 		{
+			std::cout << "response timeout" << std::endl;
 			_response.reset();
 			_response._constructErrorResponse(502);
 			return true;
@@ -68,16 +70,10 @@ namespace ft
 		return false;
 	}
 
-	void	Client::_prepareResponse()
-	{
-	}
-
 	bool	Client::handleResponse()
 	{
 		return _response.send(_sockt.fd);
 	}
-
-
 
 	bool	Client::keepAlive() const
 	{

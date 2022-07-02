@@ -22,11 +22,14 @@ concepts :
 -	add Server header field
 # set the header part max length
 
--	correct uri parse
 
 
--	add timeout to the connection
+-	correct uri parse : percent msgs decoded
+-	handle timeouts :
+	-	request : done
+	-	response
 -	handle end of transmissions
+-	cgi exits with failure : return cgi output or cgi response error
 
 
 

@@ -6,10 +6,6 @@ namespace ft
 {
 	Nginy::Nginy() :	_configFileName(), _env(0), _multiplexer(), _servers()
 	{
-		//!!!!!!!! to remove
-		// ServerSockt	sockt("127.0.0.1", "8080");
-		// Server	*server = new Server(sockt);
-		// _servers.push_back(server);
 	}
 	
 	Nginy::~Nginy()
@@ -80,7 +76,6 @@ namespace ft
 	void	Nginy::fetchConfiguration(const std::string& configFileName)
 	{
 		_configFileName = configFileName;
-		// _parseConfigFile();
 		if(_configFileName.substr(_configFileName.find_last_of(".")) == ".conf")
 			_parseConfigFile();
 		else
