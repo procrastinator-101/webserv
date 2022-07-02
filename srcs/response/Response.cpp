@@ -240,14 +240,12 @@ namespace ft
 		location = get_matched_location_for_request_uri(request._path, host->_locations);
 		if (location.second == NULL)
 		{
-			std::cout << request._path << " waaaaaa3 ........................................" << std::endl;
 			_status = 404;
 			_isGood = false;
 			return ;
 		}
 		if (location.second->_redirection.first != 0)
 		{
-			std::cout << request._path << " ooooooooooooo ........................................" << std::endl;
 			_status = location.second->_redirection.first;
 			_headers["Location"] = location.second->_redirection.second;
 			return ;
