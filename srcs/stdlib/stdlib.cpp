@@ -1,5 +1,7 @@
 #include "stdlib.hpp"
 #include <new>
+#include <sys/_types/_size_t.h>
+#include <vector>
 
 
 namespace ft
@@ -333,6 +335,33 @@ namespace ft
 			ret[i] = s1[i];
 		ret[len] = 0;
 		return ret;
+	}
+
+	char	**vec2arr(std::vector<std::string>& vec)
+	{
+		char	**ret;
+
+		ret = new (std::nothrow) char *[vec.size() + 1];
+		if (!ret)
+			return ret;
+		for (size_t i = 0; i < vec.size(); i++)
+		{
+			ret[i] = ft_strdup(vec[i].c_str());
+			if (!ret[i])
+			{
+				destroy2arr(ret, i);
+				return 0;
+			}
+		}
+		ret[vec.size()] = 0;
+		return ret;
+	}
+
+	void	destroy2arr(char **arr, size_t n)
+	{
+		for (size_t i = 0; i < n; i++)
+			delete [] arr[i];
+		delete [] arr;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////

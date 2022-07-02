@@ -56,6 +56,7 @@ namespace ft
 			const Host					*_host;
 			const Server				*_server;
 			const Client				*_client;
+			std::string					_inputFile;
 			std::string					_scriptName;
 			std::vector<std::string>	_env;
 			int							_pid;
@@ -87,6 +88,7 @@ namespace ft
 		public:
 			void	reset();
 			bool	isTimedOut() const;
+			bool	isRunning() const;
 			Status	execute(Response& response, Request& request);
 			void	constructEnv(Request& request);
 
@@ -109,6 +111,7 @@ namespace ft
 			void	setServer(const Server *server);
 			void	setClient(const Client *client);
 			void	setPathInfo(const std::string& pathInfo);
+			void	setInputFile(const std::string& inputFile);
 			void	setScriptName(const std::string& scriptName);
 			void	setPathTranslated(const std::string& pathTranslated);
 		//================================================================================================
@@ -127,7 +130,9 @@ namespace ft
 
 			bool	_isCgiEnv(const std::string& str);
 
-			void	_runScript();
+			char	**_getSciptArgs() const;
+
+			void	_runScript(int fd[2]);
 			void	_initialiseEnv();
 			void	_initialiseEnvList();
 

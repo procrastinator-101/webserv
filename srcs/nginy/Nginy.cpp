@@ -7,9 +7,9 @@ namespace ft
 	Nginy::Nginy() :	_configFileName(), _env(0), _multiplexer(), _servers()
 	{
 		//!!!!!!!! to remove
-		ServerSockt	sockt("127.0.0.1", "8080");
-		Server	*server = new Server(sockt);
-		_servers.push_back(server);
+		// ServerSockt	sockt("127.0.0.1", "8080");
+		// Server	*server = new Server(sockt);
+		// _servers.push_back(server);
 	}
 	
 	Nginy::~Nginy()
@@ -106,20 +106,23 @@ namespace ft
 
 	void	Nginy::_serveClients(std::map<int, int>& candidates)
 	{
+		Client	*client;
 		std::map<int, int>::iterator		it;
 		std::map<int, Client *>::iterator	cit;
 
 		for (size_t i = 0; i < _servers.size(); i++)
 		{
-			for (cit = _servers[i]->_clients.begin(); cit != _servers[i]->_clients.end(); ++cit)
+			for (cit = _servers[i]->_clients.begin(); cit != _servers[i]->_clients.end();)
 			{
-				it = candidates.find(cit->first);
+				client = cit->second;
+				++cit;
+				it = candidates.find(client->getSocktFd());
 				if (it == candidates.end())
 					continue;
 				if (it->second & aRead)
-					_manageRequest(*cit->second, *_servers[i]);
+					_manageRequest(*client, *_servers[i]);
 				else if (it->second & aWrite)
-					_manageResponse(*cit->second, *_servers[i]);
+					_manageResponse(*client, *_servers[i]);
 			}
 		}
 	}
@@ -132,7 +135,7 @@ namespace ft
 		if (isFinished)
 		{
 			_multiplexer.del(client._sockt.fd, aRead);
-			if (client._request.status() == Request::fatal)
+			if (client._request.status() == Request::fatal)///!!!!!!!
 				server.delClient(&client);
 			else
 				_multiplexer.add(client._sockt.fd, aWrite);

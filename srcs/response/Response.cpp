@@ -32,6 +32,8 @@ namespace ft
 	{
 		Cgi::Status	ret;
 
+		if (!_cgi.isRunning())
+			return false;
 		ret = _cgi.timeOut();
 		if (ret == Cgi::cTimeout)
 			return true;
@@ -93,7 +95,7 @@ namespace ft
 				return ;
 			}
 		}
-		_bodyFileName = NGINY_ERROR_PAGES_PATH + "/" + std::to_string(code) + ".html";
+		_bodyFileName = std::string(NGINY_ERROR_PAGES_PATH) + "/" + std::to_string(code) + ".html";
 	}
 
 	void	Response::build(const std::vector<Host *>& hosts, Request& request)
@@ -109,18 +111,18 @@ namespace ft
 
 			_constructHead(request);
 
-			// _prepare(host, request);
-			// if (!_isGood)
-			// {
-			// 	_constructErrorResponse(_status);
-			// 	return;
-			// }
-			// if (_bodyFileName.empty())
-			// 	getFileFromStatus(_host, _status.code);
+			_prepare(_host, request);
+			if (!_isGood)
+			{
+				_constructErrorResponse(_status);
+				return;
+			}
+			if (_bodyFileName.empty())
+				getFileFromStatus(_host, _status.code);
 
 			//temporary
-			_bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
-			_status = 200;
+			// _bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
+			// _status = 200;
 			//end temporary
 
 			_contentLength = getFileSize(_bodyFileName);
@@ -287,7 +289,7 @@ namespace ft
 		return std::string();
 	}
 
-	bool	matched_ext(std::map<std::string, std::string> cgis, std::string& path, std::string& cgi_ext)
+	bool	Response::matched_ext(std::map<std::string, std::string> cgis, std::string& path, std::string& cgi_ext)
 	{
 		std::string	file;
 		size_t		tmp;
@@ -730,12 +732,15 @@ namespace ft
 
 	void	Response::_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated)
 	{
-		(void)filePath;
+		_cgi.setInputFile(filePath);
 		_cgi.setPathInfo(pathInfo);
 		_cgi.setScriptName(scriptPath);
 		_cgi.setPathTranslated(pathTranslated);
 
 		_cgi.execute(*this, request);
+
+		//parse _body
+		//headers + _body
 	}
 
 	void	Response::reset()

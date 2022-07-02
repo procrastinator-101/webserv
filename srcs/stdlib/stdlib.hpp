@@ -2,6 +2,7 @@
 # define STDLIB_HPP
 
 #include <string>
+#include <sys/_types/_size_t.h>
 #include <vector>
 #include <sstream>
 
@@ -78,6 +79,8 @@ namespace ft
 	std::string	ztoa(size_t n);
 
 	char	*ft_strdup(const char *s1);
+	char	**vec2arr(std::vector<std::string>& vec);
+	void	destroy2arr(char **arr, size_t n);
 
 
 	

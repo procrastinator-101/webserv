@@ -57,6 +57,11 @@ namespace ft
 		return false;
 	}
 
+	bool	Cgi::isRunning() const
+	{
+		return _isRunning;
+	}
+
 	Cgi::Status	Cgi::timeOut()
 	{
 		int	ret;
@@ -121,7 +126,7 @@ namespace ft
 				close(fd[1]);
 				exit(EXIT_FAILURE);
 			}
-			// ret = execve(, , );
+			_runScript(fd);
 			close(fd[0]);
 			close(fd[1]);
 			exit(EXIT_FAILURE);
@@ -129,25 +134,48 @@ namespace ft
 		return timeOut();
 	}
 
-	int	Cgi::_runScript(int fd[2])
+	void	Cgi::_runScript(int fd[2])
 	{
 		char **env;
 		char **args;
 
-		env = new(std::nothrow) char *[_env.size() + 1];
+		//set env for cgi script
+		env = vec2arr(_env);
 		if (!env)
 		{
 			close(fd[0]);
 			close(fd[1]);
 			exit(EXIT_FAILURE);
 		}
-		args = new(std::nothrow) char *[2];
-		for (size_t i = 0; i < _env.size(); i++)
-			env[i] = _env[i].c_str();
-		env[_env.size()] = 0;
-		args[0] = _scriptName.c_str();
-		args[1] = 0;
-		execve(_scriptName.c_str(), args, env);
+
+		//set args for the cgi script
+		args = _getSciptArgs();
+		if (!env)
+		{
+			close(fd[0]);
+			close(fd[1]);
+			destroy2arr(env, _env.size() + 1);
+			exit(EXIT_FAILURE);
+		}
+		execve(args[0], args, env);
+	}
+
+	char	**Cgi::_getSciptArgs() const
+	{
+		char	**args;
+
+		args = new (std::nothrow) char *[3];
+		if (!args)
+			return 0;
+		args[0] = ft_strdup(_scriptName.c_str());
+		args[1] = ft_strdup(_inputFile.c_str());
+		args[2] = 0;
+		if (!args[0] || !args[1])
+		{
+			destroy2arr(args, 3);
+			return 0;
+		}
+		return args;
 	}
 
 	void	Cgi::constructEnv(Request& request)
@@ -297,6 +325,11 @@ namespace ft
 	void	Cgi::setPathInfo(const std::string& pathInfo)
 	{
 		_env.push_back("PATH_INFO=" + pathInfo);
+	}
+
+	void	Cgi::setInputFile(const std::string& inputFile)
+	{
+		_inputFile = inputFile;
 	}
 
 	void	Cgi::setScriptName(const std::string& scriptName)
