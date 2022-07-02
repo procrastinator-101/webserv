@@ -1,0 +1,4 @@
+[parent directory] inside root dir (which status nginx return)
+
+%20 in uri
+

@@ -102,7 +102,9 @@ namespace ft
 	{
 		std::map<std::string, std::string>::const_iterator	hostName;
 
+		std::cout << "host seach" << std::endl;
 		_host = _fetchTargetedHost(hosts, hostName->second);
+		std::cout << "host found : " << _host << std::endl;
 		if (request.status() != Request::good)
 			_constructErrorResponse(400);
 		else
@@ -119,6 +121,8 @@ namespace ft
 			}
 			if (_bodyFileName.empty())
 				getFileFromStatus(_host, _status.code);
+			std::cout << _status.code << "    " << _bodyFileName << std::endl;
+			// exit (0);
 
 			//temporary
 			// _bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
@@ -235,12 +239,14 @@ namespace ft
 		location = get_matched_location_for_request_uri(request._path, host->_locations);
 		if (location.second == NULL)
 		{
+			std::cout << request._path << " waaaaaa3 ........................................" << std::endl;
 			_status = 404;
 			_isGood = false;
 			return ;
 		}
 		if (location.second->_redirection.first != 0)
 		{
+			std::cout << request._path << " ooooooooooooo ........................................" << std::endl;
 			_status = location.second->_redirection.first;
 			_headers["Location"] = location.second->_redirection.second;
 			return ;
@@ -325,7 +331,7 @@ namespace ft
 		}
 	}
 
-	void	Response::_prepare_indixing(std::string& path)
+	void	Response::_prepare_indixing(std::string& path, Request& request)
 	{
 		std::string		file_name;
 		std::string		path2;
@@ -385,7 +391,8 @@ namespace ft
 		{
 			if (strcmp(de.d_name, ".") == 0)
 				continue ;
-			path2 = path + de.d_name;
+			// path2 = path + de.d_name;
+			path2 = request._path + de.d_name;
 			if (de.d_type == 4) // dir
 			{
 				tmp = ft_strdup("                <tr><td>\n                        <a class=\"icon dir\" href=\"");
@@ -436,7 +443,8 @@ namespace ft
 		if (path[path.length() - 1] != '/')
 		{
 			_status = 301;
-			_headers["Location"] = path + "/";
+			// _headers["Location"] = path + "/";
+			_headers["Location"] = request._path + "/";
 			return ;
 		}
 		index_file = IsDirHasIndexFiles(location, path);
@@ -445,7 +453,7 @@ namespace ft
 		else if (location.second->_autoIndex == true)
 		{
 			_status = 200;
-			_prepare_indixing(path);
+			_prepare_indixing(path, request);
 			if (_status.code != 200)
 				_isGood = false;
 		}
@@ -464,6 +472,7 @@ namespace ft
 		path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
 		if(stat(path.c_str(), &s) == 0)
 		{
+			std::cout << "*************************************************hi " << request._path << std::endl;
 			if(s.st_mode & S_IFDIR)		//it's a directory
 				_handleDirInGet(location, path, request);
 			else
@@ -483,7 +492,8 @@ namespace ft
 		if (path[path.length() - 1] != '/')
 		{
 			_status = 301;
-			_headers["Location"] = path.append("/");
+			// _headers["Location"] = path.append("/");
+			_headers["Location"] = request._path + "/";
 			return ;
 		}
 		index_file = IsDirHasIndexFiles(location, path);

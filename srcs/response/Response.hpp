@@ -121,7 +121,7 @@ namespace ft
 			int				DeleteFolderContent(std::string& path);
 			void			getFileFromStatus(const Host *host, int code);
 			void			_uploadfile(Request& request, const std::string& path);
-			void			_prepare_indixing(std::string& path);
+			void			_prepare_indixing(std::string& path, Request& request);
 
 			bool		matched_ext(std::map<std::string, std::string> cgis, std::string& path, std::string& cgi_ext);
 
