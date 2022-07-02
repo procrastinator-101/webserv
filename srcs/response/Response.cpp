@@ -114,6 +114,7 @@ namespace ft
 			_constructHead(request);
 
 			_prepare(_host, request);
+			std::cout << _status.code << "    " << _bodyFileName << std::endl;
 			if (!_isGood)
 			{
 				_constructErrorResponse(_status);
@@ -122,7 +123,6 @@ namespace ft
 			if (_bodyFileName.empty())
 				getFileFromStatus(_host, _status.code);
 			std::cout << _status.code << "    " << _bodyFileName << std::endl;
-			// exit (0);
 
 			//temporary
 			// _bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
@@ -568,10 +568,10 @@ namespace ft
 		while (read_from.good())
 		{
 			read_from.read(buffer, buffer_size);
-			file.write(buffer, buffer_size);
-			readedsize += buffer_size;
 			if (file_size - readedsize < buffer_size)
 				buffer_size = file_size - readedsize;
+			file.write(buffer, buffer_size);
+			readedsize += buffer_size;
 		}
 		delete [] buffer;
 		file.close();

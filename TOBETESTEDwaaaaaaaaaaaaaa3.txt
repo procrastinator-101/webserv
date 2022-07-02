@@ -2,3 +2,4 @@
 
 %20 in uri
 
+return 301 /home/index.html (does it return 301 dima or depend on code)
