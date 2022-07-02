@@ -287,7 +287,7 @@ namespace ft
 		return std::string();
 	}
 
-	bool	matched_ext(std::map<std::string, std::string> cgis, std::string& path, std::string& cgi_ext)
+	bool	Response::matched_ext(std::map<std::string, std::string> cgis, std::string& path, std::string& cgi_ext)
 	{
 		std::string	file;
 		size_t		tmp;
