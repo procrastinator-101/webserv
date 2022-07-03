@@ -2,7 +2,6 @@ make --dry-run --always-make --keep-going --print-directory
 make: Entering directory `/Users/yarroubi/Desktop/webserv'
 mkdir -p /goinfre/$USER/var/nginy
  
-g++ -Wall -Werror -Wextra -std=c++98 -fsanitize=address -DNGINY_CONF_PATH=\"/Users/yarroubi/Desktop/webserv/confFiles/default.conf\" -DNGINY_VAR_PATH=\"/goinfre/$USER/var/nginy\" -DNGINY_INDEX_PATH=\"/Users/yarroubi/Desktop/webserv/indexes\" -DNGINY_ERROR_PAGES_PATH=\"/Users/yarroubi/Desktop/webserv/error_pages\" -o webserv srcs/main.cpp srcs/cgi/Cgi.cpp srcs/client/Client.cpp srcs/host/Host.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockets/ClientSockt.cpp srcs/sockets/ServerSockt.cpp srcs/sockets/Sockt.cpp srcs/stdlib/stdlib.cpp
- 
+g++ -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g -DNGINY_CONF_PATH=\"/Users/yarroubi/Desktop/webserv/confFiles/default.conf\" -DNGINY_VAR_PATH=\"/goinfre/$USER/var/nginy\" -DNGINY_INDEX_PATH=\"/Users/yarroubi/Desktop/webserv/indexes\" -DNGINY_ERROR_PAGES_PATH=\"/Users/yarroubi/Desktop/webserv/error_pages\" -o webserv srcs/main.cpp srcs/cgi/Cgi.cpp srcs/client/Client.cpp srcs/host/Host.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockets/ClientSockt.cpp srcs/sockets/ServerSockt.cpp srcs/sockets/Sockt.cpp srcs/stdlib/stdlib.cpp
 make: Leaving directory `/Users/yarroubi/Desktop/webserv'
  

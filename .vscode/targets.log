@@ -8,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Sat Jul  2 16:56:30 2022
+# Make data base, printed on Sun Jul  3 11:22:22 2022
 
 # Variables
 
@@ -54,7 +54,7 @@ _ = /usr/bin/make
 # makefile (from `Makefile', line 28)
 CGI_HDR = $(CGI_PATH)/Cgi.hpp
 # makefile (from `Makefile', line 18)
-CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g
 # makefile (from `Makefile', line 57)
 LOCATION_PATH = $(SRCS_PATH)/location
 # makefile (from `Makefile', line 122)
@@ -76,11 +76,11 @@ _NGINY_CONF_PATH = $(ROOT_DIR)/confFiles/default.conf
 # makefile (from `Makefile', line 25)
 CGI_PATH = $(SRCS_PATH)/cgi
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-d87e60f2-1c61-4f91-88d1-4451cd7c49cf.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-cd8fd86f-f500-469b-8190-8e7ff0cc46b0.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.9nfZhDFbbp/Render
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.CMq5aKsFoZ/Render
 # makefile (from `Makefile', line 119)
 STDLIB_PATH = $(SRCS_PATH)/stdlib
 # environment
@@ -104,7 +104,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from `Makefile', line 49)
 HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.K7Zl5lVTnR/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.01NFXPV05P/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -204,7 +204,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.microsoft.VSCode.1204
+XPC_SERVICE_NAME = com.microsoft.VSCode.2504
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
@@ -244,7 +244,7 @@ _NGINY_VAR_PATH = /goinfre/$$USER/var/nginy
 # environment
 LANG = C
 # environment
-VSCODE_PID = 11650
+VSCODE_PID = 45846
 # makefile (from `Makefile', line 60)
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 # makefile (from `Makefile', line 139)
@@ -258,10 +258,10 @@ _NGINY_ERROR_PAGES_PATH_INC = NGINY_ERROR_PAGES_PATH=\"$(_NGINY_ERROR_PAGES_PATH
 
 # Directories
 
-# . (device 16777227, inode 395979): 24 files, no impossibilities.
-
  
-# 24 files, no impossibilities in 1 directories.
+# . (device 16777227, inode 395979): 25 files, no impossibilities.
+
+# 25 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -297,7 +297,7 @@ all: webserv
 
 webserv: NGINX_PATHS srcs/main.cpp srcs/cgi/Cgi.cpp srcs/client/Client.cpp srcs/host/Host.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockets/ClientSockt.cpp srcs/sockets/ServerSockt.cpp srcs/sockets/Sockt.cpp srcs/stdlib/stdlib.cpp srcs/cgi/Cgi.hpp srcs/client/Client.hpp srcs/host/Host.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/multiplex/Action.hpp srcs/multiplex/Selecter.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockets/ClientSockt.hpp srcs/sockets/ServerSockt.hpp srcs/sockets/Sockt.hpp srcs/stdlib/stdlib.hpp
 #  Implicit rule search has not been done.
-#  Last modified 2022-06-30 17:44:59
+#  Last modified 2022-07-02 19:02:24
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
@@ -344,7 +344,7 @@ srcs/cgi/Cgi.cpp:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-30 19:03:15
+#  Last modified 2022-07-02 19:02:23
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -563,10 +563,10 @@ srcs/response/Response.cpp:
 
 # # of strings in strcache: 1
 # # of strcache buffers: 1
-# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
  
+# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sat Jul  2 16:56:30 2022
+# Finished Make data base on Sun Jul  3 11:22:22 2022
 
  
