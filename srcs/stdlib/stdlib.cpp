@@ -249,6 +249,15 @@ namespace ft
 		return std::string(12 + str.size(), '=');
 	}
 
+	bool	is_path_valid(const std::string& path)
+	{
+		struct stat s;
+
+		if (stat(path.c_str(), &s) == 0)
+			return true;
+		return false;
+	}
+
 	std::string	ft_itoa(int n)
 	{
 		std::stringstream	ss;

@@ -62,6 +62,8 @@ namespace ft
 			_root = value;
 		else
 			throw std::runtime_error("Host:: root is not valid");
+		if (!is_path_valid(_root))
+			throw std::runtime_error("Host:: root is not valid");
 		if (lineStream.good())
 		{
 			lineStream >> check;
@@ -153,7 +155,6 @@ namespace ft
 			throw std::runtime_error("Host:: invalid error_page");
 		if (lineStream.good() && isnumber(code_str))
 		{
-			// code = ::atoi(code_str.c_str());
 			code = ft::stoi(code_str);
 			try
 			{
@@ -166,6 +167,8 @@ namespace ft
 			lineStream >> value;
 			if (value == "#")
 				throw std::runtime_error("Host:: invalid error_page");
+			if (!is_path_valid(value))
+				throw std::runtime_error("Host:: error_page path is not valid");
 			_errorPages[code] = value;
 		}
 		else

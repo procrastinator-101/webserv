@@ -127,6 +127,8 @@ namespace ft
 			_root = token;
 		else
 			throw std::runtime_error("Location:: root is not valid");
+		if (!is_path_valid(_root))
+			throw std::runtime_error("Location:: root is not valid");
 		if (streamLine.good())
 		{
 			streamLine >> token;
@@ -266,6 +268,8 @@ namespace ft
 			if (!streamLine.fail() && value != "#")
 				throw std::runtime_error("Location:: too many arguments for CGI");
 		}
+		if (!is_path_valid(path))
+			throw std::runtime_error("Location:: cgi path is not valid");
 		_cgis[ext] = path;
 	}
 

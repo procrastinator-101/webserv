@@ -296,7 +296,7 @@ namespace ft
 			{
 				tmp = path + *it;
 				if (stat(tmp.c_str(), &s) == 0)
-					return *it;
+					return tmp;
 			}
 		}
 		return std::string();
@@ -329,7 +329,7 @@ namespace ft
 		if (location.second->_cgis.size() && matched_ext(location.second->_cgis, path, cgi_ext))
 		{
 			cgi_path = location.second->_cgis.find(cgi_ext)->second;
-			_initiateCgi(request, cgi_path, path, request._path, request._path);
+			_initiateCgi(request, cgi_path, path, cgi_path, cgi_path);
 		}
 		else
 		{
@@ -522,7 +522,7 @@ namespace ft
 		if (location.second->_cgis.size() && matched_ext(location.second->_cgis, path, cgi_ext))
 		{
 			cgi_path = location.second->_cgis.find(cgi_ext)->second;
-			_initiateCgi(request, cgi_path, path, request._path, request._path);
+			_initiateCgi(request, cgi_path, path, cgi_path, cgi_path);
 		}
 		else
 		{
@@ -560,7 +560,10 @@ namespace ft
 			if (errno == EACCES)
 				_status = 403;
 			else if (errno == ENOENT)
+			{
 				_status = 404;
+				std::cout << "a-------------------------------------aaaaaaaaaaaa" << std::endl;
+			}
 			else
 				_status = 500;
 			file.close();
@@ -680,7 +683,7 @@ namespace ft
 			if (index_file.length() && matched_ext(location.second->_cgis, path, cgi_ext))
 			{
 				cgi_path = location.second->_cgis.find(cgi_ext)->second;
-				_initiateCgi(request, cgi_path, path, request._path, request._path);
+				_initiateCgi(request, cgi_path, path, cgi_path, cgi_path);
 			}
 			else
 			{
@@ -713,7 +716,7 @@ namespace ft
 		if (location.second->_cgis.size() && matched_ext(location.second->_cgis, path, cgi_ext))
 		{
 			cgi_path = location.second->_cgis.find(cgi_ext)->second;
-			_initiateCgi(request, cgi_path, path, request._path, request._path);
+			_initiateCgi(request, cgi_path, path, cgi_path, cgi_path);
 		}
 		else
 		{

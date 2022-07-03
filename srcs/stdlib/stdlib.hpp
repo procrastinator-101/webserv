@@ -84,7 +84,7 @@ namespace ft
 	char	**vec2arr(std::vector<std::string>& vec);
 	void	destroy2arr(char **arr, size_t n);
 
-
+	bool	is_path_valid(const std::string& path);
 	
 	std::string	trim(const std::string& str, const std::string& delimiters);
 	std::string	ltrim(const std::string& str, const std::string& delimiters);
