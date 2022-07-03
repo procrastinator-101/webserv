@@ -28,27 +28,27 @@ concepts :
 	-	percent msgs decoded : done
 	-	set of allawed characters
 
--	set correct path info
-
+	
 -	handle timeouts :
 	-	request : done
 	-	response
+
 -	cgi cookies
 	-	coded : done
 	-	tested
+
 -	cgi parse response
 
 -	test delete
 -	find the segfault
--	test paths
 
 -	test leaks
 
--	config file check
+
+
+-	config file check : done
 	-	error pages and indexes need to be checked whether they exist or not
-
-
-
+-	set correct path info : done
 -	cgi exits with failure : return cgi response error -> 500 : done
 -	handle end of transmissions : done
 -	default host port = 8080 : done

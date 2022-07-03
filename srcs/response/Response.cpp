@@ -754,17 +754,13 @@ namespace ft
 	void	Response::_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated)
 	{
 		std::cout << " ---------------- cgi --------------- " << std::endl;
-		std::cout << "scriptPath : " << scriptPath << std::endl;
-		std::cout << "filePath : " << filePath << std::endl;
-		std::cout << "pathInfo : " << pathInfo << std::endl;
-		std::cout << "pathTranslated : " << pathTranslated << std::endl;
-		std::cout << " ------------------------------------ " << std::endl;
 		_cgi.setInputFile(filePath);
 		_cgi.setPathInfo(pathInfo);
 		_cgi.setScriptName(scriptPath);
 		_cgi.setPathTranslated(pathTranslated);
 
 		_cgi.execute(*this, request);
+		std::cout << " ------------------------------------ " << std::endl;
 
 		_parseCgiResponse();
 	}
@@ -784,15 +780,17 @@ namespace ft
 		if (!cgiResponse.is_open())
 		{
 			std::cout << "cgiResponse opening error" << std::endl;
+			_isGood = false;
 			_status = 500;
 			return ;
 		}
-		_bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
+		_bodyFileName = std::string(NGINY_VAR_DATA_PATH) + "/" + getRandomFileName();
 		std::cout << "RbodyFileName : " << _bodyFileName << std::endl;
 		_body.open(_bodyFileName);
 		if (!cgiResponse.is_open())
 		{
 			std::cout << "_body opening error" << std::endl;
+			_isGood = false;
 			_status = 500;
 			return ;
 		}
@@ -827,6 +825,7 @@ namespace ft
 			{
 				std::cout << "_body writing error" << std::endl;
 				_body.close();
+				_isGood = false;
 				_status = 500;
 				return ;
 			}
