@@ -38,6 +38,12 @@ concepts :
 	-	tested
 -	cgi parse response
 
+-	test delete
+-	find the segfault
+-	test paths
+
+-	test leaks
+
 -	config file check
 	-	error pages and indexes need to be checked whether they exist or not
 

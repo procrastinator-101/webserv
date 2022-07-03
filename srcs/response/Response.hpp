@@ -102,6 +102,8 @@ namespace ft
 
 			void	_constructErrorResponse(const HttpStatus& status);
 
+			void	_parseCgiResponse();
+
 
 			void	_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated);
 

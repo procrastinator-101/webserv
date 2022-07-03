@@ -14,7 +14,7 @@ Author = younes
 
 NAME = webserv
 
-CC = g++
+CC = clang++
 CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g
 
 

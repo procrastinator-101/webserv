@@ -11,7 +11,7 @@
 #include <cstddef>
 #include <stdexcept>
 
-# define CGI_EXEC_TIMEOUT	3000	//milliseconds
+# define CGI_EXEC_TIMEOUT	10000	//milliseconds
 
 namespace ft
 {

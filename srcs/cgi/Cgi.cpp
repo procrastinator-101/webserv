@@ -6,6 +6,7 @@
 #include "../client/Client.hpp"
 #include "../server/Server.hpp"
 #include <new>
+#include <string>
 #include <sys/_types/_size_t.h>
 #include <unistd.h>
 
@@ -95,9 +96,10 @@ namespace ft
 	{
 		int	ret;
 		int	fd[2];
-		
+		std::string	newBodyFileName;
 
 		constructEnv(request);
+		newBodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
 		_pid = fork();
 		if (_pid < 0)
 			return  cError;
@@ -109,16 +111,16 @@ namespace ft
 			fd[0] = open(request._bodyFileName.c_str(), O_RDONLY);
 			if (fd[0] < 0)
 				exit(EXIT_FAILURE);
-			response._bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
+			response._bodyFileName = newBodyFileName;
 			std::cout << "response._bodyFileName : " << response._bodyFileName << std::endl;
 			fd[1] = open(response._bodyFileName.c_str(), O_WRONLY | O_TRUNC);
-
 			std::cout << "fd : " << fd[1] << std::endl;
 			if (fd[1] < 0)
 			{
 				close(fd[0]);
 				exit(EXIT_FAILURE);
 			}
+			close(STDIN_FILENO);
 			ret = dup2(fd[0], STDIN_FILENO);
 			if (ret < 0)
 			{
@@ -126,6 +128,7 @@ namespace ft
 				close(fd[1]);
 				exit(EXIT_FAILURE);
 			}
+			close(STDOUT_FILENO);
 			ret = dup2(fd[1], STDOUT_FILENO);
 			if (ret < 0)
 			{
@@ -138,6 +141,7 @@ namespace ft
 			close(fd[1]);
 			exit(EXIT_FAILURE);
 		}
+		response._bodyFileName = newBodyFileName;
 		return timeOut();
 	}
 

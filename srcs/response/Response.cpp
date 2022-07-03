@@ -1,6 +1,7 @@
 #include "Response.hpp"
 
 #include "../server/Server.hpp"
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <sys/_types/_size_t.h>
@@ -762,8 +763,71 @@ namespace ft
 
 		_cgi.execute(*this, request);
 
-		//parse _body
-		//headers + _body
+		_parseCgiResponse();
+	}
+
+	void	Response::_parseCgiResponse()
+	{
+		bool	isInBody;
+		size_t	len;
+		size_t	pos;
+		char	buffer[BUFFER_SIZE];
+		std::fstream	cgiResponse;
+
+
+		//open files
+		std::cout << "CgiBodyFileName : " << _bodyFileName << std::endl;
+		cgiResponse.open(_bodyFileName);
+		if (!cgiResponse.is_open())
+		{
+			std::cout << "cgiResponse opening error" << std::endl;
+			_status = 500;
+			return ;
+		}
+		_bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
+		std::cout << "RbodyFileName : " << _bodyFileName << std::endl;
+		_body.open(_bodyFileName);
+		if (!cgiResponse.is_open())
+		{
+			std::cout << "_body opening error" << std::endl;
+			_status = 500;
+			return ;
+		}
+
+		//read from cgi response to response body
+		_msg.clear();
+		isInBody = false;
+		len = std::string(HTTP_BLANKlINE).length();
+		while (cgiResponse.good())
+		{
+			cgiResponse.read(buffer, BUFFER_SIZE);
+			if (cgiResponse.bad())
+			{
+				std::cout << "cgiResponse reading error" << std::endl;
+				_body.close();
+				_status = 500;
+				return ;
+			}
+			if (!isInBody)
+			{
+				_msg.append(buffer, cgiResponse.gcount());
+				pos = _msg.find(HTTP_BLANKlINE);
+				if (pos != std::string::npos)
+				{
+					_body.write(_msg.c_str() + pos + len, _msg.size() - pos - len);
+					_msg.erase(pos);
+				}
+			}
+			else
+				_body.write(buffer, cgiResponse.gcount());
+			if (_body.bad())
+			{
+				std::cout << "_body writing error" << std::endl;
+				_body.close();
+				_status = 500;
+				return ;
+			}
+		}
 	}
 
 	void	Response::reset()
