@@ -105,7 +105,7 @@ namespace ft
 	{
 		if (!_bodySize)
 		{
-			_bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
+			_bodyFileName = std::string(NGINY_VAR_DATA_PATH) + "/" + getRandomFileName();
 			_body.open(_bodyFileName.c_str(), std::ios_base::out);
 		}
 		if (!_isChunked)

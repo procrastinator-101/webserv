@@ -99,7 +99,7 @@ namespace ft
 		std::string	newBodyFileName;
 
 		constructEnv(request);
-		newBodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
+		newBodyFileName = std::string(NGINY_VAR_CGI_PATH) + "/" + getRandomFileName();
 		_pid = fork();
 		if (_pid < 0)
 			return  cError;
