@@ -1,8 +1,10 @@
 #include "Response.hpp"
 
 #include "../server/Server.hpp"
+#include <iostream>
 #include <string>
 #include <sys/_types/_size_t.h>
+#include <utility>
 
 namespace ft
 {
@@ -42,14 +44,13 @@ namespace ft
 		return false;
 	}
 
-	bool	Response::send(int fd)
+	std::pair<bool, Transmission>	Response::send(int fd)
 	{
 		int		ret;
 		int		len;
 		int		left;
 		int		size;
 		char	buffer[BUFFER_SIZE];
-		static std::fstream	logs("response_log", std::ios_base::out | std::ios_base::trunc);
 
 		//header message still has bufferSize or more bytes to send
 		if (_sent + BUFFER_SIZE <= _msg.length())
@@ -73,13 +74,11 @@ namespace ft
 				_body.seekg(_body.tellg() - std::streampos(len));
 			}
 		}
-		if (ret < 0)
-			throw std::runtime_error("Response:: send failed");
-		else if (!ret)
-			return true;//should close connection
+		if (ret <= 0)
+			return std::make_pair(true, tError);
 		else
 			_sent += ret;
-		return _sent == _contentLength + _msg.length();
+		return std::make_pair(_sent == _contentLength + _msg.length(), tSuccess);
 	}
 
 	void	Response::getFileFromStatus(const Host *host, int code)
@@ -102,11 +101,17 @@ namespace ft
 	{
 		std::map<std::string, std::string>::const_iterator	hostName;
 
-		std::cout << "host seach" << std::endl;
+		std::cout << "host search .................." << std::endl;
+		std::cout << "host size : " << hosts.size() << std::endl;
 		_host = _fetchTargetedHost(hosts, hostName->second);
 		std::cout << "host found : " << _host << std::endl;
 		if (request.status() != Request::good)
-			_constructErrorResponse(400);
+		{
+			if (request._status == Request::bad && request._notImplemented)
+				_constructErrorResponse(501);
+			else
+				_constructErrorResponse(400);
+		}
 		else
 		{
 			_cgi.setHost(_host);
@@ -144,6 +149,7 @@ namespace ft
 		_status = status;
 		_keepAlive = false;
 		getFileFromStatus(_host, _status.code);
+		std::cout << "file name : " << _bodyFileName << std::endl;
 		_contentLength = getFileSize(_bodyFileName);
 			
 		_constructStatusLine();
@@ -199,6 +205,7 @@ namespace ft
 			if (hosts[i]->hasName(name))
 				return hosts[i];
 		}
+		std::cout << "hosts[0]--------" << std::endl;
 		return hosts[0];
 	}
 
@@ -469,6 +476,7 @@ namespace ft
 		std::string	path;
 
 		path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
+		std::cout << "///////// " << path << std::endl;
 		if(stat(path.c_str(), &s) == 0)
 		{
 			std::cout << "*************************************************hi " << request._path << std::endl;
@@ -744,6 +752,12 @@ namespace ft
 
 	void	Response::_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated)
 	{
+		std::cout << " ---------------- cgi --------------- " << std::endl;
+		std::cout << "scriptPath : " << scriptPath << std::endl;
+		std::cout << "filePath : " << filePath << std::endl;
+		std::cout << "pathInfo : " << pathInfo << std::endl;
+		std::cout << "pathTranslated : " << pathTranslated << std::endl;
+		std::cout << " ------------------------------------ " << std::endl;
 		_cgi.setInputFile(filePath);
 		_cgi.setPathInfo(pathInfo);
 		_cgi.setScriptName(scriptPath);

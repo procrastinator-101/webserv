@@ -190,6 +190,13 @@ recv :
 		-	continue reading
 	-	ret < 0
 		-	error : delete client
+
+
+-	transmission not done
+-	end of transmission:
+	-	malformed Request -> fatal(tbadContent) : send on
+	-	closed receipient or socket error (terror): no send
+	-	normal end of transmission (tsuuces): send on 
 =====================================================================================================
 
 eot eob cont

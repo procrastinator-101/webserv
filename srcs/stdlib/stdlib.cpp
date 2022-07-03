@@ -1,5 +1,8 @@
 #include "stdlib.hpp"
+#include <exception>
 #include <new>
+#include <stdexcept>
+#include <string>
 #include <sys/_types/_size_t.h>
 #include <vector>
 
@@ -362,6 +365,24 @@ namespace ft
 		for (size_t i = 0; i < n; i++)
 			delete [] arr[i];
 		delete [] arr;
+	}
+
+	char	decodePercent(std::string& src)
+	{
+		char	ret;
+
+		if (src.size() != 3)
+			throw std::invalid_argument("decodePercent:: invalid argument");
+		try
+		{
+			ret = hstoz(src.substr(1, 2));
+			std::cout << "fmt : " << src.substr(1, 2) << " : " << (int)ret << std::endl;
+		}
+		catch (std::exception& e)
+		{
+			throw std::invalid_argument("decodePercent:: invalid argument");
+		}
+		return ret;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////

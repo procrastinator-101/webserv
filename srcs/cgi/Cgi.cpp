@@ -67,6 +67,7 @@ namespace ft
 
 		ret = waitpid(_pid, &status, WNOHANG);
 
+		_isRunning = false;
 		if (!ret)
 		{
 			if (isTimedOut())
@@ -75,7 +76,10 @@ namespace ft
 				return cTimeout;
 			}
 			else
+			{
+				_isRunning = true;
 				return cWait;
+			}
 		}
 		else if (ret < 0)
 		{
@@ -84,7 +88,6 @@ namespace ft
 		}
 		else if (!WIFEXITED(status) || WEXITSTATUS(status))
 			return cError;
-		_isRunning = false;
 		return cSucces;
 	}
 
@@ -106,20 +109,24 @@ namespace ft
 			fd[0] = open(request._bodyFileName.c_str(), O_RDONLY);
 			if (fd[0] < 0)
 				exit(EXIT_FAILURE);
+			response._bodyFileName = std::string(NGINY_VAR_PATH) + "/" + getRandomFileName();
+			std::cout << "response._bodyFileName : " << response._bodyFileName << std::endl;
 			fd[1] = open(response._bodyFileName.c_str(), O_WRONLY | O_TRUNC);
+
+			std::cout << "fd : " << fd[1] << std::endl;
 			if (fd[1] < 0)
 			{
 				close(fd[0]);
 				exit(EXIT_FAILURE);
 			}
-			ret = dup2(STDIN_FILENO, fd[0]);
+			ret = dup2(fd[0], STDIN_FILENO);
 			if (ret < 0)
 			{
 				close(fd[0]);
 				close(fd[1]);
 				exit(EXIT_FAILURE);
 			}
-			ret = dup2(STDOUT_FILENO, fd[1]);
+			ret = dup2(fd[1], STDOUT_FILENO);
 			if (ret < 0)
 			{
 				close(fd[0]);
@@ -248,6 +255,9 @@ namespace ft
 			if (!_isForbiddenHttpHeaderEnv(it->first))
 				_env.push_back(http::headerToEnv(it->first) + "=" + it->second);
 		}
+		//set Cookies
+		for (size_t i = 0; i < request._cookies.size(); i++)
+			_env.push_back("Cookie=" + request._cookies[i]);
 	}
 
 	bool	Cgi::_isForbiddenHttpHeaderEnv(const std::string& header)

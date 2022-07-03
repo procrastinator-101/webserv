@@ -83,7 +83,9 @@ namespace ft
 		public:
 			bool	timeOut();
 			void	reset();
-			bool	send(int fd);
+			
+			std::pair<bool, Transmission>	send(int fd);
+
 			void	build(const std::vector<Host *>& hosts, Request& request);
 		//================================================================================================
 		//	Response operations End

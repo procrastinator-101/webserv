@@ -34,6 +34,12 @@
 
 namespace ft
 {
+	enum Transmission
+	{
+		tError,
+		tSuccess,
+		tBadContent
+	};
 
 	/**
 	 * @brief 

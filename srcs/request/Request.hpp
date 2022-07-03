@@ -6,6 +6,7 @@
 #include <exception>
 #include <string>
 #include <sys/_types/_timeval.h>
+#include <utility>
 #include <vector>
 
 #include <map>
@@ -60,6 +61,7 @@ namespace ft
 			bool								_isTrailerSet;
 			bool								_isTrailerReached;
 
+			bool								_notImplemented;
 			Status								_status;
 			size_t								_bodySize;
 			std::string							_buffer;
@@ -70,6 +72,7 @@ namespace ft
 			size_t								_contentLength;
 			std::string							_querry;
 			std::set<std::string>				_trailerHeaders;
+			std::vector<std::string>			_cookies;
 
 
 			std::string							_method;
@@ -103,13 +106,14 @@ namespace ft
 		//================================================================================================
 		public:
 			void	reset();
-			bool	receive(int fd);
 			bool	isValid();
 
 			Status	status() const;
 			bool	isReceiving() const;
 
 			bool	timeOut() const;
+
+			std::pair<bool, Transmission>	receive(int fd);
 		//================================================================================================
 		//	Request operations End
 		//================================================================================================
@@ -122,6 +126,8 @@ namespace ft
 
 			bool	_endBody();
 			bool	_parse(char *buffer, size_t size);
+
+			std::string	_decodePercentUri(std::string& uri);
 
 
 			//return true if status is fatal, false otehrwise

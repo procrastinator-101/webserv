@@ -26,14 +26,12 @@ namespace ft
 		return *this;
 	}
 
-	bool	Client::handleRequest(const Server& server, const char **env)
+	std::pair<bool, Transmission>	Client::handleRequest(const Server& server, const char **env)
 	{
-		bool	ret;
+		std::pair<bool, Transmission>	ret;
 		
 		ret = _request.receive(_sockt.fd);
-		if (_request.status() == Request::fatal)
-			return true;
-		else if (!ret)
+		if (!ret.first || ret.second == tError)
 			return ret;
 
 		std::cout << _request << std::endl;
@@ -70,7 +68,7 @@ namespace ft
 		return false;
 	}
 
-	bool	Client::handleResponse()
+	std::pair<bool, Transmission>	Client::handleResponse()
 	{
 		return _response.send(_sockt.fd);
 	}
