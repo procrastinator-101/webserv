@@ -53,7 +53,7 @@ namespace ft
 			 * @return true : the client is ready(request handled completely) to send the response
 			 * @return false : the client is not ready to send the response
 			 */
-			bool	handleRequest(const Server& server, const char **env);
+			std::pair<bool, Transmission>	handleRequest(const Server& server, const char **env);
 
 			/**
 			 * @brief : takes the server that the client is interracting with
@@ -61,7 +61,7 @@ namespace ft
 			 * @return true : the client is ready(reponse completely sent) to receive new requests
 			 * @return false : the client is not ready to receive requests
 			 */
-			bool	handleResponse();
+			std::pair<bool, Transmission>	handleResponse();
 
 			bool	keepAlive() const;
 			int		getSocktFd() const;

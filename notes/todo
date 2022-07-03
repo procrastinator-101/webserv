@@ -23,16 +23,28 @@ concepts :
 # set the header part max length
 
 
+-	initialise all attributes and reset them
+-	correct uri parse :
+	-	percent msgs decoded : done
+	-	set of allawed characters
 
--	correct uri parse : percent msgs decoded
+-	set correct path info
+
 -	handle timeouts :
 	-	request : done
 	-	response
--	handle end of transmissions
--	cgi exits with failure : return cgi output or cgi response error
+-	cgi cookies
+	-	coded : done
+	-	tested
+-	cgi parse response
+
+-	config file check
+	-	error pages and indexes need to be checked whether they exist or not
 
 
 
+-	cgi exits with failure : return cgi response error -> 500 : done
+-	handle end of transmissions : done
 -	default host port = 8080 : done
 -	check select fd > fd_maxset : done
 -	http version should not excedd 1.1 : done

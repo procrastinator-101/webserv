@@ -124,13 +124,14 @@ namespace ft
 
 	void	Nginy::_manageRequest(Client& client, Server& server)
 	{
-		bool	isFinished;
+		std::pair<bool, Transmission>	ret;
 
-		isFinished = client.handleRequest(server, _env);
-		if (isFinished)
+		ret = client.handleRequest(server, _env);
+		std::cout << "isRequestFinished : " << ret.first << " | transmission : " << ret.second << std::endl;
+		if (ret.first)
 		{
 			_multiplexer.del(client._sockt.fd, aRead);
-			if (client._request.status() == Request::fatal)///!!!!!!!
+			if (ret.second == tError)
 				server.delClient(&client);
 			else
 				_multiplexer.add(client._sockt.fd, aWrite);
@@ -139,15 +140,15 @@ namespace ft
 
 	void	Nginy::_manageResponse(Client& client, Server& server)
 	{
-		bool	isFinished;
+		std::pair<bool, Transmission>	ret;
 
-		isFinished = client.handleResponse();
-		std::cout << "isResponseFinished : " << isFinished << std::endl;
-		if (isFinished)
+		ret = client.handleResponse();
+		std::cout << "isResponseFinished : " << ret.first << " | transmission : " << ret.second << std::endl;
+		if (ret.first)
 		{
 			// std::cout << client._response << std::endl;
 			_multiplexer.del(client._sockt.fd, aWrite);
-			if (client.keepAlive())
+			if (ret.second != tError && client.keepAlive())
 			{
 				client._response.reset();
 				_multiplexer.add(client._sockt.fd, aRead);

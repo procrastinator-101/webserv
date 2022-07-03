@@ -70,6 +70,8 @@ namespace ft
 {
 	long	getTimeStamp(timeval start);
 
+	char	decodePercent(std::string& src);
+
 
 	int	stoi(const std::string& str);
 	bool	isnumber(const std::string &str);

@@ -1,5 +1,9 @@
 #include "Request.hpp"
+#include <exception>
+#include <string>
+#include <sys/_types/_size_t.h>
 #include <sys/select.h>
+#include <utility>
 
 namespace ft
 {
@@ -26,22 +30,26 @@ namespace ft
 		return *this;
 	}
 
-	bool	Request::receive(int fd)
+	std::pair<bool, Transmission>	Request::receive(int fd)
 	{
-		bool	ret;
 		int		received;
 		char	str[BUFFER_SIZE];
+		std::pair<bool, Transmission>	ret;
 
-		ret = true;
+		ret = std::make_pair(true, tSuccess);
 		_updateRecvState();
 		received = ::recv(fd, str, BUFFER_SIZE, 0);
 		if (received > 0)
-			ret = _parse(str, received);
+			ret.first = _parse(str, received);
 		else
-			ret = _setStatus(fatal);
+			ret = std::make_pair(true, tError);
 		//end of receiving
-		if (ret)
+		if (ret.first)
+		{
 			_isReceiving = false;
+			if (_status == fatal)
+				ret.second = tBadContent;
+		}
 		return ret;
 	}
 
@@ -254,6 +262,8 @@ namespace ft
 			return false;
 		if (_body.is_open())
 			_body.close();
+		if (_bodySize > _contentLength)
+			_status = fatal;
 		return true;
 	}
 
@@ -309,6 +319,14 @@ namespace ft
 
 	Request::Status	Request::_parseUri(std::string& uri)
 	{
+		try
+		{
+			uri = _decodePercentUri(uri);
+		}
+		catch (std::exception& e)
+		{
+			return bad;
+		}
 		_path = strdtok(uri, "?");
 		_querry = uri;
 		if (_path.find_first_of(HTTP_WHITE_SPACES) != std::string::npos)
@@ -316,6 +334,29 @@ namespace ft
 		if (_querry.find_first_of(HTTP_WHITE_SPACES) != std::string::npos)
 			return bad;
 		return good;
+	}
+
+	std::string	Request::_decodePercentUri(std::string& uri)
+	{
+		size_t		pos;
+		size_t		start;
+		std::string	percent;
+		std::string	ret;
+
+		start = 0;
+		while (1)
+		{
+			pos = uri.find('%', start);
+			if (pos == std::string::npos)
+			{
+				ret.append(uri, start);
+				return ret;
+			}
+			ret.append(uri, start, pos - start);
+			percent = uri.substr(pos, 3);
+			ret.push_back(decodePercent(percent));
+			start = pos + 3;
+		}
 	}
 
 	Request::Status	Request::_parseVersion(std::string& version)
@@ -398,8 +439,6 @@ namespace ft
 		//Content-Length
 		else if (key == "Content-Length")
 		{
-			if (!isnumber(value))
-				return fatal;
 			try
 			{
 				_contentLength = stoz(value);
@@ -409,8 +448,6 @@ namespace ft
 				return fatal;
 			}
 		}
-
-		//Content-Type : get the file extension to know wheter to send it o cgi or not
 
 		//Host
 		else if (key == "Host")
@@ -430,16 +467,21 @@ namespace ft
 		else if (key == "Transfer-Encoding")
 		{
 			tmp = split(value, ",");
-			if (tmp.size() != 1)
-				ret = bad;
-			else if (tmp[0] != "chunked")//!!!!!!!!!
-				ret = bad;
-			else
-				_isChunked = true;
+			for (size_t i = 0; i < tmp.size(); i++)
+			{
+				tmp[i] = trim(tmp[i], " ");
+				if (tmp[i] != "chunked")
+				{
+					_notImplemented = true;
+					ret = bad;
+				}
+				else
+					_isChunked = true;
+			}
 		}
 
 		//Trailer
-		else if (key == "Trailer")//!!!!!!!
+		else if (key == "Trailer")
 		{
 			_isTrailerSet = true;
 			tmp = split(value, ",");
@@ -455,17 +497,20 @@ namespace ft
 			}
 		}
 
+		//cookies
+		else if (key == "Cookie")
+		{
+			_cookies.push_back(trim(value, " "));
+			return ret;
+		}
+
 		_headers.insert(std::make_pair(key, value));
 		return ret;
 	}
 
 	Request::Status	Request::_checkStartLine() const
 	{
-		if (_method != "GET" && _method != "POST" && _method != "DELETE")
-			return bad;
 		if (_path.empty())
-			return bad;
-		if (_version != "HTTP/1.1")
 			return bad;
 		return good;
 	}
@@ -476,6 +521,8 @@ namespace ft
 
 		it = _headers.find("Host");
 		if (it == _headers.end())
+			return bad;
+		if (_headers.find("Transfer-Encoding") != _headers.end() && _headers.find("Content-Length") != _headers.end())
 			return bad;
 		return good;
 	}
@@ -585,6 +632,7 @@ namespace ft
 
 		ostr << std::setw(fieldSize) << "method : " << request._method << std::endl;
 		ostr << std::setw(fieldSize) << "path : " << request._path << std::endl;
+		ostr << std::setw(fieldSize) << "querry : " << request._querry << std::endl;
 		ostr << std::setw(fieldSize) << "version : " << request._version << std::endl;
 
 		ostr << getDisplayHeader("TrailerHeaders", REQUEST_SHSIZE) << std::endl;
