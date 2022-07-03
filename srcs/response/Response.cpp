@@ -95,7 +95,7 @@ namespace ft
 				return ;
 			}
 		}
-		_bodyFileName = std::string(NGINY_ERROR_PAGES_PATH) + "/" + std::to_string(code) + ".html";
+		_bodyFileName = std::string(NGINY_ERROR_PAGES_PATH) + "/" + ztoa(code) + ".html";
 	}
 
 	void	Response::build(const std::vector<Host *>& hosts, Request& request)

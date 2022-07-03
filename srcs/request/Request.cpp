@@ -297,6 +297,7 @@ namespace ft
 		if (ret != good)
 			return ret;
 		ret = _parseUri(requestLine[1]);
+		std::cout << "ret : " << ret << std::endl;
 		if (ret != good)
 			return ret;
 		return _parseVersion(requestLine[2]);
@@ -319,6 +320,8 @@ namespace ft
 
 	Request::Status	Request::_parseUri(std::string& uri)
 	{
+		if (uri.find_first_of(HTTP_WHITE_SPACES) != std::string::npos)
+			return bad;
 		try
 		{
 			uri = _decodePercentUri(uri);
@@ -329,10 +332,6 @@ namespace ft
 		}
 		_path = strdtok(uri, "?");
 		_querry = uri;
-		if (_path.find_first_of(HTTP_WHITE_SPACES) != std::string::npos)
-			return bad;
-		if (_querry.find_first_of(HTTP_WHITE_SPACES) != std::string::npos)
-			return bad;
 		return good;
 	}
 
@@ -366,7 +365,7 @@ namespace ft
 		std::string	minor;
 
 		_version = version;
-
+		std::cout << "_version : " <<  _version << "|" << std::endl;
 		name = strdtok(version, "/");
 		if (name != "HTTP" && name != "%x48.54.54.50")
 			return bad;
