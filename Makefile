@@ -170,8 +170,8 @@ $(NAME) : NGINX_PATHS $(SRC) $(HDR)
 
 
 NGINX_PATHS :
-	mkdir -p $(_NGINY_VAR_DATA_PATH)
-	mkdir -p $(_NGINY_VAR_CGI_PATH)
+	@mkdir -p $(_NGINY_VAR_DATA_PATH)
+	@mkdir -p $(_NGINY_VAR_CGI_PATH)
 # @rm -r $(_NGINY_VAR_PATH)/*
 
 clean:

@@ -202,3 +202,9 @@ recv :
 eot eob cont
 
 dav_methods  PUT DELETE MKCOL COPY MOVE;
+
+
+response headers:
+	-	Content-type
+	-	Content-Length
+	-	Connection

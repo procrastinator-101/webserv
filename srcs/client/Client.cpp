@@ -1,6 +1,7 @@
 #include "Client.hpp"
 
 #include "../server/Server.hpp"
+#include <utility>
 
 namespace ft
 {
@@ -70,7 +71,9 @@ namespace ft
 
 	std::pair<bool, Transmission>	Client::handleResponse()
 	{
-		return _response.send(_sockt.fd);
+		if (_response.isFinished())
+			return _response.send(_sockt.fd);
+		return std::make_pair(false, tSuccess);
 	}
 
 	bool	Client::keepAlive() const

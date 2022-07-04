@@ -28,7 +28,7 @@ concepts :
 	-	percent msgs decoded : done
 	-	set of allawed characters
 
-	
+-	version parse error
 -	handle timeouts :
 	-	request : done
 	-	response
@@ -43,6 +43,7 @@ concepts :
 -	find the segfault
 
 -	test leaks
+-	add mime types
 
 
 

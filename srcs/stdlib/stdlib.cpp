@@ -20,6 +20,7 @@ namespace ft
 		timestamp = timestamp + now.tv_usec - start.tv_usec;
 		return (timestamp / 1000);
 	}
+
 	//left trim by delimiters
 	std::string	ltrim(const std::string& str, const std::string& delimiters)
 	{
@@ -268,7 +269,7 @@ namespace ft
 
 	std::string	getRandomFileName()
 	{
-		return std::string("file" + ft_itoa(time(0)));
+		return std::string("file" + ztoa(time(0)));
 	}
 
 	//returns the file size in bytes
