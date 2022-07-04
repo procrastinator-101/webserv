@@ -96,10 +96,9 @@ namespace ft
 	{
 		int	ret;
 		int	fd[2];
-		std::string	newBodyFileName;
 
 		constructEnv(request);
-		newBodyFileName = std::string(NGINY_VAR_CGI_PATH) + "/" + getRandomFileName();
+		response._bodyFileName = std::string(NGINY_VAR_CGI_PATH) + "/" + getRandomFileName();
 		_pid = fork();
 		if (_pid < 0)
 			return  cError;
@@ -111,10 +110,7 @@ namespace ft
 			fd[0] = open(request._bodyFileName.c_str(), O_RDONLY);
 			if (fd[0] < 0)
 				exit(EXIT_FAILURE);
-			response._bodyFileName = newBodyFileName;
-			std::cout << "response._bodyFileName : " << response._bodyFileName << std::endl;
-			fd[1] = open(response._bodyFileName.c_str(), O_WRONLY | O_TRUNC);
-			std::cout << "fd : " << fd[1] << std::endl;
+			fd[1] = open(response._bodyFileName.c_str(), O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 			if (fd[1] < 0)
 			{
 				close(fd[0]);
@@ -141,7 +137,6 @@ namespace ft
 			close(fd[1]);
 			exit(EXIT_FAILURE);
 		}
-		response._bodyFileName = newBodyFileName;
 		return timeOut();
 	}
 

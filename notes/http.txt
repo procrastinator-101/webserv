@@ -153,7 +153,7 @@ supported http headers
 		or
 		-	terminate the message by closing the connection
 	-	may not be sent on response of status code 1xx or 204.
-	-	A server MUST NOT send a Transfer-Encoding header field in any 2xx (Successful) response 
+	-	A server MUST NOT send a Transfer-Encoding header field in any 2xx (Successful) respons
 		to a CONNECT request.
 	-	A server that receives a request message with a transfer coding it does not understand 
 		SHOULD respond with 501 (Not Implemented).

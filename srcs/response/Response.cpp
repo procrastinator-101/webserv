@@ -1,15 +1,19 @@
 #include "Response.hpp"
 
 #include "../server/Server.hpp"
+#include <cstring>
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <sys/_types/_size_t.h>
+#include <sys/errno.h>
+#include <sys/fcntl.h>
 #include <utility>
 
 namespace ft
 {
-	Response::Response() :	_isGood(true), _host(0), _sent(0), _msg(), _cgi(), _keepAlive(true), _contentLength(0), _version("HTTP/1.1"),
+	Response::Response() :	_isCgiResponse(false), _isGood(true), _host(0), _sent(0), _msg(), _cgi(), _keepAlive(true), _contentLength(0), _version("HTTP/1.1"),
 							_status(), _headers(), _bodyFileName(), _body()
 	{
 	}
@@ -35,6 +39,8 @@ namespace ft
 	{
 		Cgi::Status	ret;
 
+		if (!_isCgiResponse)
+			return false;
 		if (!_cgi.isRunning())
 			return false;
 		ret = _cgi.timeOut();
@@ -42,7 +48,16 @@ namespace ft
 			return true;
 		else if (ret == Cgi::cError)
 			_constructErrorResponse(500);
+		else if (ret == Cgi::cSucces)
+			_parseCgiResponse();
 		return false;
+	}
+
+	bool	Response::isFinished()
+	{
+		if (_isCgiResponse && _cgi.isRunning())
+			return false;
+		return true;
 	}
 
 	std::pair<bool, Transmission>	Response::send(int fd)
@@ -120,6 +135,8 @@ namespace ft
 			_constructHead(request);
 
 			_prepare(_host, request);
+			if (_isCgiResponse)
+				return;
 			std::cout << _status.code << "    " << _bodyFileName << std::endl;
 			if (!_isGood)
 			{
@@ -128,19 +145,24 @@ namespace ft
 			}
 			if (_bodyFileName.empty())
 				getFileFromStatus(_host, _status.code);
-			std::cout << _status.code << "    " << _bodyFileName << std::endl;
-
-			//temporary
-			// _bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
-			// _status = 200;
-			//end temporary
-
-			_contentLength = getFileSize(_bodyFileName);
-				
-			_constructStatusLine();
-			_constructHeaders();
-			_constructBody();
+			_formatMessage();
 		}
+	}
+
+	void	Response::_formatMessage()
+	{
+		std::cout << _status.code << "    " << _bodyFileName << std::endl;
+
+		//temporary
+		// _bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
+		// _status = 200;
+		//end temporary
+
+		_contentLength = getFileSize(_bodyFileName);
+			
+		_constructStatusLine();
+		_constructHeaders();
+		_constructBody();
 	}
 
 	void	Response::_constructErrorResponse(const HttpStatus& status)
@@ -753,6 +775,7 @@ namespace ft
 
 	void	Response::_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated)
 	{
+		_isCgiResponse = true;
 		std::cout << " ---------------- cgi --------------- " << std::endl;
 		_cgi.setInputFile(filePath);
 		_cgi.setPathInfo(pathInfo);
@@ -761,8 +784,6 @@ namespace ft
 
 		_cgi.execute(*this, request);
 		std::cout << " ------------------------------------ " << std::endl;
-
-		_parseCgiResponse();
 	}
 
 	void	Response::_parseCgiResponse()
@@ -773,23 +794,20 @@ namespace ft
 		char	buffer[BUFFER_SIZE];
 		std::fstream	cgiResponse;
 
-
 		//open files
 		std::cout << "CgiBodyFileName : " << _bodyFileName << std::endl;
-		cgiResponse.open(_bodyFileName);
+		cgiResponse.open(_bodyFileName, std::ios_base::in);
 		if (!cgiResponse.is_open())
 		{
-			std::cout << "cgiResponse opening error" << std::endl;
 			_isGood = false;
 			_status = 500;
 			return ;
 		}
 		_bodyFileName = std::string(NGINY_VAR_DATA_PATH) + "/" + getRandomFileName();
 		std::cout << "RbodyFileName : " << _bodyFileName << std::endl;
-		_body.open(_bodyFileName);
-		if (!cgiResponse.is_open())
+		_body.open(_bodyFileName, std::ios_base::out);
+		if (!_body.is_open())
 		{
-			std::cout << "_body opening error" << std::endl;
 			_isGood = false;
 			_status = 500;
 			return ;
@@ -804,7 +822,6 @@ namespace ft
 			cgiResponse.read(buffer, BUFFER_SIZE);
 			if (cgiResponse.bad())
 			{
-				std::cout << "cgiResponse reading error" << std::endl;
 				_body.close();
 				_status = 500;
 				return ;
@@ -817,23 +834,55 @@ namespace ft
 				{
 					_body.write(_msg.c_str() + pos + len, _msg.size() - pos - len);
 					_msg.erase(pos);
+					isInBody = true;
 				}
 			}
 			else
 				_body.write(buffer, cgiResponse.gcount());
 			if (_body.bad())
 			{
-				std::cout << "_body writing error" << std::endl;
 				_body.close();
 				_isGood = false;
 				_status = 500;
 				return ;
 			}
 		}
+		_body.close();
+		_formatMessage();
+	}
+
+	void	Response::_parseCgiResponseHead()
+	{
+		std::string	key;
+		std::string	buffer;
+		std::vector<std::string>	msgLines;
+
+		buffer.swap(_msg);
+		msgLines = split(buffer, "\r\n");
+		for (size_t i = 0; i < msgLines.size(); i++)
+		{
+			key = strdtok(msgLines[i], ":");
+			if (key == "Status")
+			{
+				try
+				{
+					_status = stoz(trim(msgLines[i], " "));
+				}
+				catch (std::exception& e)
+				{
+					_status = 502;
+				}
+			}
+			else
+			{
+				_msg.append(key + ":" + msgLines[i]);
+			}
+		}
 	}
 
 	void	Response::reset()
 	{
+		_isCgiResponse = false;
 		_isGood = true;
 		_host = 0;
 		_sent = 0;

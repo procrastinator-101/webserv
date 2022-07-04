@@ -40,6 +40,7 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
+			bool								_isCgiResponse;
 			bool								_isGood;
 			const Host							*_host;
 			size_t								_sent;
@@ -83,6 +84,7 @@ namespace ft
 		public:
 			bool	timeOut();
 			void	reset();
+			bool	isFinished();
 			
 			std::pair<bool, Transmission>	send(int fd);
 
@@ -103,6 +105,10 @@ namespace ft
 			void	_constructErrorResponse(const HttpStatus& status);
 
 			void	_parseCgiResponse();
+
+			void	_formatMessage();
+
+			void	_parseCgiResponseHead();
 
 
 			void	_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated);

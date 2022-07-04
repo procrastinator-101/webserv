@@ -8,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Sun Jul  3 21:45:43 2022
+# Make data base, printed on Mon Jul  4 13:04:07 2022
 
 # Variables
 
@@ -73,11 +73,11 @@ _NGINY_CONF_PATH = $(ROOT_DIR)/confFiles/default.conf
 # makefile (from `Makefile', line 25)
 CGI_PATH = $(SRCS_PATH)/cgi
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-1a6538a5-e6d2-44ea-9fda-ba6c7aba6269.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-be26d12b-c3bd-42ad-a443-860b3ff7f65e.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.MBssnWImx6/Render
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.OpC0yetv9x/Render
 # makefile (from `Makefile', line 119)
 STDLIB_PATH = $(SRCS_PATH)/stdlib
 # environment
@@ -101,7 +101,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from `Makefile', line 49)
 HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.OOXsCNPvHE/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.F1fIQVQ7eH/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -125,7 +125,7 @@ MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
 # makefile (from `Makefile', line 84)
 REQUEST_SRC = $(REQUEST_PATH)/Request.cpp
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/yarroubi/Library/Application Support/Code/CachedData/4af164ea3a06f701fe3e89a2bcbb421d2026b68f
+VSCODE_CODE_CACHE_PATH = /Users/yarroubi/Library/Application Support/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
 # environment
 LOGNAME = yarroubi
 # environment
@@ -193,7 +193,7 @@ TMPDIR = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/yarroubi/Library/Application Support/Code/1.68.0-main.sock
+VSCODE_IPC_HOOK = /Users/yarroubi/Library/Application Support/Code/1.68.1-main.sock
 # makefile
 MAKEFLAGS = Rrqp
 # makefile (from `Makefile', line 100)
@@ -251,7 +251,7 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 3355
+VSCODE_PID = 3671
  
 # makefile (from `Makefile', line 60)
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
@@ -304,7 +304,7 @@ all: webserv
 
 webserv: NGINX_PATHS srcs/main.cpp srcs/cgi/Cgi.cpp srcs/client/Client.cpp srcs/host/Host.cpp srcs/http_status/HttpStatus.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockets/ClientSockt.cpp srcs/sockets/ServerSockt.cpp srcs/sockets/Sockt.cpp srcs/stdlib/stdlib.cpp srcs/cgi/Cgi.hpp srcs/client/Client.hpp srcs/host/Host.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/multiplex/Action.hpp srcs/multiplex/Selecter.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockets/ClientSockt.hpp srcs/sockets/ServerSockt.hpp srcs/sockets/Sockt.hpp srcs/stdlib/stdlib.hpp
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-03 20:58:22
+#  Last modified 2022-07-04 11:41:14
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
@@ -351,7 +351,7 @@ srcs/cgi/Cgi.cpp:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-03 20:49:09
+#  Last modified 2022-07-04 07:56:37
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -464,8 +464,8 @@ NGINX_PATHS:
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=3/12=25%
 #  commands to execute (from `Makefile', line 173):
-	mkdir -p $(_NGINY_VAR_DATA_PATH)
-	mkdir -p $(_NGINY_VAR_CGI_PATH)
+	@mkdir -p $(_NGINY_VAR_DATA_PATH)
+	@mkdir -p $(_NGINY_VAR_CGI_PATH)
 	
 
 re: fclean all
@@ -575,6 +575,6 @@ srcs/response/Response.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sun Jul  3 21:45:43 2022
+# Finished Make data base on Mon Jul  4 13:04:07 2022
 
  
