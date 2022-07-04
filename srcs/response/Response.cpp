@@ -447,7 +447,7 @@ namespace ft
 	{
 		std::string		index_file;
 
-		if (path[path.length() - 1] != '/')
+		if (request._path[request._path.length() - 1] != '/')
 		{
 			_status = 301;
 			// _headers["Location"] = path + "/";
@@ -477,10 +477,8 @@ namespace ft
 		std::string	path;
 
 		path = prepare_path(location.second->_root, request._path.substr(location.first.length()));
-		std::cout << "///////// " << path << std::endl;
 		if(stat(path.c_str(), &s) == 0)
 		{
-			std::cout << "*************************************************hi " << request._path << std::endl;
 			if(s.st_mode & S_IFDIR)		//it's a directory
 				_handleDirInGet(location, path, request);
 			else
@@ -497,7 +495,7 @@ namespace ft
 	{
 		std::string		index_file;
 
-		if (path[path.length() - 1] != '/')
+		if (request._path[request._path.length() - 1] != '/')
 		{
 			_status = 301;
 			// _headers["Location"] = path.append("/");
