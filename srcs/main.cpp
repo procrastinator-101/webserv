@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "nginy/Nginy.hpp"
+#include "mime_type/mimeType.hpp"
 
 int debug = 1;
 
@@ -21,6 +22,7 @@ int main(int argc, char** argv, char **env)
 		if (debug)
 		{
 			nginy.fetchConfiguration(argv[1]);
+			ft::MimeType::setMimesTypes(std::string(NGINY_ROOT_DIR_INC) + "/srcs/mime_type/mimes.txt");
 		}
 		else
 		{
