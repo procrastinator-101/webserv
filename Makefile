@@ -15,7 +15,7 @@ Author = younes
 NAME = webserv
 
 CC = clang++
-CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g
+CFLAGS = -Wall -Werror -Wextra -std=c++98 #-fsanitize=address -g
 
 
 SRCS_PATH = srcs
@@ -58,6 +58,14 @@ LOCATION_PATH = $(SRCS_PATH)/location
 
 LOCATION_SRC = $(LOCATION_PATH)/Location.cpp
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
+#================================================================================
+
+# mime_type
+#================================================================================
+MIME_TYPE_PATH = $(SRCS_PATH)/mime_type
+
+MIME_TYPE_SRC = $(MIME_TYPE_PATH)/mimeType.cpp
+MIME_TYPE_HDR = $(MIME_TYPE_PATH)/mimeType.hpp
 #================================================================================
 
 # multiplex
@@ -134,6 +142,9 @@ _NGINY_INDEX_PATH = $(ROOT_DIR)/indexes
 _NGINY_ERROR_PAGES_PATH = $(ROOT_DIR)/error_pages
 
 
+
+NGINY_ROOT_DIR_INC = NGINY_ROOT_DIR_INC=\"$(ROOT_DIR)\"
+
 NGINY_CONF_PATH_INC = NGINY_CONF_PATH=\"$(_NGINY_CONF_PATH)\"
 
 NGINY_VAR_DATA_PATH_INC = NGINY_VAR_DATA_PATH=\"$(_NGINY_VAR_DATA_PATH)\"
@@ -142,18 +153,18 @@ NGINY_VAR_CGI_PATH_INC = NGINY_VAR_CGI_PATH=\"$(_NGINY_VAR_CGI_PATH)\"
 NGINY_INDEX_PATH_INC = NGINY_INDEX_PATH=\"$(_NGINY_INDEX_PATH)\"
 _NGINY_ERROR_PAGES_PATH_INC = NGINY_ERROR_PAGES_PATH=\"$(_NGINY_ERROR_PAGES_PATH)\"
 
-INCLUDE_PARAMS =	$(NGINY_CONF_PATH_INC) $(NGINY_VAR_DATA_PATH_INC) $(NGINY_VAR_CGI_PATH_INC) \
+INCLUDE_PARAMS =	$(NGINY_ROOT_DIR_INC) $(NGINY_CONF_PATH_INC) $(NGINY_VAR_DATA_PATH_INC) $(NGINY_VAR_CGI_PATH_INC) \
 					$(NGINY_INDEX_PATH_INC) $(_NGINY_ERROR_PAGES_PATH_INC)
 #--------------------------------------------------------------------------------
 
 
 SRC =	$(SRCS_PATH)/main.cpp $(CGI_SRC) $(CLIENT_SRC) $(HOST_SRC) $(HTTP_STATUS_SRC) \
-		$(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) $(REQUEST_SRC) $(RESPONSE_SRC) \
-		$(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
+		$(MIME_TYPE_SRC) $(LOCATION_SRC) $(MULTIPLEX_SRC) $(NGINY_SRC) $(REQUEST_SRC) \
+		$(RESPONSE_SRC) $(SERVER_SRC) $(SOCKT_SRC) $(STDLIB_SRC)
 
 HDR =	$(CGI_HDR) $(CLIENT_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) \
-		$(MULTIPLEX_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) \
-		$(SOCKT_HDR) $(STDLIB_HDR)
+		$(MIME_TYPE_HDR) $(MULTIPLEX_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) \
+		$(SERVER_HDR) $(SOCKT_HDR) $(STDLIB_HDR)
 
 
 INC = $(INCLUDE_PARAMS:%=-D%)

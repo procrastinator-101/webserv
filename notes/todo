@@ -26,9 +26,10 @@ concepts :
 -	initialise all attributes and reset them
 -	correct uri parse :
 	-	percent msgs decoded : done
-	-	set of allawed characters
+	-	set of allowed characters
 
 -	version parse error
+
 -	handle timeouts :
 	-	request : done
 	-	response
@@ -39,12 +40,13 @@ concepts :
 
 -	cgi parse response
 
--	test delete
 -	find the segfault
 
--	test leaks
 -	add mime types
 
+
+-	test delete :done
+-	test leaks : done
 
 
 -	config file check : done
