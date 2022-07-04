@@ -116,6 +116,7 @@ namespace ft
 				close(fd[0]);
 				exit(EXIT_FAILURE);
 			}
+			std::cout << "cgi:: bodyFileName : " << response._bodyFileName << std::endl;
 			close(STDIN_FILENO);
 			ret = dup2(fd[0], STDIN_FILENO);
 			if (ret < 0)
@@ -133,6 +134,7 @@ namespace ft
 				exit(EXIT_FAILURE);
 			}
 			_runScript(fd);
+			std::cout << "cgi:: end" << std::endl;
 			close(fd[0]);
 			close(fd[1]);
 			exit(EXIT_FAILURE);
@@ -242,7 +244,7 @@ namespace ft
 		_env.push_back("SERVER_PROTOCOL=HTTP/1.1");
 
 		//SERVER_SOFTWARE
-		_env.push_back("SERVER_SOFTWARE=nginy/1");
+		_env.push_back("SERVER_SOFTWARE=Nginy/1");
 
 		_setHttpEnvHeaders(request);
 	}

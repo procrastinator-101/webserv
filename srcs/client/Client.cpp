@@ -63,7 +63,7 @@ namespace ft
 		{
 			std::cout << "response timeout" << std::endl;
 			_response.reset();
-			_response._constructErrorResponse(502);
+			_response._constructErrorResponse(504);
 			return true;
 		}
 		return false;

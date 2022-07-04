@@ -5,6 +5,7 @@
 #include <exception>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <sys/_types/_size_t.h>
 #include <sys/errno.h>
@@ -44,6 +45,7 @@ namespace ft
 		if (!_cgi.isRunning())
 			return false;
 		ret = _cgi.timeOut();
+		std::cout << "cgi::status : " << ret << std::endl;
 		if (ret == Cgi::cTimeout)
 			return true;
 		else if (ret == Cgi::cError)
@@ -55,6 +57,7 @@ namespace ft
 
 	bool	Response::isFinished()
 	{
+		std::cout << "isCgiResponse : " << _isCgiResponse << " : " << _cgi.isRunning() << std::endl;
 		if (_isCgiResponse && _cgi.isRunning())
 			return false;
 		return true;
@@ -121,6 +124,7 @@ namespace ft
 		std::cout << "host size : " << hosts.size() << std::endl;
 		_host = _fetchTargetedHost(hosts, hostName->second);
 		std::cout << "host found : " << _host << std::endl;
+		_constructHead(request);
 		if (request.status() != Request::good)
 		{
 			if (request._status == Request::bad && request._notImplemented)
@@ -131,8 +135,6 @@ namespace ft
 		else
 		{
 			_cgi.setHost(_host);
-
-			_constructHead(request);
 
 			_prepare(_host, request);
 			if (_isCgiResponse)
@@ -153,11 +155,6 @@ namespace ft
 	{
 		std::cout << _status.code << "    " << _bodyFileName << std::endl;
 
-		//temporary
-		// _bodyFileName = std::string(NGINY_INDEX_PATH) + "/index.html";
-		// _status = 200;
-		//end temporary
-
 		_contentLength = getFileSize(_bodyFileName);
 			
 		_constructStatusLine();
@@ -169,10 +166,19 @@ namespace ft
 	{
 		_headers.clear();
 
-		_status = status;
+		//Content-Length is set later
+		_headers["Server"] = "Nginy/1";
+		_headers["Content-type"] = "text/html";
 		_keepAlive = false;
+		
+
+		// _version = request._version;
+		//_status is set in prepare response
+
+		_headers.clear();
+
+		_status = status;
 		getFileFromStatus(_host, _status.code);
-		std::cout << "file name : " << _bodyFileName << std::endl;
 		_contentLength = getFileSize(_bodyFileName);
 			
 		_constructStatusLine();
@@ -182,17 +188,13 @@ namespace ft
 
 	void	Response::_constructHead(Request& request)
 	{
-		_headers = request._headers;
-
-		//remove request headers related to content framing
-		_headers.erase("Content-Type");
-		_headers.erase("Content-Length");
-		_headers.erase("Transfer-Encoding");
-		_headers.erase("Host");
-		_headers.erase("Trailer");
-
+		//Content-Length is set later
+		_headers["Server"] = "Nginy/1";
+		_headers["Content-type"] = "text/html";
 		_keepAlive = request._keepAlive;
+
 		_version = request._version;
+		//_status is set in prepare response
 	}
 
 	void	Response::_constructStatusLine()
@@ -228,6 +230,8 @@ namespace ft
 			if (hosts[i]->hasName(name))
 				return hosts[i];
 		}
+		if (hosts.empty())
+			throw std::runtime_error("Response:: no host found");
 		std::cout << "hosts[0]--------" << std::endl;
 		return hosts[0];
 	}
@@ -806,9 +810,12 @@ namespace ft
 		_isCgiResponse = true;
 		std::cout << " ---------------- cgi --------------- " << std::endl;
 		_cgi.setInputFile(filePath);
-		_cgi.setPathInfo(pathInfo);
+		(void)pathInfo;
+		// _cgi.setPathInfo(pathInfo);
+		_cgi.setPathInfo(filePath);
 		_cgi.setScriptName(scriptPath);
 		_cgi.setPathTranslated(pathTranslated);
+		_cgi.setPathTranslated(filePath);
 
 		_cgi.execute(*this, request);
 		std::cout << " ------------------------------------ " << std::endl;
