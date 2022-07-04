@@ -190,7 +190,7 @@ namespace ft
 	{
 		//Content-Length is set later
 		_headers["Server"] = "Nginy/1";
-		_headers["Content-type"] = "text/html";
+		_headers["Content-Type"] = "text/html";
 		_keepAlive = request._keepAlive;
 
 		_version = request._version;
@@ -809,13 +809,14 @@ namespace ft
 	{
 		_isCgiResponse = true;
 		std::cout << " ---------------- cgi --------------- " << std::endl;
+		std::cout << "script path : " << scriptPath << " | filePath : " << filePath << std::endl;
 		_cgi.setInputFile(filePath);
 		(void)pathInfo;
-		// _cgi.setPathInfo(pathInfo);
-		_cgi.setPathInfo(filePath);
-		_cgi.setScriptName(scriptPath);
-		_cgi.setPathTranslated(pathTranslated);
+		(void)pathTranslated;
+		_cgi.setPathInfo(request._path);
+		_cgi.setScriptName(request._path);
 		_cgi.setPathTranslated(filePath);
+		_cgi.setScriptFileName(filePath);
 
 		_cgi.execute(*this, request);
 		std::cout << " ------------------------------------ " << std::endl;

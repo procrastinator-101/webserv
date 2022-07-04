@@ -113,6 +113,8 @@ namespace ft
 			void	setPathInfo(const std::string& pathInfo);
 			void	setInputFile(const std::string& inputFile);
 			void	setScriptName(const std::string& scriptName);
+			void	setScriptPath(const std::string& scriptPath);
+			void	setScriptFileName(const std::string& scriptFileName);
 			void	setPathTranslated(const std::string& pathTranslated);
 		//================================================================================================
 		//	Cgi Setters End

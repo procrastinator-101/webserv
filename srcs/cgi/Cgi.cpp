@@ -32,7 +32,7 @@ namespace ft
 	{
 		if (!sysEnv)
 			throw std::invalid_argument("Cgi:: sysEnv is null");
-		_initialiseEnv();
+		// _initialiseEnv();
 	}
 
 	Cgi::Cgi(const Cgi& src) :	_sysEnv(src._sysEnv), _host(src._host), _server(src._server), _client(src._client), _env(src._env), 
@@ -68,6 +68,7 @@ namespace ft
 
 		ret = waitpid(_pid, &status, WNOHANG);
 
+		std::cout << "waitpid : " << ret << " | pid : " << _pid << std::endl;
 		_isRunning = false;
 		if (!ret)
 		{
@@ -125,6 +126,9 @@ namespace ft
 				close(fd[1]);
 				exit(EXIT_FAILURE);
 			}
+			std::cout << "cgi envs" << std::endl;
+			for (size_t i = 0; i < _env.size(); i++)
+				std::cout << _env[i] << std::endl;
 			close(STDOUT_FILENO);
 			ret = dup2(fd[1], STDOUT_FILENO);
 			if (ret < 0)
@@ -134,7 +138,6 @@ namespace ft
 				exit(EXIT_FAILURE);
 			}
 			_runScript(fd);
-			std::cout << "cgi:: end" << std::endl;
 			close(fd[0]);
 			close(fd[1]);
 			exit(EXIT_FAILURE);
@@ -178,6 +181,10 @@ namespace ft
 		args[0] = ft_strdup(_scriptName.c_str());
 		args[1] = ft_strdup(_inputFile.c_str());
 		args[2] = 0;
+		std::cout << "file : " << _inputFile.c_str() << std::endl;
+		std::cout << "script : " << _scriptName.c_str() << std::endl;
+		for (size_t i = 0; i < 2; i++)
+			std::cout << "args[" << i << "] : {" << args[i] << "}" << std::endl;
 		if (!args[0] || !args[1])
 		{
 			destroy2arr(args, 3);
@@ -245,6 +252,11 @@ namespace ft
 
 		//SERVER_SOFTWARE
 		_env.push_back("SERVER_SOFTWARE=Nginy/1");
+
+		//REDIRECT_STATUS : php specific
+		_env.push_back("REDIRECT_STATUS=200");
+
+		
 
 		_setHttpEnvHeaders(request);
 	}
@@ -328,6 +340,10 @@ namespace ft
 		_host = 0;
 		_server = 0;
 		_client = 0;
+
+		_inputFile.clear();
+		_scriptName.clear();
+
 		_env.clear();
 		_pid = -1;
 		_isRunning = false;
@@ -345,13 +361,23 @@ namespace ft
 
 	void	Cgi::setScriptName(const std::string& scriptName)
 	{
-		_scriptName = scriptName;
+		// _scriptName = scriptName;
 		_env.push_back("SCRIPT_NAME=" + scriptName);
 	}
 
 	void	Cgi::setPathTranslated(const std::string& pathTranslated)
 	{
 		_env.push_back("PATH_TRANSLATED=" + pathTranslated);
+	}
+
+	void	Cgi::setScriptFileName(const std::string& scriptFileName)
+	{
+		_env.push_back("SCRIPT_FILENAME=" + scriptFileName);
+	}
+
+	void	Cgi::setScriptPath(const std::string& scriptPath)
+	{
+		_scriptName = scriptPath;
 	}
 
 	void	Cgi::setHost(const Host *host)

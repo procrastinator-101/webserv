@@ -1,0 +1,54 @@
+/Users/yarroubi/Desktop/webserv/confFiles/default.conf
+isRequestFinished : 0 | transmission : 1
+request timeout
+isCgiResponse : 0 : 0
+isResponseFinished : 0 | transmission : 1
+isCgiResponse : 0 : 0
+isResponseFinished : 0 | transmission : 1
+isCgiResponse : 0 : 0
+isResponseFinished : 0 | transmission : 1
+isCgiResponse : 0 : 0
+isResponseFinished : 1 | transmission : 1
+isRequestFinished : 0 | transmission : 1
+isRequestFinished : 0 | transmission : 1
+isRequestFinished : 0 | transmission : 1
+isRequestFinished : 0 | transmission : 1
+ret(_parseStartLine) : 0
+ret(_parseHeaders) : 0
+_______________________________Request________________________________
+_isTrailerSet :               0
+_isChunked :                  0
+keepAlive :                   1
+state :                       1
+method :                      
+path :                        
+querry :                      
+version :                     
+_________________________TrailerHeaders__________________________
+
+-----------------------------------------------------------------
+_____________________________headers_____________________________
+aa                             : 
+aaaa                           : 
+aaaaaa                         : 
+-----------------------------------------------------------------
+______________________________body_______________________________
+name : /goinfre/yarroubi/var/nginy/data/file1656963739
+=============================================================================
+=============================================================================
+-----------------------------------------------------------------
+----------------------------------------------------------------------
+
+host search ..................
+host size : 1
+hosts[0]--------
+host found : 0x60e000000040
+isRequestFinished : 1 | transmission : 1
+isCgiResponse : 0 : 0
+isResponseFinished : 0 | transmission : 1
+isCgiResponse : 0 : 0
+isResponseFinished : 0 | transmission : 1
+isCgiResponse : 0 : 0
+isResponseFinished : 0 | transmission : 1
+isCgiResponse : 0 : 0
+isResponseFinished : 1 | transmission : 1

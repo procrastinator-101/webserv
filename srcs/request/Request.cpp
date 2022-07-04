@@ -8,7 +8,7 @@
 namespace ft
 {
 	Request::Request() :	_isReceiving(false), _isInChunk(false), _chunkLen(0), _chunkSize(0), _isTrailerSet(false), _isTrailerReached(false),
-							_status(good), _bodySize(0), _buffer(), _isChunked(false), _keepAlive(true), _contentLength(0),
+							_status(good), _isInBody(false), _bodySize(0), _buffer(), _isChunked(false), _keepAlive(true), _contentLength(0),
 							_trailerHeaders(), _method(), _path(), _version(), _headers(), _bodyFileName(), _body()
 	{
 	}
@@ -82,7 +82,8 @@ namespace ft
 		size_t	start;
 
 		ret = false;
-		if (_bodySize)
+		std::cout << "----isBody : " << _isInBody << " bodySize : " <<_bodySize << std::endl;
+		if (_isInBody)
 			ret = _fetchBody(str, size);
 		else
 		{
@@ -98,16 +99,19 @@ namespace ft
 				ret = _fetchBody(str + start, size - start);
 			}
 		}
+		std::cout << "++++isBody : " << _isInBody << " bodySize : " <<_bodySize << std::endl;
 		return ret;
 	}
 
 	bool	Request::_fetchBody(char *str, size_t size)
 	{
-		if (!_bodySize)
+		std::cout << "isBody : " << _isInBody << " bodySize : " <<_bodySize << std::endl;
+		if (!_isInBody)
 		{
 			_bodyFileName = std::string(NGINY_VAR_DATA_PATH) + "/" + getRandomFileName();
 			_body.open(_bodyFileName.c_str(), std::ios_base::out);
 		}
+		_isInBody = true;
 		if (!_isChunked)
 		{
 			_body.write(str, size);
@@ -589,6 +593,7 @@ namespace ft
 		_isTrailerReached = false;
 
 		_status = good;
+		_isInBody = false;
 		_bodySize = 0;
 		_buffer.clear();
 
