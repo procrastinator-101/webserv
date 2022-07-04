@@ -343,6 +343,35 @@ namespace ft
 		return (cgis.find(cgi_ext) != cgis.end());
 	}
 
+	// void	Response::setheader(std::map<std::string, std::string>& var, std::string ext)
+	// {
+	// 	std::map<std::string, std::string>::const_iterator	it = var.find(ext);
+
+	// 	if (ext.empty() || it == var.end())
+	// 		_headers["Content-Disposition"] = "attachement";
+	// 	else
+	// 		_headers["Content-Type"] = it->second;
+	// }
+
+	// void	Response::setContentType(std::string& path)
+	// {
+	// 	std::string	file;
+	// 	std::string	ext;
+	// 	size_t		tmp;
+
+	// 	tmp = path.find_last_of('/');
+	// 	if (tmp != std::string::npos)
+	// 		file = path.substr(tmp + 1);
+	// 	else
+	// 		file = path;
+	// 	tmp = file.find_last_of('.');
+	// 	if (tmp != std::string::npos)
+	// 		ext = file.substr(tmp + 1);
+	// 	else
+	// 		ext = "";
+	// 	setheader(mimes, ext);
+	// }
+
 	void	Response::_handleFileInGet(const std::pair<std::string, Location *>& location, std::string& path, Request& request)
 	{
 		std::string	cgi_ext;
@@ -355,6 +384,7 @@ namespace ft
 		}
 		else
 		{
+
 			_status = 200;
 			_bodyFileName = path;
 		}

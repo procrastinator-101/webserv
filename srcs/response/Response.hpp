@@ -135,6 +135,9 @@ namespace ft
 
 			bool		matched_ext(std::map<std::string, std::string> cgis, std::string& path, std::string& cgi_ext);
 
+			// void		setheader(std::map<std::string, std::string>& var, std::string ext);
+			// void		setContentType(std::string& path);
+
 
 			const Host	*_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name);
 
