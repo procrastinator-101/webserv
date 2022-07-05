@@ -641,7 +641,7 @@ namespace ft
 		struct stat s;
 		std::string	path;
 
-		if (location.second->_uploadPath.length() != 0)
+		if (!location.second->_uploadPath.empty())
 		{
 			if (getFileSize(request._bodyFileName) > MaxBodySize)
 			{
