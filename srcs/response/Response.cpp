@@ -1,20 +1,11 @@
 #include "Response.hpp"
 
 #include "../server/Server.hpp"
-#include <cstring>
 #include <exception>
-#include <fstream>
-#include <iostream>
-#include <stdexcept>
-#include <string>
-#include <sys/_types/_size_t.h>
-#include <sys/errno.h>
-#include <sys/fcntl.h>
-#include <utility>
 
 namespace ft
 {
-	Response::Response() :	_isCgiResponse(false), _isGood(true), _host(0), _sent(0), _msg(), _cgi(), _keepAlive(true), _contentLength(0), _version("HTTP/1.1"),
+	Response::Response() :	_isCgiResponse(false), _isGood(true), _host(0), _sent(0), _msg(), _cgi(), _keepAlive(true), _contentLength(0),
 							_status(), _headers(), _bodyFileName(), _body()
 	{
 	}
@@ -45,7 +36,7 @@ namespace ft
 		if (!_cgi.isRunning())
 			return false;
 		ret = _cgi.timeOut();
-		std::cout << "cgi::status : " << ret << std::endl;
+		// std::cout << "cgi::status : " << ret << std::endl;
 		if (ret == Cgi::cTimeout)
 			return true;
 		else if (ret == Cgi::cError)
@@ -57,7 +48,7 @@ namespace ft
 
 	bool	Response::isFinished()
 	{
-		std::cout << "isCgiResponse : " << _isCgiResponse << " : " << _cgi.isRunning() << std::endl;
+		// std::cout << "isCgiResponse : " << _isCgiResponse << " : " << _cgi.isRunning() << std::endl;
 		if (_isCgiResponse && _cgi.isRunning())
 			return false;
 		return true;
@@ -167,7 +158,6 @@ namespace ft
 		_headers.clear();
 
 		//Content-Length is set later
-		_headers["Server"] = "Nginy/1";
 		_headers["Content-Type"] = "text/html";
 		_keepAlive = false;
 		
@@ -193,17 +183,21 @@ namespace ft
 		_headers["Content-Type"] = "text/html";
 		_keepAlive = request._keepAlive;
 
-		_version = request._version;
 		//_status is set in prepare response
 	}
 
 	void	Response::_constructStatusLine()
 	{
+		_msg.clear();
+		_msg.append(getStatusLine() + "\r\n");
+	}
+
+	std::string	Response::getStatusLine() const
+	{
 		std::stringstream	line;
 		
-		line << _version << " " << _status.code << " " << _status.msg;
-		_msg = line.str();
-		_msg.append("\r\n");
+		line << "HTTP/1.1" << " " << _status.code << " " << _status.msg;
+		return line.str();
 	}
 
 	void	Response::_constructHeaders()
@@ -380,7 +374,7 @@ namespace ft
 		if (location.second->_cgis.size() && matched_ext(location.second->_cgis, path, cgi_ext))
 		{
 			cgi_path = location.second->_cgis.find(cgi_ext)->second;
-			_initiateCgi(request, cgi_path, path, cgi_path, cgi_path);
+			_initiateCgi(request, cgi_path, path);
 		}
 		else
 		{
@@ -398,7 +392,7 @@ namespace ft
 		DIR				*d;
 		struct dirent	de, *dep; 
 
-		file_name = "/tmp/" + ft::getRandomFileName() + ".html";
+		file_name = "/tmp/" + ft::getRandomFileName("index") + ".html";
 		file.open(file_name.c_str());
 		if (!file.is_open())
 		{
@@ -572,7 +566,7 @@ namespace ft
 		if (location.second->_cgis.size() && matched_ext(location.second->_cgis, path, cgi_ext))
 		{
 			cgi_path = location.second->_cgis.find(cgi_ext)->second;
-			_initiateCgi(request, cgi_path, path, cgi_path, cgi_path);
+			_initiateCgi(request, cgi_path, path);
 		}
 		else
 		{
@@ -592,7 +586,7 @@ namespace ft
 		size_t			readedsize = 0;
 		size_t			file_size = getFileSize(request._bodyFileName);
 
-		file_uploaded_name = path + "/" + ft::getRandomFileName();
+		file_uploaded_name = path + "/" + ft::getRandomFileName("file");
 		file.open(file_uploaded_name.c_str());
 		if (!file.is_open())
 		{
@@ -733,7 +727,7 @@ namespace ft
 			if (index_file.length() && matched_ext(location.second->_cgis, path, cgi_ext))
 			{
 				cgi_path = location.second->_cgis.find(cgi_ext)->second;
-				_initiateCgi(request, cgi_path, path, cgi_path, cgi_path);
+				_initiateCgi(request, cgi_path, path);
 			}
 			else
 			{
@@ -766,7 +760,7 @@ namespace ft
 		if (location.second->_cgis.size() && matched_ext(location.second->_cgis, path, cgi_ext))
 		{
 			cgi_path = location.second->_cgis.find(cgi_ext)->second;
-			_initiateCgi(request, cgi_path, path, cgi_path, cgi_path);
+			_initiateCgi(request, cgi_path, path);
 		}
 		else
 		{
@@ -801,17 +795,19 @@ namespace ft
 		}
 	}
 
-	void	Response::_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated)
+	void	Response::_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath)
 	{
 		_isCgiResponse = true;
 		std::cout << " ---------------- cgi --------------- " << std::endl;
+		_cgi.setScriptPath(scriptPath);
 		_cgi.setInputFile(filePath);
-		(void)pathInfo;
-		// _cgi.setPathInfo(pathInfo);
-		_cgi.setPathInfo(filePath);
-		_cgi.setScriptName(scriptPath);
-		_cgi.setPathTranslated(pathTranslated);
+
+		_cgi.setPathInfo(request._path);
 		_cgi.setPathTranslated(filePath);
+		
+		// _cgi.setScriptName(request._path);
+		_cgi.setScriptName("");
+		_cgi.setScriptFileName(filePath);
 
 		_cgi.execute(*this, request);
 		std::cout << " ------------------------------------ " << std::endl;
@@ -834,7 +830,7 @@ namespace ft
 			_status = 500;
 			return ;
 		}
-		_bodyFileName = std::string(NGINY_VAR_DATA_PATH) + "/" + getRandomFileName();
+		_bodyFileName = std::string(NGINY_VAR_DATA_PATH) + "/" + getRandomFileName("response");
 		std::cout << "RbodyFileName : " << _bodyFileName << std::endl;
 		_body.open(_bodyFileName, std::ios_base::out);
 		if (!_body.is_open())
@@ -879,36 +875,53 @@ namespace ft
 			}
 		}
 		_body.close();
-		_formatMessage();
+		try
+		{
+			_prepareCgiResponseHead();
+		}
+		catch (std::exception& e)
+		{
+			_constructErrorResponse(502);
+			return ;
+		}
+		_constructBody();
 	}
 
-	void	Response::_parseCgiResponseHead()
+	void	Response::_prepareCgiResponseHead()
 	{
+		bool	isContentLengthSet;
 		std::string	key;
 		std::string	buffer;
 		std::vector<std::string>	msgLines;
 
+		isContentLengthSet = false;
 		buffer.swap(_msg);
-		msgLines = split(buffer, "\r\n");
+		msgLines = split(buffer, HTTP_NEWLINE);
 		for (size_t i = 0; i < msgLines.size(); i++)
 		{
 			key = strdtok(msgLines[i], ":");
 			if (key == "Status")
-			{
-				try
-				{
-					_status = stoz(trim(msgLines[i], " "));
-				}
-				catch (std::exception& e)
-				{
-					_status = 502;
-				}
-			}
+				_status = stoz(trim(msgLines[i], " "));
 			else
 			{
+				if (key == "Content-Length")
+					isContentLengthSet = true;
+				if (!_msg.empty())
+					_msg.append(HTTP_NEWLINE);
 				_msg.append(key + ":" + msgLines[i]);
 			}
 		}
+		if (!isContentLengthSet)
+		{
+			_contentLength = getFileSize(_bodyFileName);
+			_msg.append(std::string(HTTP_NEWLINE) + "Content-Length: " + ztoa(_contentLength));
+		}
+		if (_keepAlive)
+			_msg.append(std::string(HTTP_NEWLINE) + "Connection: keep-alive");
+		else
+			_msg.append(std::string(HTTP_NEWLINE) + "Connection: close");
+		_msg.append("\r\n\r\n");
+		_msg.insert(0, getStatusLine() + HTTP_NEWLINE);
 	}
 
 	void	Response::reset()
@@ -925,7 +938,6 @@ namespace ft
 		_keepAlive = true;
 		_contentLength = 0;
 
-		_version.clear();
 		_status = 200;
 		_headers.clear();
 		_bodyFileName.clear();
@@ -946,7 +958,6 @@ namespace ft
 		ostr << std::left;
 		ostr << getDisplayHeader("Response", RESPONSE_HSIZE) << std::endl;
 
-		ostr << std::setw(fieldSize) << "version : " << response._version << std::endl;
 		ostr << std::setw(fieldSize) << "status : " << response._status.code << " : " << response._status.msg << std::endl;
 
 		ostr << getDisplayHeader("headers", RESPONSE_SHSIZE) << std::endl;
@@ -956,7 +967,7 @@ namespace ft
 
 		ostr << getDisplayHeader("body", RESPONSE_SHSIZE) << std::endl;
 		ostr << "name : " << response._bodyFileName << std::endl;
-		ostr << "=============================================================================" << std::endl;
+		// ostr << "=============================================================================" << std::endl;
 		// bodyFile.open((response._bodyFileName.c_str()));
 		// while (bodyFile.good())
 		// {
@@ -964,7 +975,7 @@ namespace ft
 		// 	ostr << line << std::endl;
 		// }
 		// bodyFile.close();
-		ostr << "=============================================================================" << std::endl;
+		// ostr << "=============================================================================" << std::endl;
 		ostr << getDisplayFooter(RESPONSE_SHSIZE) << std::endl;
 		
 		ostr << getDisplayFooter(RESPONSE_HSIZE) << std::endl;

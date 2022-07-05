@@ -42,7 +42,6 @@ namespace ft
 		//	static attributes
 		//================================================================================================
 		private:
-			static std::set<std::string>	_envList;
 			static std::set<std::string>	_httpForbiddenEnvHeaders;
 		//================================================================================================
 		//	static attributes End
@@ -52,12 +51,11 @@ namespace ft
 		//	attributes
 		//================================================================================================
 		private:
-			const char					**_sysEnv;
 			const Host					*_host;
 			const Server				*_server;
 			const Client				*_client;
 			std::string					_inputFile;
-			std::string					_scriptName;
+			std::string					_scriptPath;
 			std::vector<std::string>	_env;
 			int							_pid;
 			bool						_isRunning;
@@ -76,7 +74,7 @@ namespace ft
 			Cgi();
 			~Cgi();
 			
-			Cgi(const char **sysEnv, const Host *host, const Server *server, const Client *client);
+			Cgi(const Host *host, const Server *server, const Client *client);
 			Cgi(const Cgi& src);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
@@ -107,12 +105,13 @@ namespace ft
 		//================================================================================================
 		public:
 			void	setHost(const Host *host);
-			void	setSysEnv(const char **sysEnv);
 			void	setServer(const Server *server);
 			void	setClient(const Client *client);
 			void	setPathInfo(const std::string& pathInfo);
 			void	setInputFile(const std::string& inputFile);
 			void	setScriptName(const std::string& scriptName);
+			void	setScriptPath(const std::string& scriptPath);
+			void	setScriptFileName(const std::string& scriptFileName);
 			void	setPathTranslated(const std::string& pathTranslated);
 		//================================================================================================
 		//	Cgi Setters End
@@ -128,13 +127,9 @@ namespace ft
 			void	_setHttpEnvHeaders(const Request& request);
 			bool	_isForbiddenHttpHeaderEnv(const std::string& header);
 
-			bool	_isCgiEnv(const std::string& str);
-
 			char	**_getSciptArgs() const;
 
 			void	_runScript(int fd[2]);
-			void	_initialiseEnv();
-			void	_initialiseEnvList();
 
 			void	_deepCopy(const Cgi& src);
 		//================================================================================================

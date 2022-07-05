@@ -10,9 +10,9 @@
 
 int debug = 1;
 
-int main(int argc, char** argv, char **env)
+int main(int argc, char** argv)
 {
-	ft::Nginy nginy(const_cast<const char **>(env));
+	ft::Nginy nginy;
 	try
 	{
 		if (argc != 2)

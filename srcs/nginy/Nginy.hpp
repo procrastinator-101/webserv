@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-// #include <sys/_types/_fd_def.h>
-
 
 #include "../client/Client.hpp"
 #include "../server/Server.hpp"
@@ -31,7 +29,6 @@ namespace ft
 		//================================================================================================
 		private:
 			std::string				_configFileName;
-			const char				**_env;
 			Selecter				_multiplexer;
 			std::vector<Server *>	_servers;
 		//================================================================================================
@@ -43,15 +40,14 @@ namespace ft
 		//	destructors, constructors, and assignment operators
 		//================================================================================================
 		private:
-			Nginy();
 			Nginy(const Nginy& src);
 			Nginy	&operator=(const Nginy& rop);
 
 		public:
 			~Nginy();
 
-			Nginy(const char **env);
-			Nginy(const std::string& configFileName, const char **env);
+			Nginy();
+			Nginy(const std::string& configFileName);
 		//================================================================================================
 		//	destructors, constructors, and assignment operators End
 		//================================================================================================

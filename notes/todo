@@ -22,7 +22,9 @@ concepts :
 -	add Server header field
 # set the header part max length
 
+-	check not implemented method
 
+-	body check is in
 -	initialise all attributes and reset them
 -	correct uri parse :
 	-	percent msgs decoded : done
@@ -42,11 +44,14 @@ concepts :
 
 -	find the segfault
 
--	add mime types
+-	delete sysEnv : done
 
 
 -	test delete :done
 -	test leaks : done
+-	add mime types: done
+
+
 
 
 -	config file check : done

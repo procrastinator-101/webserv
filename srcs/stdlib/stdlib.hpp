@@ -112,7 +112,7 @@ namespace ft
 	bool	isUserInGroup(gid_t gid, uid_t uid);
 	size_t	getFileSize(const std::string& name);
 
-	std::string	getRandomFileName();
+	std::string	getRandomFileName(const std::string& extension);
 
 	namespace http
 	{

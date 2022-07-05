@@ -1,0 +1,376 @@
+/Users/yarroubi/Desktop/webserv/confFiles/default.conf
+ret : 0
+_version : HTTP/1.1|
+ret(_parseStartLine) : 0
+ret(_parseHeaders) : 0
+_______________________________Request________________________________
+_isTrailerSet :               0
+_isChunked :                  0
+keepAlive :                   1
+state :                       0
+method :                      GET
+path :                        /cgis/tests/cgi-bin/bonus/cookies.php
+querry :                      
+version :                     HTTP/1.1
+_________________________TrailerHeaders__________________________
+
+-----------------------------------------------------------------
+_____________________________cookies_____________________________
+
+-----------------------------------------------------------------
+_____________________________headers_____________________________
+Accept                         : text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding                : gzip, deflate, br
+Accept-Language                : en-US,en;q=0.9
+Cache-Control                  : max-age=0
+Connection                     : keep-alive
+Host                           : localhost:8080
+Sec-Fetch-Dest                 : document
+Sec-Fetch-Mode                 : navigate
+Sec-Fetch-Site                 : none
+Sec-Fetch-User                 : ?1
+Upgrade-Insecure-Requests      : 1
+User-Agent                     : Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+sec-ch-ua                      : ".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"
+sec-ch-ua-mobile               : ?0
+sec-ch-ua-platform             : "macOS"
+-----------------------------------------------------------------
+______________________________body_______________________________
+name : /goinfre/yarroubi/var/nginy/data/request1657019640
+-----------------------------------------------------------------
+----------------------------------------------------------------------
+
+host search ..................
+host size : 1
+hosts[0]--------
+host found : 0x60e000000040
+ ---------------- cgi --------------- 
+ ------------------------------------ 
+cgi:: bodyFileName : /goinfre/yarroubi/var/nginy/cgi/cgi1657019640
+cgi envs
+PATH_INFO=/cgis/tests/cgi-bin/bonus/cookies.php
+PATH_TRANSLATED=/Users/yarroubi/Desktop/tests/cgi-bin/bonus/cookies.php
+SCRIPT_NAME=
+SCRIPT_FILENAME=/Users/yarroubi/Desktop/tests/cgi-bin/bonus/cookies.php
+GATEWAY_INTERFACE=CGI/1.1
+QUERY_STRING=
+REMOTE_ADDR=127.0.0.1
+REMOTE_HOST=127.0.0.1
+REQUEST_METHOD=GET
+SERVER_NAME=localhost:8080
+SERVER_PORT=8080
+SERVER_PROTOCOL=HTTP/1.1
+SERVER_SOFTWARE=Nginy/1
+REDIRECT_STATUS=200
+HTTP_ACCEPT=text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+HTTP_ACCEPT_ENCODING=gzip, deflate, br
+HTTP_ACCEPT_LANGUAGE=en-US,en;q=0.9
+HTTP_CACHE_CONTROL=max-age=0
+HTTP_HOST=localhost:8080
+HTTP_SEC_FETCH_DEST=document
+HTTP_SEC_FETCH_MODE=navigate
+HTTP_SEC_FETCH_SITE=none
+HTTP_SEC_FETCH_USER=?1
+HTTP_UPGRADE_INSECURE_REQUESTS=1
+HTTP_USER_AGENT=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+HTTP_SEC_CH_UA=".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"
+HTTP_SEC_CH_UA_MOBILE=?0
+HTTP_SEC_CH_UA_PLATFORM="macOS"
+CgiBodyFileName : /goinfre/yarroubi/var/nginy/cgi/cgi1657019640
+RbodyFileName : /goinfre/yarroubi/var/nginy/data/response1657019640
+ret : 0
+_version : HTTP/1.1|
+ret(_parseStartLine) : 0
+ret(_parseHeaders) : 0
+_______________________________Request________________________________
+_isTrailerSet :               0
+_isChunked :                  0
+keepAlive :                   1
+state :                       0
+method :                      POST
+path :                        /cgis/tests/cgi-bin/bonus/cookies.php
+querry :                      
+version :                     HTTP/1.1
+_________________________TrailerHeaders__________________________
+
+-----------------------------------------------------------------
+_____________________________cookies_____________________________
+
+-----------------------------------------------------------------
+_____________________________headers_____________________________
+Accept                         : text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding                : gzip, deflate, br
+Accept-Language                : en-US,en;q=0.9
+Cache-Control                  : max-age=0
+Connection                     : keep-alive
+Content-Length                 : 5002170
+Content-Type                   : multipart/form-data; boundary=----WebKitFormBoundarykooSFC8wA1JacHFe
+Host                           : localhost:8080
+Origin                         : http://localhost:8080
+Referer                        : http://localhost:8080/cgis/tests/cgi-bin/bonus/cookies.php
+Sec-Fetch-Dest                 : document
+Sec-Fetch-Mode                 : navigate
+Sec-Fetch-Site                 : same-origin
+Sec-Fetch-User                 : ?1
+Upgrade-Insecure-Requests      : 1
+User-Agent                     : Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+sec-ch-ua                      : ".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"
+sec-ch-ua-mobile               : ?0
+sec-ch-ua-platform             : "macOS"
+-----------------------------------------------------------------
+______________________________body_______________________________
+name : /goinfre/yarroubi/var/nginy/data/request1657019645
+-----------------------------------------------------------------
+----------------------------------------------------------------------
+
+host search ..................
+host size : 1
+hosts[0]--------
+host found : 0x60e000000040
+ ---------------- cgi --------------- 
+ ------------------------------------ 
+cgi:: bodyFileName : /goinfre/yarroubi/var/nginy/cgi/cgi1657019646
+cgi envs
+PATH_INFO=/cgis/tests/cgi-bin/bonus/cookies.php
+PATH_TRANSLATED=/Users/yarroubi/Desktop/tests/cgi-bin/bonus/cookies.php
+SCRIPT_NAME=
+SCRIPT_FILENAME=/Users/yarroubi/Desktop/tests/cgi-bin/bonus/cookies.php
+CONTENT_LENGTH=5002170
+CONTENT_TYPE=multipart/form-data; boundary=----WebKitFormBoundarykooSFC8wA1JacHFe
+GATEWAY_INTERFACE=CGI/1.1
+QUERY_STRING=
+REMOTE_ADDR=127.0.0.1
+REMOTE_HOST=127.0.0.1
+REQUEST_METHOD=POST
+SERVER_NAME=localhost:8080
+SERVER_PORT=8080
+SERVER_PROTOCOL=HTTP/1.1
+SERVER_SOFTWARE=Nginy/1
+REDIRECT_STATUS=200
+HTTP_ACCEPT=text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+HTTP_ACCEPT_ENCODING=gzip, deflate, br
+HTTP_ACCEPT_LANGUAGE=en-US,en;q=0.9
+HTTP_CACHE_CONTROL=max-age=0
+HTTP_HOST=localhost:8080
+HTTP_ORIGIN=http://localhost:8080
+HTTP_REFERER=http://localhost:8080/cgis/tests/cgi-bin/bonus/cookies.php
+HTTP_SEC_FETCH_DEST=document
+HTTP_SEC_FETCH_MODE=navigate
+HTTP_SEC_FETCH_SITE=same-origin
+HTTP_SEC_FETCH_USER=?1
+HTTP_UPGRADE_INSECURE_REQUESTS=1
+HTTP_USER_AGENT=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+HTTP_SEC_CH_UA=".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"
+HTTP_SEC_CH_UA_MOBILE=?0
+HTTP_SEC_CH_UA_PLATFORM="macOS"
+CgiBodyFileName : /goinfre/yarroubi/var/nginy/cgi/cgi1657019646
+RbodyFileName : /goinfre/yarroubi/var/nginy/data/response1657019646
+ret : 0
+_version : HTTP/1.1|
+ret(_parseStartLine) : 0
+ret(_parseHeaders) : 0
+_______________________________Request________________________________
+_isTrailerSet :               0
+_isChunked :                  0
+keepAlive :                   1
+state :                       0
+method :                      GET
+path :                        /cgis/tests/cgi-bin/bonus/cookies.php
+querry :                      
+version :                     HTTP/1.1
+_________________________TrailerHeaders__________________________
+
+-----------------------------------------------------------------
+_____________________________cookies_____________________________
+
+-----------------------------------------------------------------
+_____________________________headers_____________________________
+Accept                         : text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding                : gzip, deflate, br
+Accept-Language                : en-US,en;q=0.9
+Connection                     : keep-alive
+Host                           : localhost:8080
+Sec-Fetch-Dest                 : document
+Sec-Fetch-Mode                 : navigate
+Sec-Fetch-Site                 : none
+Sec-Fetch-User                 : ?1
+Upgrade-Insecure-Requests      : 1
+User-Agent                     : Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+sec-ch-ua                      : ".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"
+sec-ch-ua-mobile               : ?0
+sec-ch-ua-platform             : "macOS"
+-----------------------------------------------------------------
+______________________________body_______________________________
+name : /goinfre/yarroubi/var/nginy/data/request1657019924
+-----------------------------------------------------------------
+----------------------------------------------------------------------
+
+host search ..................
+host size : 1
+hosts[0]--------
+host found : 0x60e000000040
+ ---------------- cgi --------------- 
+ ------------------------------------ 
+cgi:: bodyFileName : /goinfre/yarroubi/var/nginy/cgi/cgi1657019924
+cgi envs
+PATH_INFO=/cgis/tests/cgi-bin/bonus/cookies.php
+PATH_TRANSLATED=/Users/yarroubi/Desktop/tests/cgi-bin/bonus/cookies.php
+SCRIPT_NAME=
+SCRIPT_FILENAME=/Users/yarroubi/Desktop/tests/cgi-bin/bonus/cookies.php
+GATEWAY_INTERFACE=CGI/1.1
+QUERY_STRING=
+REMOTE_ADDR=127.0.0.1
+REMOTE_HOST=127.0.0.1
+REQUEST_METHOD=GET
+SERVER_NAME=localhost:8080
+SERVER_PORT=8080
+SERVER_PROTOCOL=HTTP/1.1
+SERVER_SOFTWARE=Nginy/1
+REDIRECT_STATUS=200
+HTTP_ACCEPT=text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+HTTP_ACCEPT_ENCODING=gzip, deflate, br
+HTTP_ACCEPT_LANGUAGE=en-US,en;q=0.9
+HTTP_HOST=localhost:8080
+HTTP_SEC_FETCH_DEST=document
+HTTP_SEC_FETCH_MODE=navigate
+HTTP_SEC_FETCH_SITE=none
+HTTP_SEC_FETCH_USER=?1
+HTTP_UPGRADE_INSECURE_REQUESTS=1
+HTTP_USER_AGENT=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+HTTP_SEC_CH_UA=".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"
+HTTP_SEC_CH_UA_MOBILE=?0
+HTTP_SEC_CH_UA_PLATFORM="macOS"
+CgiBodyFileName : /goinfre/yarroubi/var/nginy/cgi/cgi1657019924
+RbodyFileName : /goinfre/yarroubi/var/nginy/data/response1657019924
+ret : 0
+_version : HTTP/1.1|
+ret(_parseStartLine) : 0
+ret(_parseHeaders) : 0
+_______________________________Request________________________________
+_isTrailerSet :               0
+_isChunked :                  0
+keepAlive :                   1
+state :                       0
+method :                      POST
+path :                        /cgis/tests/cgi-bin/bonus/cookies.php
+querry :                      
+version :                     HTTP/1.1
+_________________________TrailerHeaders__________________________
+
+-----------------------------------------------------------------
+_____________________________cookies_____________________________
+
+-----------------------------------------------------------------
+_____________________________headers_____________________________
+Accept                         : text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding                : gzip, deflate, br
+Accept-Language                : en-US,en;q=0.9
+Cache-Control                  : max-age=0
+Connection                     : keep-alive
+Content-Length                 : 37042
+Content-Type                   : multipart/form-data; boundary=----WebKitFormBoundarym8Zd4kxTvzIkMBzr
+Host                           : localhost:8080
+Origin                         : http://localhost:8080
+Referer                        : http://localhost:8080/cgis/tests/cgi-bin/bonus/cookies.php
+Sec-Fetch-Dest                 : document
+Sec-Fetch-Mode                 : navigate
+Sec-Fetch-Site                 : same-origin
+Sec-Fetch-User                 : ?1
+Upgrade-Insecure-Requests      : 1
+User-Agent                     : Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+sec-ch-ua                      : ".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"
+sec-ch-ua-mobile               : ?0
+sec-ch-ua-platform             : "macOS"
+-----------------------------------------------------------------
+______________________________body_______________________________
+name : /goinfre/yarroubi/var/nginy/data/request1657019929
+-----------------------------------------------------------------
+----------------------------------------------------------------------
+
+host search ..................
+host size : 1
+hosts[0]--------
+host found : 0x60e000000040
+ ---------------- cgi --------------- 
+ ------------------------------------ 
+cgi:: bodyFileName : /goinfre/yarroubi/var/nginy/cgi/cgi1657019929
+cgi envs
+PATH_INFO=/cgis/tests/cgi-bin/bonus/cookies.php
+PATH_TRANSLATED=/Users/yarroubi/Desktop/tests/cgi-bin/bonus/cookies.php
+SCRIPT_NAME=
+SCRIPT_FILENAME=/Users/yarroubi/Desktop/tests/cgi-bin/bonus/cookies.php
+CONTENT_LENGTH=37042
+CONTENT_TYPE=multipart/form-data; boundary=----WebKitFormBoundarym8Zd4kxTvzIkMBzr
+GATEWAY_INTERFACE=CGI/1.1
+QUERY_STRING=
+REMOTE_ADDR=127.0.0.1
+REMOTE_HOST=127.0.0.1
+REQUEST_METHOD=POST
+SERVER_NAME=localhost:8080
+SERVER_PORT=8080
+SERVER_PROTOCOL=HTTP/1.1
+SERVER_SOFTWARE=Nginy/1
+REDIRECT_STATUS=200
+HTTP_ACCEPT=text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+HTTP_ACCEPT_ENCODING=gzip, deflate, br
+HTTP_ACCEPT_LANGUAGE=en-US,en;q=0.9
+HTTP_CACHE_CONTROL=max-age=0
+HTTP_HOST=localhost:8080
+HTTP_ORIGIN=http://localhost:8080
+HTTP_REFERER=http://localhost:8080/cgis/tests/cgi-bin/bonus/cookies.php
+HTTP_SEC_FETCH_DEST=document
+HTTP_SEC_FETCH_MODE=navigate
+HTTP_SEC_FETCH_SITE=same-origin
+HTTP_SEC_FETCH_USER=?1
+HTTP_UPGRADE_INSECURE_REQUESTS=1
+HTTP_USER_AGENT=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+HTTP_SEC_CH_UA=".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"
+HTTP_SEC_CH_UA_MOBILE=?0
+HTTP_SEC_CH_UA_PLATFORM="macOS"
+CgiBodyFileName : /goinfre/yarroubi/var/nginy/cgi/cgi1657019929
+RbodyFileName : /goinfre/yarroubi/var/nginy/data/response1657019929
+ret : 0
+_version : HTTP/1.1|
+ret(_parseStartLine) : 0
+ret(_parseHeaders) : 0
+_______________________________Request________________________________
+_isTrailerSet :               0
+_isChunked :                  0
+keepAlive :                   1
+state :                       0
+method :                      GET
+path :                        /cgis/tests/cgi-bin/bonus/uploads/62c41e1964a829.34402851.png
+querry :                      
+version :                     HTTP/1.1
+_________________________TrailerHeaders__________________________
+
+-----------------------------------------------------------------
+_____________________________cookies_____________________________
+name=procrastinator101; email=yarroubi%40student.1337.ma; avatar=uploads%2F62c41e1964a829.34402851.png 
+-----------------------------------------------------------------
+_____________________________headers_____________________________
+Accept                         : image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Accept-Encoding                : gzip, deflate, br
+Accept-Language                : en-US,en;q=0.9
+Connection                     : keep-alive
+Host                           : localhost:8080
+Referer                        : http://localhost:8080/cgis/tests/cgi-bin/bonus/cookies.php
+Sec-Fetch-Dest                 : image
+Sec-Fetch-Mode                 : no-cors
+Sec-Fetch-Site                 : same-origin
+User-Agent                     : Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+sec-ch-ua                      : ".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"
+sec-ch-ua-mobile               : ?0
+sec-ch-ua-platform             : "macOS"
+-----------------------------------------------------------------
+______________________________body_______________________________
+name : /goinfre/yarroubi/var/nginy/data/request1657019929
+-----------------------------------------------------------------
+----------------------------------------------------------------------
+
+host search ..................
+host size : 1
+hosts[0]--------
+host found : 0x60e000000040
+200    /Users/yarroubi/Desktop/tests/cgi-bin/bonus/uploads/62c41e1964a829.34402851.png
+200    /Users/yarroubi/Desktop/tests/cgi-bin/bonus/uploads/62c41e1964a829.34402851.png

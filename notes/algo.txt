@@ -208,4 +208,3 @@ response headers:
 	-	Content-type
 	-	Content-Length
 	-	Connection
-	-	Server

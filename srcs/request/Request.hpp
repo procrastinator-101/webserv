@@ -29,7 +29,7 @@
 
 
 # define MAX_REQUEST_LINE_LENGTH	10000
-# define RECV_TIMEOUT				10000
+# define RECV_TIMEOUT				100000
 
 namespace ft
 {
@@ -63,6 +63,7 @@ namespace ft
 
 			bool								_notImplemented;
 			Status								_status;
+			bool								_isInBody;
 			size_t								_bodySize;
 			std::string							_buffer;
 
