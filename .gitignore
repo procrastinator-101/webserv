@@ -4,3 +4,5 @@ confFiles
 webserv
 webserv.dSYM
 .vscode
+debug.log
+a.out
