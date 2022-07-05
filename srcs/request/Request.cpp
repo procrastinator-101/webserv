@@ -103,6 +103,9 @@ namespace ft
 
 	bool	Request::_fetchBody(char *str, size_t size)
 	{
+
+		std::cerr << "Body cont ====== " << _contentLength << " ==== " << _bodySize << std::endl;
+
 		if (!_bodySize)
 		{
 			_bodyFileName = std::string(NGINY_VAR_DATA_PATH) + "/" + getRandomFileName();
