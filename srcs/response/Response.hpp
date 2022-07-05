@@ -54,7 +54,6 @@ namespace ft
 			bool								_keepAlive;
 			size_t								_contentLength;
 
-			std::string							_version;
 			HttpStatus							_status;
 			std::map<std::string, std::string>	_headers;
 			std::string							_bodyFileName;
@@ -104,16 +103,18 @@ namespace ft
 			void	_constructStatusLine();
 			void	_constructHead(Request& request);
 
+			std::string	getStatusLine() const;
+
 			void	_constructErrorResponse(const HttpStatus& status);
 
 			void	_parseCgiResponse();
 
 			void	_formatMessage();
 
-			void	_parseCgiResponseHead();
+			void	_prepareCgiResponseHead();
 
 
-			void	_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath, const std::string& pathInfo, const std::string& pathTranslated);
+			void	_initiateCgi(Request& request, const std::string& scriptPath, const std::string& filePath);
 
 			void	_prepare(const Host* host, Request& request);
 			void	_handleGetMethod(Request& request, const std::pair<std::string, Location *>& location);

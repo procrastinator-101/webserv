@@ -13,10 +13,9 @@
 
 namespace ft
 {
-	std::set<std::string>	Cgi::_envList;
 	std::set<std::string>	Cgi::_httpForbiddenEnvHeaders;
 
-	Cgi::Cgi() :	_sysEnv(0), _host(0), _server(0), _client(0), _env(), _pid(-1), _isRunning(false), _begin()
+	Cgi::Cgi() :	_host(0), _server(0), _client(0), _env(), _pid(-1), _isRunning(false), _begin()
 	{
 	}
 
@@ -25,17 +24,12 @@ namespace ft
 	}
 
 	
-	Cgi::Cgi(const char **sysEnv, const Host *host, const Server *server, const Client *client) :	_sysEnv(sysEnv), _host(host),
-																									_server(server), _client(client),
-																									_env(), _pid(-1), _isRunning(false),
-																									_begin()
+	Cgi::Cgi(const Host *host, const Server *server, const Client *client) :	_host(host), _server(server), _client(client),
+																				_env(), _pid(-1), _isRunning(false), _begin()
 	{
-		if (!sysEnv)
-			throw std::invalid_argument("Cgi:: sysEnv is null");
-		// _initialiseEnv();
 	}
 
-	Cgi::Cgi(const Cgi& src) :	_sysEnv(src._sysEnv), _host(src._host), _server(src._server), _client(src._client), _env(src._env), 
+	Cgi::Cgi(const Cgi& src) :	_host(src._host), _server(src._server), _client(src._client), _env(src._env), 
 								_pid(src._pid), _isRunning(src._isRunning), _begin(src._begin)
 	{
 	}
@@ -68,7 +62,6 @@ namespace ft
 
 		ret = waitpid(_pid, &status, WNOHANG);
 
-		std::cout << "waitpid : " << ret << " | pid : " << _pid << std::endl;
 		_isRunning = false;
 		if (!ret)
 		{
@@ -88,7 +81,7 @@ namespace ft
 			kill(_pid, SIGKILL);
 			return cError;
 		}
-		else if (!WIFEXITED(status) || WEXITSTATUS(status))
+		else if (!WIFEXITED(status))
 			return cError;
 		return cSucces;
 	}
@@ -99,7 +92,7 @@ namespace ft
 		int	fd[2];
 
 		constructEnv(request);
-		response._bodyFileName = std::string(NGINY_VAR_CGI_PATH) + "/" + getRandomFileName();
+		response._bodyFileName = std::string(NGINY_VAR_CGI_PATH) + "/" + getRandomFileName("cgi");
 		_pid = fork();
 		if (_pid < 0)
 			return  cError;
@@ -178,13 +171,9 @@ namespace ft
 		args = new (std::nothrow) char *[3];
 		if (!args)
 			return 0;
-		args[0] = ft_strdup(_scriptName.c_str());
+		args[0] = ft_strdup(_scriptPath.c_str());
 		args[1] = ft_strdup(_inputFile.c_str());
 		args[2] = 0;
-		std::cout << "file : " << _inputFile.c_str() << std::endl;
-		std::cout << "script : " << _scriptName.c_str() << std::endl;
-		for (size_t i = 0; i < 2; i++)
-			std::cout << "args[" << i << "] : {" << args[i] << "}" << std::endl;
 		if (!args[0] || !args[1])
 		{
 			destroy2arr(args, 3);
@@ -196,13 +185,6 @@ namespace ft
 	void	Cgi::constructEnv(Request& request)
 	{
 		std::map<std::string, std::string>::iterator	it;
-
-		//clean cgi envs from env
-		for (size_t i = 0;  i < _env.size(); i++)
-		{
-			if (_isCgiEnv(_env[i]))
-				_env.erase(_env.begin() + i);
-		}
 
 		//AUTH_TYPE
 		it  = request._headers.find("auth-scheme");
@@ -256,8 +238,6 @@ namespace ft
 		//REDIRECT_STATUS : php specific
 		_env.push_back("REDIRECT_STATUS=200");
 
-		
-
 		_setHttpEnvHeaders(request);
 	}
 
@@ -270,7 +250,7 @@ namespace ft
 		}
 		//set Cookies
 		for (size_t i = 0; i < request._cookies.size(); i++)
-			_env.push_back("Cookie=" + request._cookies[i]);
+			_env.push_back("HTTP_COOKIE=" + request._cookies[i]);
 	}
 
 	bool	Cgi::_isForbiddenHttpHeaderEnv(const std::string& header)
@@ -288,61 +268,14 @@ namespace ft
 		_httpForbiddenEnvHeaders.insert("Authorization");
 	}
 
-	void	Cgi::_initialiseEnv()
-	{
-		for (size_t i = 0; _sysEnv[i]; i++)
-			_env.push_back(_sysEnv[i]);
-	}
-
-	bool	Cgi::_isCgiEnv(const std::string& str)
-	{
-		bool		ret;
-		size_t		pos;
-		std::string	key;
-
-		if (_envList.empty())
-			_initialiseEnvList();
-		pos = str.find('=');
-		if (pos == std::string::npos)
-			key = str;
-		else
-			key.assign(str, pos);
-		ret = _envList.find(key) != _envList.end();
-		if (ret)
-			return true;
-		return key.compare(0, 5, "HTTP_") == 0;
-	}
-
-	void	Cgi::_initialiseEnvList()
-	{
-		_envList.insert("AUTH_TYPE");
-		_envList.insert("CONTENT_LENGTH");
-		_envList.insert("CONTENT_TYPE");
-		_envList.insert("GATEWAY_INTERFACE");
-		_envList.insert("PATH_INFO");
-		_envList.insert("PATH_TRANSLATED");
-		_envList.insert("QUERY_STRING");
-		_envList.insert("REMOTE_ADDR");
-		_envList.insert("REMOTE_HOST");
-		_envList.insert("REMOTE_IDENT");
-		_envList.insert("REMOTE_USER");
-		_envList.insert("REQUEST_METHOD");
-		_envList.insert("SCRIPT_NAME");
-		_envList.insert("SERVER_NAME");
-		_envList.insert("SERVER_PORT");
-		_envList.insert("SERVER_PROTOCOL");
-		_envList.insert("SERVER_SOFTWARE");
-	}
-
 	void	Cgi::reset()
 	{
-		_sysEnv = 0;
 		_host = 0;
 		_server = 0;
 		_client = 0;
 
 		_inputFile.clear();
-		_scriptName.clear();
+		_scriptPath.clear();
 
 		_env.clear();
 		_pid = -1;
@@ -361,7 +294,6 @@ namespace ft
 
 	void	Cgi::setScriptName(const std::string& scriptName)
 	{
-		// _scriptName = scriptName;
 		_env.push_back("SCRIPT_NAME=" + scriptName);
 	}
 
@@ -377,17 +309,12 @@ namespace ft
 
 	void	Cgi::setScriptPath(const std::string& scriptPath)
 	{
-		_scriptName = scriptPath;
+		_scriptPath = scriptPath;
 	}
 
 	void	Cgi::setHost(const Host *host)
 	{
 		_host = host;
-	}
-
-	void	Cgi::setSysEnv(const char **sysEnv)
-	{
-		_sysEnv = sysEnv;
 	}
 	
 	void	Cgi::setServer(const Server *server)

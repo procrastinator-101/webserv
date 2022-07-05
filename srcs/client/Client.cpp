@@ -27,7 +27,7 @@ namespace ft
 		return *this;
 	}
 
-	std::pair<bool, Transmission>	Client::handleRequest(const Server& server, const char **env)
+	std::pair<bool, Transmission>	Client::handleRequest(const Server& server)
 	{
 		std::pair<bool, Transmission>	ret;
 		
@@ -38,7 +38,6 @@ namespace ft
 		std::cout << _request << std::endl;
 
 		//set up cgi
-		_response._cgi.setSysEnv(env);
 		_response._cgi.setServer(&server);
 		_response._cgi.setClient(this);
 

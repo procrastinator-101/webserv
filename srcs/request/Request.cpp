@@ -4,6 +4,7 @@
 #include <sys/_types/_size_t.h>
 #include <sys/select.h>
 #include <utility>
+#include <vector>
 
 namespace ft
 {
@@ -82,7 +83,7 @@ namespace ft
 		size_t	start;
 
 		ret = false;
-		std::cout << "----isBody : " << _isInBody << " bodySize : " <<_bodySize << std::endl;
+		// std::cout << "----isBody : " << _isInBody << " bodySize : " <<_bodySize << std::endl;
 		if (_isInBody)
 			ret = _fetchBody(str, size);
 		else
@@ -99,16 +100,16 @@ namespace ft
 				ret = _fetchBody(str + start, size - start);
 			}
 		}
-		std::cout << "++++isBody : " << _isInBody << " bodySize : " <<_bodySize << std::endl;
+		// std::cout << "++++isBody : " << _isInBody << " bodySize : " <<_bodySize << std::endl;
 		return ret;
 	}
 
 	bool	Request::_fetchBody(char *str, size_t size)
 	{
-		std::cout << "isBody : " << _isInBody << " bodySize : " <<_bodySize << std::endl;
+		// std::cout << "isBody : " << _isInBody << " bodySize : " <<_bodySize << std::endl;
 		if (!_isInBody)
 		{
-			_bodyFileName = std::string(NGINY_VAR_DATA_PATH) + "/" + getRandomFileName();
+			_bodyFileName = std::string(NGINY_VAR_DATA_PATH) + "/" + getRandomFileName("request");
 			_body.open(_bodyFileName.c_str(), std::ios_base::out);
 		}
 		_isInBody = true;
@@ -377,7 +378,7 @@ namespace ft
 		if (major != "1")
 			return bad;
 		minor = version;
-		if (minor != "0" && minor != "1")
+		if (minor != "1")
 			return bad;
 		return good;
 	}
@@ -592,6 +593,7 @@ namespace ft
 		_isTrailerSet = false;
 		_isTrailerReached = false;
 
+		_notImplemented = false;
 		_status = good;
 		_isInBody = false;
 		_bodySize = 0;
@@ -600,7 +602,9 @@ namespace ft
 		_isChunked = false;
 		_keepAlive = true;
 		_contentLength = 0;
+		_querry.clear();
 		_trailerHeaders.clear();
+		_cookies.clear();
 
 		_method.clear();
 		_path.clear();
@@ -645,6 +649,12 @@ namespace ft
 		ostr << std::endl;
 		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
 
+		ostr << getDisplayHeader("cookies", REQUEST_SHSIZE) << std::endl;
+		for (std::vector<std::string>::const_iterator it = request._cookies.begin(); it != request._cookies.end(); ++it)
+			ostr << *it << " ";
+		ostr << std::endl;
+		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
+
 		ostr << getDisplayHeader("headers", REQUEST_SHSIZE) << std::endl;
 		for (std::map<std::string, std::string>::const_iterator it = request._headers.begin(); it != request._headers.end(); ++it)
 			ostr << std::setw(fieldSize) << it->first << " : " << it->second << std::endl;
@@ -652,7 +662,7 @@ namespace ft
 
 		ostr << getDisplayHeader("body", REQUEST_SHSIZE) << std::endl;
 		ostr << "name : " << request._bodyFileName << std::endl;
-		ostr << "=============================================================================" << std::endl;
+		// ostr << "=============================================================================" << std::endl;
 		// bodyFile.open((request._bodyFileName.c_str()));
 		// while (bodyFile.good())
 		// {
@@ -660,7 +670,7 @@ namespace ft
 		// 	ostr << line << std::endl;
 		// }
 		// bodyFile.close();
-		ostr << "=============================================================================" << std::endl;
+		// ostr << "=============================================================================" << std::endl;
 		ostr << getDisplayFooter(REQUEST_SHSIZE) << std::endl;
 		
 		ostr << getDisplayFooter(REQUEST_HSIZE) << std::endl;

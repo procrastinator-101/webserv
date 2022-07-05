@@ -8,12 +8,13 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Mon Jul  4 18:02:46 2022
+# Make data base, printed on Tue Jul  5 09:47:04 2022
 
 # Variables
 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
+ 
 # automatic
 ?F = $(notdir $?)
 # makefile (from `Makefile', line 120)
@@ -65,7 +66,6 @@ HOST_HDR = $(HOST_PATH)/Host.hpp
 # makefile (from `Makefile', line 100)
 RESPONSE_SRC = $(RESPONSE_PATH)/Response.cpp
 # makefile (from `Makefile', line 109)
- 
 SERVER_HDR = $(SERVER_PATH)/Server.hpp
 # environment
 VSCODE_VERBOSE_LOGGING = true
@@ -76,11 +76,11 @@ _NGINY_CONF_PATH = $(ROOT_DIR)/confFiles/default.conf
 # makefile (from `Makefile', line 25)
 CGI_PATH = $(SRCS_PATH)/cgi
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-09622035-e2ac-4ee2-89ab-76ad488e7fef.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00005v00001fr/T/vscode-ipc-6db829c2-841b-48d7-98d8-2d14c1ad22b8.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.alb8LUcRfX/Render
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.bGra20g6Kt/Render
 # makefile (from `Makefile', line 127)
 STDLIB_PATH = $(SRCS_PATH)/stdlib
 # environment
@@ -108,7 +108,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from `Makefile', line 49)
 HTTP_STATUS_PATH = $(SRCS_PATH)/http_status
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.IqmVz5i10e/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.yDByeLvpnd/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -212,7 +212,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000003.Electron
+XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000005.Electron
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # makefile (from `Makefile', line 139)
@@ -244,7 +244,7 @@ NGINY_VAR_DATA_PATH_INC = NGINY_VAR_DATA_PATH=\"$(_NGINY_VAR_DATA_PATH)\"
 # environment
 LC_ALL = C
 # environment
-SECURITYSESSIONID = 186a8
+SECURITYSESSIONID = 187ba
 # automatic
 ^F = $(notdir $^)
 # default
@@ -254,13 +254,14 @@ SUFFIXES :=
 # makefile (from `Makefile', line 93)
 REQUEST_HDR = $(REQUEST_PATH)/Request.hpp
 # makefile (from `Makefile', line 165)
+ 
 HDR = $(CGI_HDR) $(CLIENT_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) $(MIME_TYPE_HDR) $(MULTIPLEX_HDR) $(NGINY_HDR) $(REQUEST_HDR) $(RESPONSE_HDR) $(SERVER_HDR) $(SOCKT_HDR) $(STDLIB_HDR)
 # environment
 MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 17744
+VSCODE_PID = 94658
 # makefile (from `Makefile', line 60)
 LOCATION_HDR = $(LOCATION_PATH)/Location.hpp
 # makefile (from `Makefile', line 154)
@@ -274,9 +275,9 @@ _NGINY_ERROR_PAGES_PATH_INC = NGINY_ERROR_PAGES_PATH=\"$(_NGINY_ERROR_PAGES_PATH
 
 # Directories
 
-# . (device 16777227, inode 395979): 31 files, no impossibilities.
+# . (device 16777227, inode 395979): 30 files, no impossibilities.
 
-# 31 files, no impossibilities in 1 directories.
+# 30 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -290,7 +291,6 @@ _NGINY_ERROR_PAGES_PATH_INC = NGINY_ERROR_PAGES_PATH=\"$(_NGINY_ERROR_PAGES_PATH
 # Files
 
 # Not a target:
- 
 srcs/mime_type/mimeType.hpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -319,7 +319,7 @@ all: webserv
 
 webserv: NGINX_PATHS srcs/main.cpp srcs/cgi/Cgi.cpp srcs/client/Client.cpp srcs/host/Host.cpp srcs/http_status/HttpStatus.cpp srcs/mime_type/mimeType.cpp srcs/location/Location.cpp srcs/multiplex/Selecter.cpp srcs/nginy/Nginy.cpp srcs/request/Request.cpp srcs/response/Response.cpp srcs/server/Server.cpp srcs/sockets/ClientSockt.cpp srcs/sockets/ServerSockt.cpp srcs/sockets/Sockt.cpp srcs/stdlib/stdlib.cpp srcs/cgi/Cgi.hpp srcs/client/Client.hpp srcs/host/Host.hpp srcs/http_status/HttpStatus.hpp srcs/location/Location.hpp srcs/mime_type/mimeType.hpp srcs/multiplex/Action.hpp srcs/multiplex/Selecter.hpp srcs/nginy/Nginy.hpp srcs/request/Request.hpp srcs/response/Response.hpp srcs/server/Server.hpp srcs/sockets/ClientSockt.hpp srcs/sockets/ServerSockt.hpp srcs/sockets/Sockt.hpp srcs/stdlib/stdlib.hpp
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-04 18:02:25
+#  Last modified 2022-07-04 20:53:20
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
@@ -549,6 +549,7 @@ srcs/mime_type/mimeType.cpp:
 # Not a target:
 srcs/multiplex/Action.hpp:
 #  Implicit rule search has not been done.
+ 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -588,7 +589,6 @@ srcs/response/Response.cpp:
 
 # No `vpath' search paths.
 
- 
 # No general (`VPATH' variable) search path.
 
 # # of strings in strcache: 1
@@ -596,6 +596,6 @@ srcs/response/Response.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Mon Jul  4 18:02:46 2022
+# Finished Make data base on Tue Jul  5 09:47:04 2022
 
  

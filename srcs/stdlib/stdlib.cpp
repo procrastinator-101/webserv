@@ -1,4 +1,5 @@
 #include "stdlib.hpp"
+#include <_ctype.h>
 #include <exception>
 #include <new>
 #include <stdexcept>
@@ -267,9 +268,9 @@ namespace ft
 		return ss.str();
 	}
 
-	std::string	getRandomFileName()
+	std::string	getRandomFileName(const std::string& extension)
 	{
-		return std::string("file" + ztoa(time(0)));
+		return std::string(extension + ztoa(time(0)));
 	}
 
 	//returns the file size in bytes
@@ -513,9 +514,9 @@ namespace ft
 				if (ret[i] == '-')
 					ret[i] = '_';
 				else if (islower(ret[i]))
-					ret[i] = tolower(ret[i]);
+					ret[i] = toupper(ret[i]);
 			}
-			return ret;
+			return "HTTP_" + ret;
 		}
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////

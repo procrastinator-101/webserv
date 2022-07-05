@@ -4,7 +4,7 @@
 
 namespace ft
 {
-	Nginy::Nginy() :	_configFileName(), _env(0), _multiplexer(), _servers()
+	Nginy::Nginy() :	_configFileName(), _multiplexer(), _servers()
 	{
 	}
 	
@@ -14,11 +14,7 @@ namespace ft
 			delete _servers[i];
 	}
 
-	Nginy::Nginy(const char **env) :	_configFileName(), _env(env), _multiplexer(), _servers()
-	{
-	}
-
-	Nginy::Nginy(const std::string& configFileName, const char **env) :	_configFileName(configFileName), _env(env), _multiplexer(), _servers()
+	Nginy::Nginy(const std::string& configFileName) :	_configFileName(configFileName), _multiplexer(), _servers()
 	{
 		if(_configFileName.substr(_configFileName.find_last_of(".")) == ".conf")
 			_parseConfigFile();
@@ -126,8 +122,8 @@ namespace ft
 	{
 		std::pair<bool, Transmission>	ret;
 
-		ret = client.handleRequest(server, _env);
-		std::cout << "isRequestFinished : " << ret.first << " | transmission : " << ret.second << std::endl;
+		ret = client.handleRequest(server);
+		// std::cout << "isRequestFinished : " << ret.first << " | transmission : " << ret.second << std::endl;
 		if (ret.first)
 		{
 			_multiplexer.del(client._sockt.fd, aRead);
@@ -143,7 +139,7 @@ namespace ft
 		std::pair<bool, Transmission>	ret;
 
 		ret = client.handleResponse();
-		std::cout << "isResponseFinished : " << ret.first << " | transmission : " << ret.second << std::endl;
+		// std::cout << "isResponseFinished : " << ret.first << " | transmission : " << ret.second << std::endl;
 		if (ret.first)
 		{
 			// std::cout << client._response << std::endl;
@@ -174,7 +170,6 @@ namespace ft
 				try 
 				{
 					client->_sockt = _servers[i]->_sockt.accept();
-					(void)_env;//!!!!!!!!!!!!!
 					_servers[i]->_clients[client->_sockt.fd] = client;
 					_multiplexer.add(client->_sockt.fd, aRead);
 				}
