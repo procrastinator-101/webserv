@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 		if (argc != 2)
 			throw std::invalid_argument("use ./webser configuration_file");
 		
-		std::cout << NGINY_CONF_PATH << std::endl;
+		// std::cout << NGINY_CONF_PATH << std::endl;
 		if (debug)
 		{
 			nginy.fetchConfiguration(argv[1]);

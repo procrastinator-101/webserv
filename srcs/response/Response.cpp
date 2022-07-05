@@ -109,12 +109,7 @@ namespace ft
 
 	void	Response::build(const std::vector<Host *>& hosts, Request& request)
 	{
-		std::map<std::string, std::string>::const_iterator	hostName;
-
-		std::cout << "host search .................." << std::endl;
-		std::cout << "host size : " << hosts.size() << std::endl;
-		_host = _fetchTargetedHost(hosts, hostName->second);
-		std::cout << "host found : " << _host << std::endl;
+		_host = _fetchTargetedHost(hosts, request._headers["Host"]);
 		_constructHead(request);
 		if (request.status() != Request::good)
 		{
@@ -179,7 +174,7 @@ namespace ft
 	void	Response::_constructHead(Request& request)
 	{
 		//Content-Length is set later
-		_headers["Server"] = "Nginy/1";
+		// _headers["Server"] = "Nginy/1";
 		_headers["Content-Type"] = "text/html";
 		_keepAlive = request._keepAlive;
 
@@ -219,14 +214,18 @@ namespace ft
 
 	const Host	*Response::_fetchTargetedHost(const std::vector<Host *>& hosts, const std::string& name)
 	{
+		std::cout << "hostsName : " << name << std::endl;
 		for (size_t i = 0; i < hosts.size(); i++)
 		{
 			if (hosts[i]->hasName(name))
+			{
+				std::cout << "host index : " << i << std::endl;
 				return hosts[i];
+			}
 		}
 		if (hosts.empty())
 			throw std::runtime_error("Response:: no host found");
-		std::cout << "hosts[0]--------" << std::endl;
+		// std::cout << "hosts[0]--------" << std::endl;
 		return hosts[0];
 	}
 
