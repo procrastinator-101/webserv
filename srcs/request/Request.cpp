@@ -8,9 +8,10 @@
 
 namespace ft
 {
-	Request::Request() :	_isReceiving(false), _isInChunk(false), _chunkLen(0), _chunkSize(0), _isTrailerSet(false), _isTrailerReached(false),
-							_status(good), _isInBody(false), _bodySize(0), _buffer(), _isChunked(false), _keepAlive(true), _contentLength(0),
-							_trailerHeaders(), _method(), _path(), _version(), _headers(), _bodyFileName(), _body()
+	Request::Request() :	_isReceiving(false), _isInChunk(false), _chunkLen(0), _chunkSize(0), _isTrailerSet(false),
+							_isTrailerReached(false), _notImplemented(false), _status(good), _isInBody(false),
+							_bodySize(0), _buffer(), _isChunked(false), _keepAlive(true), _contentLength(0), _querry(),
+							_trailerHeaders(), _cookies(), _method(), _path(), _version(), _headers(), _bodyFileName(), _body()
 	{
 	}
 

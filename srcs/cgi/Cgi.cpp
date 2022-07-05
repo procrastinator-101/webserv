@@ -15,7 +15,7 @@ namespace ft
 {
 	std::set<std::string>	Cgi::_httpForbiddenEnvHeaders;
 
-	Cgi::Cgi() :	_host(0), _server(0), _client(0), _env(), _pid(-1), _isRunning(false), _begin()
+	Cgi::Cgi() :	_host(0), _server(0), _client(0), _inputFile(), _scriptPath(), _env(), _pid(-1), _isRunning(false), _begin()
 	{
 	}
 
@@ -25,12 +25,14 @@ namespace ft
 
 	
 	Cgi::Cgi(const Host *host, const Server *server, const Client *client) :	_host(host), _server(server), _client(client),
-																				_env(), _pid(-1), _isRunning(false), _begin()
+																				_inputFile(), _scriptPath(), _env(), _pid(-1),
+																				_isRunning(false), _begin()
 	{
 	}
 
-	Cgi::Cgi(const Cgi& src) :	_host(src._host), _server(src._server), _client(src._client), _env(src._env), 
-								_pid(src._pid), _isRunning(src._isRunning), _begin(src._begin)
+	Cgi::Cgi(const Cgi& src) :	_host(src._host), _server(src._server), _client(src._client), _inputFile(src._inputFile),
+								_scriptPath(src._scriptPath), _env(src._env), _pid(src._pid), _isRunning(src._isRunning), 
+								_begin(src._begin)
 	{
 	}
 

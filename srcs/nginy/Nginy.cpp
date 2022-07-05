@@ -1,6 +1,4 @@
 #include "Nginy.hpp"
-#include <algorithm>
-#include <sys/signal.h>
 
 namespace ft
 {

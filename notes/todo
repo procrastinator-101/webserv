@@ -18,34 +18,35 @@ concepts :
 --------------------------------------------------------------------------------
 -	host in the same server witch has the same name
 -	get : path is symbolic link ??
+-	find the segfault
 
 -	add Server header field
 # set the header part max length
 
--	check not implemented method
 
 -	body check is in
 -	initialise all attributes and reset them
 -	correct uri parse :
-	-	percent msgs decoded : done
-	-	set of allowed characters
+-	percent msgs decoded : done
+-	set of allowed characters
 
 -	version parse error
 
--	handle timeouts :
-	-	request : done
-	-	response
 
--	cgi cookies
-	-	coded : done
-	-	tested
 
--	cgi parse response
 
--	find the segfault
+-	check not implemented method : done
+-	check not implemented http version : not important
+
+
+-	cgi parse response : done
+-	cgi cookies : done
 
 -	delete sysEnv : done
 
+-	handle timeouts :
+	-	request : done
+	-	response : done
 
 -	test delete :done
 -	test leaks : done

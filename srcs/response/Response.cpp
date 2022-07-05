@@ -5,8 +5,8 @@
 
 namespace ft
 {
-	Response::Response() :	_isCgiResponse(false), _isGood(true), _host(0), _sent(0), _msg(), _cgi(), _keepAlive(true), _contentLength(0),
-							_status(), _headers(), _bodyFileName(), _body()
+	Response::Response() :	_isCgiResponse(false), _isGood(true), _host(0), _sent(0), _msg(), _cgi(), _keepAlive(true),
+							_contentLength(0), _status(200), _headers(), _bodyFileName(), _body()
 	{
 	}
 
@@ -77,14 +77,14 @@ namespace ft
 			len = _body.gcount();
 			size = left + len;
 			ret = ::send(fd, buffer, size, 0);
-			if (ret > 0 && ret < size)
+			if (ret >= 0 && ret < size)
 			{
 				if (ret > left)
 					len -= size - ret;
 				_body.seekg(_body.tellg() - std::streampos(len));
 			}
 		}
-		if (ret <= 0)
+		if (ret < 0)
 			return std::make_pair(true, tError);
 		else
 			_sent += ret;
@@ -933,7 +933,6 @@ namespace ft
 		_msg.clear();
 
 		_cgi.reset();
-		_isReady = false;
 
 		_keepAlive = true;
 		_contentLength = 0;

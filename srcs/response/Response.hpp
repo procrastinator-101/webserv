@@ -25,7 +25,6 @@
 #include <stdlib.h>
 
 # define UPLOAD_BUFFER_SIZE	1048576
-# define CGI_ENV_SIZE		13
 
 namespace ft
 {
@@ -49,7 +48,6 @@ namespace ft
 			std::string							_msg;
 
 			Cgi									_cgi;
-			bool								_isReady;
 
 			bool								_keepAlive;
 			size_t								_contentLength;
