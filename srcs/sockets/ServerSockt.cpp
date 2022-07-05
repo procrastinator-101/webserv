@@ -2,7 +2,7 @@
 
 namespace ft
 {
-	const int		ServerSockt::defaultBacklog = 10;
+	const int		ServerSockt::defaultBacklog = 128;
 	const in_port_t	ServerSockt::defaultPort = htons(8080);
 	const in_addr_t	ServerSockt::defaultAddress = htonl(INADDR_ANY);
 

@@ -35,6 +35,7 @@ namespace ft
 		if (!ret.first || ret.second == tError)
 			return ret;
 
+		// std::cout << "bodySize : " << _request._bodySize << "   fileSize : " << getFileSize(_request._bodyFileName) << std::endl;
 		std::cout << _request << std::endl;
 
 		//set up cgi

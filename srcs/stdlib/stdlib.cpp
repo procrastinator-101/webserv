@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <string>
 #include <sys/_types/_size_t.h>
+#include <sys/_types/_time_t.h>
+#include <sys/_types/_timeval.h>
 #include <vector>
 
 
@@ -270,7 +272,10 @@ namespace ft
 
 	std::string	getRandomFileName(const std::string& extension)
 	{
-		return std::string(extension + ztoa(time(0)));
+		timeval	ret;
+
+		gettimeofday(&ret, 0);
+		return std::string(extension + ztoa(ret.tv_sec) + "_" + ztoa(ret.tv_usec));
 	}
 
 	//returns the file size in bytes

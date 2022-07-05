@@ -29,7 +29,7 @@
 
 
 # define MAX_REQUEST_LINE_LENGTH	10000
-# define RECV_TIMEOUT				100000
+# define RECV_TIMEOUT				30000
 
 namespace ft
 {
