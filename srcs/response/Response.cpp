@@ -395,13 +395,23 @@ namespace ft
 		file.open(file_name.c_str());
 		if (!file.is_open())
 		{
-			_status = 500;
+			if (errno == EACCES)
+				_status = 403;
+			else if (errno == ENOENT)
+				_status = 404;
+			else
+				_status = 500;
 			return ;
 		}
 		d = opendir(path.c_str());
 		if (d == NULL)
 		{
-			_status = 500;
+			if (errno == EACCES)
+				_status = 403;
+			else if (errno == ENOENT)
+				_status = 404;
+			else
+				_status = 500;
 			return ;
 		}
 
@@ -603,10 +613,7 @@ namespace ft
 			if (errno == EACCES)
 				_status = 403;
 			else if (errno == ENOENT)
-			{
 				_status = 404;
-				std::cout << "a-------------------------------------aaaaaaaaaaaa" << std::endl;
-			}
 			else
 				_status = 500;
 			file.close();
@@ -645,7 +652,7 @@ namespace ft
 			if (getFileSize(request._bodyFileName) > MaxBodySize)
 			{
 				_isGood = false;
-				_status = 400;
+				_status = 413;
 			}
 			else
 			{

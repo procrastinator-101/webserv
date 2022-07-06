@@ -167,23 +167,22 @@ HDR =	$(CGI_HDR) $(CLIENT_HDR) $(HOST_HDR) $(HTTP_STATUS_HDR) $(LOCATION_HDR) \
 		$(SERVER_HDR) $(SOCKT_HDR) $(STDLIB_HDR)
 
 
+NGINX_PATHS = $(_NGINY_VAR_DATA_PATH) $(_NGINY_VAR_CGI_PATH)
+
 INC = $(INCLUDE_PARAMS:%=-D%)
 
 OBJ = $(SRC:.cpp=.o)
 
 all : $(NAME)
 
-$(NAME) : NGINX_PATHS $(SRC) $(HDR)
-	@$(CC) $(CFLAGS) $(INC) -o $@ $(SRC)
+$(NAME) : $(HDR) $(OBJ)
+	@mkdir -p $(_NGINY_VAR_DATA_PATH)
+	@mkdir -p $(_NGINY_VAR_CGI_PATH)
+	@$(CC) $(CFLAGS) $(INC) -o $@ $(OBJ)
 
 %.o: %.cpp
 	@$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
-
-NGINX_PATHS :
-	@mkdir -p $(_NGINY_VAR_DATA_PATH)
-	@mkdir -p $(_NGINY_VAR_CGI_PATH)
-# @rm -r $(_NGINY_VAR_PATH)/*
 
 clean:
 	@rm -rf $(OBJ)
@@ -193,4 +192,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY : clean fclean re NGINX_PATHS
+.PHONY : clean fclean re
