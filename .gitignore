@@ -1,6 +1,4 @@
 .DS_Store
-confFiles/test.conf
-confFiles
 webserv
 webserv.dSYM
 .vscode

@@ -136,8 +136,8 @@ STDLIB_HDR = $(STDLIB_PATH)/stdlib.hpp
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 _NGINY_CONF_PATH = $(ROOT_DIR)/confFiles/default.conf
-_NGINY_VAR_DATA_PATH = /goinfre/$$USER/var/nginy/data
-_NGINY_VAR_CGI_PATH = /goinfre/$$USER/var/nginy/cgi
+_NGINY_VAR_DATA_PATH = /users/$$USER/var/nginy/data
+_NGINY_VAR_CGI_PATH = /users/$$USER/var/nginy/cgi
 _NGINY_INDEX_PATH = $(ROOT_DIR)/indexes
 _NGINY_ERROR_PAGES_PATH = $(ROOT_DIR)/error_pages
 
